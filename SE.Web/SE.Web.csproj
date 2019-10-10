@@ -1,0 +1,117 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <IsPackable>false</IsPackable>
+    <SpaRoot>ClientApp\</SpaRoot>
+    <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
+
+    <!-- Set this to true if you enable server-side prerendering -->
+    <BuildServerSideRenderer>false</BuildServerSideRenderer>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="8.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Don't publish the SPA source files, but do show them in the project files list -->
+    <Compile Remove="deneme\**" />
+    <Content Remove="$(SpaRoot)**" />
+    <Content Remove="deneme\**" />
+    <EmbeddedResource Remove="deneme\**" />
+    <None Remove="$(SpaRoot)**" />
+    <None Remove="deneme\**" />
+    <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="ClientApp\src\app\core.module.ts" />
+    <None Remove="ClientApp\src\app\layouts\elements\se-button\se-button.component.ts" />
+    <None Remove="ClientApp\src\app\layouts\footer\footer.component.ts" />
+    <None Remove="ClientApp\src\app\layouts\header\header.component.ts" />
+    <None Remove="ClientApp\src\app\layouts\panel-aside\panel-aside.component.ts" />
+    <None Remove="ClientApp\src\app\layouts\panel-footer\panel-footer.component.ts" />
+    <None Remove="ClientApp\src\app\layouts\panel-header\panel-header.component.ts" />
+    <None Remove="ClientApp\src\app\layouts\panel-layout\panel-layout.component.ts" />
+    <None Remove="ClientApp\src\app\layouts\panel-layout\panel-layout.module.ts" />
+    <None Remove="ClientApp\src\app\layouts\site-layout\site-layout.component.ts" />
+    <None Remove="ClientApp\src\app\layouts\site-layout\site-layout.module.ts" />
+    <None Remove="ClientApp\src\app\pages\home\home.component.ts" />
+    <None Remove="ClientApp\src\app\pages\home\home.module.ts" />
+    <None Remove="ClientApp\src\app\pages\login\login.component.ts" />
+    <None Remove="ClientApp\src\app\pages\login\login.module.ts" />
+    <None Remove="ClientApp\src\app\pages\panel-pages\dashboard\dashboard.component.ts" />
+    <None Remove="ClientApp\src\app\pages\panel-pages\dashboard\dashboard.module.ts" />
+    <None Remove="ClientApp\src\app\shared\base.service.ts" />
+    <None Remove="ClientApp\src\app\shared\models.ts" />
+    <None Remove="ClientApp\src\app\shared\shared.module.ts" />
+    <None Remove="ClientApp\src\app\_services\auth-guard.service.ts" />
+    <None Remove="ClientApp\src\app\_services\auth-interceptor.service.ts" />
+    <None Remove="ClientApp\src\app\_services\auth.service.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SE.Core\SE.Core.csproj" />
+    <ProjectReference Include="..\SE.Data\SE.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\app\core.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\layouts\elements\se-button\se-button.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\layouts\footer\footer.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\layouts\header\header.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\layouts\panel-aside\panel-aside.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\layouts\panel-footer\panel-footer.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\layouts\panel-header\panel-header.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\layouts\panel-layout\panel-layout.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\layouts\panel-layout\panel-layout.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\layouts\site-layout\site-layout.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\layouts\site-layout\site-layout.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\pages\home\home.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\pages\home\home.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\pages\login\login.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\pages\login\login.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\pages\panel-pages\dashboard\dashboard.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\pages\panel-pages\dashboard\dashboard.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\shared\base.service.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\shared\models.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\shared\shared.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_services\auth-guard.service.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_services\auth-interceptor.service.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_services\auth.service.ts" />
+  </ItemGroup>
+
+  <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
+    <!-- Ensure Node.js is installed -->
+    <Exec Command="node --version" ContinueOnError="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+    <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+    <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
+  </Target>
+
+  <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
+    <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build -- --prod" />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build:ssr -- --prod" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
+
+    <!-- Include the newly-built files in the publish output -->
+    <ItemGroup>
+      <DistFiles Include="$(SpaRoot)dist\**; $(SpaRoot)dist-server\**" />
+      <DistFiles Include="$(SpaRoot)node_modules\**" Condition="'$(BuildServerSideRenderer)' == 'true'" />
+      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>%(DistFiles.Identity)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
+
+</Project>

@@ -1,0 +1,38 @@
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { SeButton } from './layouts/elements/se-button/se-button.component';
+import { HttpClientModule } from '@angular/common/http';
+import { SharedModule } from './shared/shared.module';
+import { CoreModule } from './core.module';
+import { SiteLayoutModule } from './layouts/site-layout/site-layout.module';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HomeModule } from './pages/home/home.module';
+import { LoginModule } from './pages/login/login.module';
+import { PanelLayoutModule } from './layouts/panel-layout/panel-layout.module';
+import { DashBoardModule } from './pages/panel-pages/dashboard/dashboard.module';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    SeButton
+  ],
+  imports: [
+    BrowserModule,
+    CoreModule,
+    AppRoutingModule,
+    NgxSpinnerModule,
+    HttpClientModule,
+    SharedModule,
+    SiteLayoutModule,
+    HomeModule,
+    LoginModule,
+    PanelLayoutModule,
+    DashBoardModule
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }

@@ -1,0 +1,772 @@
+<div class="hero v3 section-padding" style="background-image: url(../../../assets/images/header/hero-5.jpeg)">
+  <div class="overlay op-3"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <h1 class="hero-title v2">
+          Explore Your City.
+        </h1>
+        <p class="hero-desc v2">
+          You can’t imagine, what is waiting for you around your city
+        </p>
+      </div>
+      <div class="col-md-12 text-center mar-top-20">
+        <form [formGroup]="searchForm" (ngSubmit)="onSearchSubmit()" class="hero__form v2 mar-bot-30">
+          <div class="row">
+            <div class="col-lg-4 col-md-12">
+              <input class="hero__form-input custom-select" type="text" name="place-event" id="place-event" placeholder="What are you looking for?">
+            </div>
+            <div class="col-lg-3 col-md-12">
+              <select class="hero__form-input  custom-select">
+                <option>Select Location </option>
+                <option>New York</option>
+                <option>California</option>
+                <option>Washington</option>
+                <option>New Jersey</option>
+                <option>Los Angeles</option>
+                <option>Florida</option>
+              </select>
+            </div>
+            <div class="col-lg-3 col-md-12">
+              <select class="hero__form-input  custom-select">
+                <option>Select Categories</option>
+                <option>Art's</option>
+                <option>Health</option>
+                <option>Hotels</option>
+                <option>Real Estate</option>
+                <option>Rentals</option>
+              </select>
+            </div>
+            <div class="col-lg-2 col-md-12">
+              <div class="submit_btn text-right md-left">
+                <button class="btn v3  mar-right-5" type="submit"><i class="ion-ios-search" aria-hidden="true"></i> Search</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Hero section ends-->
+<!--Promo Category starts-->
+<div class="hero-catagory mar-top-30 section-padding">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="hero-catagory-wrapper v1">
+          <a href="grid-fullwidth.html" class="hero-category-content v1">
+            <i class="icofont-hotel"></i>
+            <p class="name">Hotel</p>
+            <p class="d-name">22 Locations</p>
+          </a>
+          <a href="grid-fullwidth.html" class="hero-category-content v1">
+            <i class="icofont-restaurant"></i> <br>
+            <p class="name">Restaurent</p>
+            <p class="d-name">15 Locations</p>
+          </a>
+          <a href="grid-fullwidth.html" class="hero-category-content v1">
+            <i class="icofont-shopping-cart"></i><br>
+            <p class="name">Shopping</p>
+            <p class="d-name">30 Locations</p>
+          </a>
+          <a href="grid-fullwidth.html" class="hero-category-content v1">
+            <i class="icofont-cut"></i> <br>
+            <p class="name">Beauty & spa</p>
+            <p class="d-name">8 Locations</p>
+          </a>
+          <a href="grid-fullwidth.html" class="hero-category-content v1">
+            <i class="icofont-hospital"></i> <br>
+            <p class="name">Hospital</p>
+            <p class="d-name">10 Locations</p>
+          </a>
+          <a href="grid-fullwidth.html" class="hero-category-content v1">
+            <i class="icofont-list"></i> <br>
+            <p class="name">Services</p>
+            <p class="d-name">28 Locations</p>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Promo Category ends-->
+<!--Popular City starts-->
+<div class="popular-catagory section-padding pad-bot-50">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 offset-md-2 text-center">
+        <h2 class="section-title v1">Explore your Dream Places</h2>
+      </div>
+      <div class="col-md-4">
+        <div class="popular-item sm-grid mar-bot-30">
+          <div class="single-place">
+            <img class="single-place-image" src="../../../assets/images/category/ny.jpeg" alt="place-image">
+            <div class="single-place-content">
+              <h2 class="single-place-title">
+                <a href="#">New York</a>
+              </h2>
+              <ul class="single-place-list v2">
+                <li><span>234</span> Listings</li>
+              </ul>
+              <a class="btn v6 explore-place" href="grid-fullwidth-map.html">Explore</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="popular-item sm-grid mar-bot-30">
+          <div class="single-place">
+            <img class="single-place-image" src="../../../assets/images/category/miami.jpeg" alt="place-image">
+            <div class="single-place-content">
+              <h2 class="single-place-title">
+                <a href="#">Miami</a>
+              </h2>
+              <ul class="single-place-list v2">
+                <li><span>150</span> Listings</li>
+              </ul>
+              <a class="btn v6 explore-place" href="grid-fullwidth-map.html">Explore</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="popular-item sm-grid mar-bot-30">
+          <div class="single-place">
+            <img class="single-place-image" src="../../../assets/images/category/london.jpeg" alt="place-image">
+            <div class="single-place-content">
+              <h2 class="single-place-title">
+                <a href="#">London</a>
+              </h2>
+              <ul class="single-place-list v2">
+                <li><span>135</span> Listings</li>
+              </ul>
+              <a class="btn v6 explore-place" href="grid-fullwidth-map.html">Explore</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="popular-item sm-grid mar-bot-30">
+          <div class="single-place">
+            <img class="single-place-image" src="../../../assets/images/category/sp.jpeg" alt="place-image">
+            <div class="single-place-content">
+              <h2 class="single-place-title">
+                <a href="#">Singapore</a>
+              </h2>
+              <ul class="single-place-list v2">
+                <li><span>90</span> Listings</li>
+              </ul>
+              <a class="btn v6 explore-place" href="grid-fullwidth-map.html">Explore</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Popular Category ends-->
+<!--Trending events starts-->
+<div class="trending-places section-padding pad-bot-130">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 offset-md-2 text-center">
+        <h2 class="section-title v1">What's happening?</h2>
+      </div>
+      <div class="col-md-12">
+        <div class="swiper-container trending-place-wrap">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide trending-place-item">
+              <div class="trending-img">
+                <img src="../../../assets/images/category/event/muay.jpeg" alt="#">
+                <span class="trending-rating-orange">6.5</span>
+                <span class="save-btn"><i class="icofont-heart"></i></span>
+              </div>
+              <div class="trending-title-box">
+                <h4><a href="single-listing-one.html">Muay Thai Live Show</a></h4>
+                <div class="customer-review">
+                  <div class="rating-summary float-left">
+                    <div class="rating-result" title="60%">
+                      <ul class="product-rating">
+                        <li><i class="ion-android-star"></i></li>
+                        <li><i class="ion-android-star"></i></li>
+                        <li><i class="ion-android-star"></i></li>
+                        <li><i class="ion-android-star-half"></i></li>
+                        <li><i class="ion-android-star-half"></i></li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="review-summury float-right">
+                    <p><a href="#">3 Reviews</a></p>
+                  </div>
+                </div>
+                <ul class="trending-address">
+                  <li>
+                    <i class="ion-ios-location"></i>
+                    <p>1690 Brown Avenue,Barline</p>
+                  </li>
+                  <li>
+                    <i class="ion-ios-telephone"></i>
+                    <p>+864-940-3419</p>
+                  </li>
+                  <li>
+                    <i class="ion-android-globe"></i>
+                    <p>www.thaishow.com</p>
+                  </li>
+                </ul>
+                <div class="trending-bottom mar-top-15 pad-bot-30">
+                  <div class="trend-left float-left">
+                    <span class="round-bg green"><i class="icofont-movie"></i></span>
+                    <p><a href="#">Movie</a></p>
+                  </div>
+                  <div class="trend-right float-right">
+                    <div class="trend-open mar-top-5"><i class="ion-clock"></i> 2.30 pm</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide trending-place-item">
+              <div class="trending-img">
+                <img src="../../../assets/images/category/event/photo1.jpeg" alt="#">
+                <span class="trending-rating-pink">6.5</span>
+                <span class="save-btn"><i class="icofont-heart"></i></span>
+              </div>
+              <div class="trending-title-box">
+                <h4><a href="single-listing-one.html">Carolina photo exibition</a></h4>
+                <div class="customer-review">
+                  <div class="rating-summary float-left">
+                    <div class="rating-result" title="60%">
+                      <ul class="product-rating">
+                        <li><i class="ion-android-star"></i></li>
+                        <li><i class="ion-android-star"></i></li>
+                        <li><i class="ion-android-star"></i></li>
+                        <li><i class="ion-android-star-half"></i></li>
+                        <li><i class="ion-android-star-half"></i></li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="review-summury float-right">
+                    <p><a href="#">10 Reviews</a></p>
+                  </div>
+                </div>
+                <ul class="trending-address">
+                  <li>
+                    <i class="ion-ios-location"></i>
+                    <p>32 down Ave, North Carolina,USA</p>
+                  </li>
+                  <li>
+                    <i class="ion-ios-telephone"></i>
+                    <p>+251 7336 8898</p>
+                  </li>
+                  <li>
+                    <i class="ion-android-globe"></i>
+                    <p>www.photoexpo.com</p>
+                  </li>
+                </ul>
+                <div class="trending-bottom mar-top-15 pad-bot-30">
+                  <div class="trend-left float-left">
+                    <span class="round-bg pink"><i class="icofont-camera"></i></span>
+                    <p><a href="#">Photography</a></p>
+                  </div>
+                  <div class="trend-right float-right">
+                    <div class="trend-open mar-top-5"><i class="ion-clock"></i>5.00 pm</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide trending-place-item">
+              <div class="trending-img">
+                <img src="../../../assets/images/category/event/coffee.jpeg" alt="#">
+                <span class="trending-rating-green">6.5</span>
+                <span class="save-btn"><i class="icofont-heart"></i></span>
+              </div>
+              <div class="trending-title-box">
+                <h4><a href="single-listing-one.html">European coffee expo </a></h4>
+                <div class="customer-review">
+                  <div class="rating-summary float-left">
+                    <div class="rating-result" title="60%">
+                      <ul class="product-rating">
+                        <li><i class="ion-android-star"></i></li>
+                        <li><i class="ion-android-star"></i></li>
+                        <li><i class="ion-android-star"></i></li>
+                        <li><i class="ion-android-star-half"></i></li>
+                        <li><i class="ion-android-star-half"></i></li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="review-summury float-right">
+                    <p><a href="#">7 Reviews</a></p>
+                  </div>
+                </div>
+                <ul class="trending-address">
+                  <li>
+                    <i class="ion-ios-location"></i>
+                    <p>1301 Avenue, Brooklyn, NY 11230</p>
+                  </li>
+                  <li>
+                    <i class="ion-ios-telephone"></i>
+                    <p>+44 20 7336 8898</p>
+                  </li>
+                  <li>
+                    <i class="ion-android-globe"></i>
+                    <p>www.burgerandlobster.com</p>
+                  </li>
+                </ul>
+                <div class="trending-bottom mar-top-15 pad-bot-30">
+                  <div class="trend-left float-left">
+                    <span class="round-bg red"><i class="icofont-tea"></i></span>
+                    <p><a href="#">Eat &amp; Drink</a></p>
+                  </div>
+                  <div class="trend-right float-right">
+                    <div class="trend-open mar-top-5"><i class="ion-clock"></i> 10.30 am</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide trending-place-item">
+              <div class="trending-img">
+                <img src="../../../assets/images/category/event/3.jpeg" alt="#">
+                <span class="trending-rating-pink">6.5</span>
+                <span class="save-btn"><i class="icofont-heart"></i></span>
+              </div>
+              <div class="trending-title-box">
+                <h4><a href="single-listing-one.html">Bolton music fair </a></h4>
+                <div class="customer-review">
+                  <div class="rating-summary float-left">
+                    <div class="rating-result" title="60%">
+                      <ul class="product-rating">
+                        <li><i class="ion-android-star"></i></li>
+                        <li><i class="ion-android-star"></i></li>
+                        <li><i class="ion-android-star"></i></li>
+                        <li><i class="ion-android-star-half"></i></li>
+                        <li><i class="ion-android-star-half"></i></li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="review-summury float-right">
+                    <p><a href="#">3 Reviews</a></p>
+                  </div>
+                </div>
+                <ul class="trending-address">
+                  <li>
+                    <i class="ion-ios-location"></i>
+                    <p>20 Hogh Street, Bolton, France</p>
+                  </li>
+                  <li>
+                    <i class="ion-ios-telephone"></i>
+                    <p>+33 20 7336 8898</p>
+                  </li>
+                  <li>
+                    <i class="ion-android-globe"></i>
+                    <p>www.bookmusic.com</p>
+                  </li>
+                </ul>
+
+                <div class="trending-bottom mar-top-15 pad-bot-30">
+                  <div class="trend-left float-left">
+                    <span class="round-bg green"><i class="icofont-music-alt"></i></span>
+                    <p><a href="#">Music</a></p>
+                  </div>
+                  <div class="trend-right float-right">
+                    <div class="trend-open mar-top-5"><i class="ion-clock"></i> 5.00 pm</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide trending-place-item">
+              <div class="trending-img">
+                <img src="../../../assets/images/category/event/sea6.jpeg" alt="#">
+                <span class="trending-rating-green">6.5</span>
+                <span class="save-btn"><i class="icofont-heart"></i></span>
+              </div>
+              <div class="trending-title-box">
+                <h4><a href="single-listing-one.html">Miami seafood show</a></h4>
+                <div class="customer-review">
+                  <div class="rating-summary float-left">
+                    <div class="rating-result" title="60%">
+                      <ul class="product-rating">
+                        <li><i class="ion-android-star"></i></li>
+                        <li><i class="ion-android-star"></i></li>
+                        <li><i class="ion-android-star"></i></li>
+                        <li><i class="ion-android-star-half"></i></li>
+                        <li><i class="ion-android-star-half"></i></li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="review-summury float-right">
+                    <p><a href="#">3 Reviews</a></p>
+                  </div>
+                </div>
+                <ul class="trending-address">
+                  <li>
+                    <i class="ion-ios-location"></i>
+                    <p>400 NW North River Dr, Miami, USA</p>
+                  </li>
+                  <li>
+                    <i class="ion-ios-telephone"></i>
+                    <p>+00 20 536 551</p>
+                  </li>
+                  <li>
+                    <i class="ion-android-globe"></i>
+                    <p>www.opentable.com</p>
+                  </li>
+                </ul>
+                <div class="trending-bottom mar-top-15 pad-bot-30">
+                  <div class="trend-left float-left">
+                    <span class="round-bg green"><i class="icofont-restaurant"></i></span>
+                    <p><a href="#">Eat &amp; Drink</a></p>
+                  </div>
+                  <div class="trend-right float-right">
+                    <div class="trend-right float-right">
+                      <div class="trend-open mar-top-5"><i class="ion-clock"></i> 9.00 am</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="trending-pagination"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Trending events ends-->
+<!--Coupon starts-->
+<div class="coupon-section section-padding">
+  <div class="container ">
+    <div class="row">
+      <div class="col-md-8 offset-md-2 text-center">
+        <h2 class="section-title v1"> Coupons &amp; Deals</h2>
+      </div>
+      <div class="col-md-12">
+        <div class="swiper-container coupon-wrap">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide coupon-content">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="coupon-img">
+                    <img class="img-fluid" src="../../../assets/images/category/coupon/3.jpeg" alt="...">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="coupon-desc float-right">
+                    <h4>30% Discount</h4>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean id porta leo.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="row align-items-center">
+                <div class="col-md-6">
+                  <div class="coupon-owner mar-top-20">
+                    <a href="store.html">Favola Restaurant</a>
+                    <a href="#" class="rating">
+                      <i class="ion-android-star"></i>
+                      <i class="ion-android-star"></i>
+                      <i class="ion-android-star"></i>
+                      <i class="ion-android-star"></i>
+                      <i class="ion-android-star-half"></i>
+                    </a>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="float-left">
+                    <a class="btn v1" data-toggle="modal" data-target="#coupon_wrap">
+                      Get Coupon
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide coupon-content">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="coupon-img">
+                    <img class="img-fluid" src="../../../assets/images/category/coupon/5.jpeg" alt="...">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="coupon-desc float-right">
+                    <h4>20% Off</h4>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean id porta leo.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="row align-items-center">
+                <div class="col-md-6">
+                  <div class="coupon-owner mar-top-20">
+                    <a href="store.html">Orion Spa</a>
+                    <a href="#" class="rating">
+                      <i class="ion-android-star"></i>
+                      <i class="ion-android-star"></i>
+                      <i class="ion-android-star"></i>
+                      <i class="ion-android-star-half"></i>
+                      <i class="ion-android-star-half"></i>
+                    </a>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="float-left">
+                    <a class="btn v1" data-toggle="modal" data-target="#coupon_wrap">
+                      Get Coupon
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="swiper-slide coupon-content">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="coupon-img">
+                    <img class="img-fluid" src="../../../assets/images/category/coupon/4.jpeg" alt="...">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="coupon-desc float-right">
+                    <h4>25% Discount</h4>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean id porta leo.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="row align-items-center">
+                <div class="col-md-6">
+                  <div class="coupon-owner mar-top-20">
+                    <a href="store.html">Hotel La Muro</a>
+                    <a href="#" class="rating">
+                      <i class="ion-android-star"></i>
+                      <i class="ion-android-star"></i>
+                      <i class="ion-android-star"></i>
+                      <i class="ion-android-star-half"></i>
+                      <i class="ion-android-star-half"></i>
+                    </a>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="float-left">
+                    <a class="btn v1" data-toggle="modal" data-target="#coupon_wrap">
+                      Get Coupon
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide coupon-content">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="coupon-img">
+                    <img class="img-fluid" src="../../../assets/images/category/coupon/1.jpeg" alt="...">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="coupon-desc float-right">
+                    <h4>50% OFF</h4>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean id porta leo.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="row align-items-center">
+                <div class="col-md-6">
+                  <div class="coupon-owner mar-top-20">
+                    <a href="store.html">Penguin Shop</a>
+                    <a href="#" class="rating">
+                      <i class="ion-android-star"></i>
+                      <i class="ion-android-star"></i>
+                      <i class="ion-android-star"></i>
+                      <i class="ion-android-star-half"></i>
+                      <i class="ion-android-star-half"></i>
+                    </a>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="float-left">
+                    <a class="btn v1" data-toggle="modal" data-target="#coupon_wrap">
+                      Get Coupon
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+        <div class="slider-btn v1 coupon-next"><i class="ion-arrow-right-c"></i></div>
+        <div class="slider-btn v1 coupon-prev"><i class="ion-arrow-left-c"></i></div>
+        <div class="modal fade" id="coupon_wrap">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Get a Coupon</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="ion-ios-close-empty"></i></span></button>
+              </div>
+              <div class="modal-body">
+                <div class="modal-coupon-code">
+                  <div class="store-content">
+                    <div class="text">
+                      Stores :
+                      <span> La Poma ,</span>
+                      <span>Gucci</span>
+                    </div>
+                    <div class="store-content">Cashback : <span>25% cashback </span></div>
+                    <div class="store-content">Valid till : <span>25-5-2019 </span></div>
+                    <div class="cashback-text">
+                      <p>Cashback will be added in your wallet in next 5 Minute of your purchase.</p>
+                    </div>
+                  </div>
+                  <div class="coupon-code">
+                    <h5>
+                      Coupon Code: <span class="coupon-code-wrapper">
+                        <i class="fa fa-scissors"></i>
+                        12345
+                      </span>
+                    </h5>
+                  </div>
+                </div>
+              </div>
+              <div class="coupon-bottom">
+                <div class="float-left"><a href="single-listing-one.html" class="btn v1">Go to Deal</a></div>
+                <button type="button" class="btn v1 float-right" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Coupon ends-->
+<!--Testimonial Section start-->
+<div class="hero-client-section pad-bot-70 section-padding">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 offset-md-2 text-center">
+        <h2 class="section-title v1">People Talking About Us</h2>
+      </div>
+      <div class="col-md-12 mar-bot-70">
+        <div class="testimonial-wrapper swiper-container">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide single-testimonial-item">
+              <div class="testimonial-img text-center">
+                <img src="../../../assets/images/clients/client_1.jpeg" alt="...">
+              </div>
+              <div class="testimonial-content text-center">
+                <ul class="product-rating">
+                  <li><i class="ion-android-star"></i></li>
+                  <li><i class="ion-android-star"></i></li>
+                  <li><i class="ion-android-star"></i></li>
+                  <li><i class="ion-android-star-half"></i></li>
+                  <li><i class="ion-android-star-half"></i></li>
+                </ul>
+                <h5>Frank Jane</h5>
+                <span>CEO, Bloomberg</span>
+                <p>Lorem ipsum dolor adipisicing elit.iusto at laborum hic qui, minus, quasi modi assumenda quis corrupti.</p>
+              </div>
+            </div>
+            <div class="swiper-slide single-testimonial-item">
+              <div class="testimonial-img text-center">
+                <img src="../../../assets/images/clients/client_3.jpeg" alt="...">
+              </div>
+              <div class="testimonial-content text-center">
+                <ul class="product-rating">
+                  <li><i class="ion-android-star"></i></li>
+                  <li><i class="ion-android-star"></i></li>
+                  <li><i class="ion-android-star"></i></li>
+                  <li><i class="ion-android-star-half"></i></li>
+                  <li><i class="ion-android-star-half"></i></li>
+                </ul>
+                <h5>Amanda Gordon</h5>
+                <span>CMO, TechTelsa</span>
+                <p>Lorem ipsum dolor adipisicing elit.iusto at laborum hic qui, minus, quasi modi assumenda quis corrupti.</p>
+              </div>
+            </div>
+            <div class="swiper-slide single-testimonial-item">
+              <div class="testimonial-img text-center">
+                <img src="../../../assets/images/clients/client_2.jpeg" alt="...">
+              </div>
+              <div class="testimonial-content text-center">
+                <ul class="product-rating">
+                  <li><i class="ion-android-star"></i></li>
+                  <li><i class="ion-android-star"></i></li>
+                  <li><i class="ion-android-star"></i></li>
+                  <li><i class="ion-android-star-half"></i></li>
+                  <li><i class="ion-android-star-half"></i></li>
+                </ul>
+                <h5>Lee Priest</h5>
+                <span>MD, Cornia Inc</span>
+                <p>Lorem ipsum dolor adipisicing elit.iusto at laborum hic qui, minus, quasi modi assumenda quis corrupti.</p>
+              </div>
+            </div>
+            <div class="swiper-slide single-testimonial-item">
+              <div class="testimonial-img text-center">
+                <img src="../../../assets/images/clients/client_4.jpeg" alt="...">
+              </div>
+              <div class="testimonial-content text-center">
+                <ul class="product-rating">
+                  <li><i class="ion-android-star"></i></li>
+                  <li><i class="ion-android-star"></i></li>
+                  <li><i class="ion-android-star"></i></li>
+                  <li><i class="ion-android-star-half"></i></li>
+                  <li><i class="ion-android-star-half"></i></li>
+                </ul>
+                <h5>Mark Henry</h5>
+                <span>CEO, Alpha Inc</span>
+                <p>Lorem ipsum dolor adipisicing elit.iusto at laborum hic qui, minus, quasi modi assumenda quis corrupti.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="client-pagination"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Testimonial Section ends-->
+<!--Blog Posts starts-->
+<div class="blog-posts v1 pad-bot-60 pad-top-60">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 offset-md-2 text-center">
+        <h2 class="section-title v1">Popular Posts</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="card single-blog-item v1">
+          <img src="../../../assets/images/blog/news_7.jpeg" alt="...">
+          <a href="#" class="blog-cat btn v6 red">Hotel</a>
+          <div class="card-body">
+            <h4 class="card-title"><a href="single-news-one.html">Top 10 Homestay in London That you don't miss out</a></h4>
+            <div class="bottom-content">
+              <p class="date">Sep 28th , 2018 by <a href="#" class="text-dark">Louis Fonsi</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card single-blog-item v1">
+          <img src="../../../assets/images/blog/news_8.jpeg" alt="...">
+          <a href="#" class="blog-cat btn v6 red">Restaurant</a>
+          <div class="card-body">
+            <h4 class="card-title"><a href="single-news-one.html">Cappuccino Coffee at Broklyn for Coffee Lover.</a></h4>
+            <div class="bottom-content">
+              <p class="date">Dec 5th , 2018 by <a href="#" class="text-dark">Adam D'Costa</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card single-blog-item v1">
+          <img src="../../../assets/images/blog/news_9.jpeg" alt="...">
+          <a href="#" class="blog-cat btn v6 red">Travel</a>
+          <div class="card-body">
+            <h4 class="card-title"><a href="single-news-one.html">Top 50 Greatest Street Arts in Paris</a></h4>
+            <div class="bottom-content">
+              <p class="date">Mar 13th , 2018 by <a href="#" class="text-dark">Mark Henri</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
