@@ -10,8 +10,8 @@ using SE.Data;
 namespace SE.Web.Migrations
 {
     [DbContext(typeof(EntitiesDbContext))]
-    [Migration("20190714171210_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20191023214119_NewTableCategory2")]
+    partial class NewTableCategory2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -131,6 +131,109 @@ namespace SE.Web.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("SE.Core.Entities.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EducationCategory");
+                });
+
+            modelBuilder.Entity("SE.Core.Entities.Education", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CategoryId");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Education");
+                });
+
+            modelBuilder.Entity("SE.Core.Entities.EducationAttribute", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.Property<int>("DisplayOrder");
+
+                    b.Property<int>("EducationAttributeCategoryId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EducationAttributeCategoryId");
+
+                    b.ToTable("EducationAttribute");
+                });
+
+            modelBuilder.Entity("SE.Core.Entities.EducationAttributeCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EducationAttributeCategory");
+                });
+
+            modelBuilder.Entity("SE.Core.Entities.EducationAttributeEducation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("EducationAttributeId");
+
+                    b.Property<int>("EducationId");
+
+                    b.Property<bool>("IsSelected");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EducationAttributeId");
+
+                    b.HasIndex("EducationId");
+
+                    b.ToTable("EducationAttributeEducation");
+                });
+
             modelBuilder.Entity("SE.Core.Entities.User", b =>
                 {
                     b.Property<string>("Id")
@@ -146,9 +249,11 @@ namespace SE.Web.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
-                    b.Property<string>("FirsName");
+                    b.Property<string>("FirsName")
+                        .HasMaxLength(100);
 
-                    b.Property<string>("LastName");
+                    b.Property<string>("LastName")
+                        .HasMaxLength(100);
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -228,6 +333,40 @@ namespace SE.Web.Migrations
                     b.HasOne("SE.Core.Entities.User")
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SE.Core.Entities.Education", b =>
+                {
+                    b.HasOne("SE.Core.Entities.Category", "Category")
+                        .WithMany("Educations")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("SE.Core.Entities.User", "User")
+                        .WithMany("Educations")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SE.Core.Entities.EducationAttribute", b =>
+                {
+                    b.HasOne("SE.Core.Entities.EducationAttributeCategory", "EducationAttributeCategory")
+                        .WithMany("EducationAttributes")
+                        .HasForeignKey("EducationAttributeCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SE.Core.Entities.EducationAttributeEducation", b =>
+                {
+                    b.HasOne("SE.Core.Entities.EducationAttribute", "EducationAttribute")
+                        .WithMany("EducationAttributeEducations")
+                        .HasForeignKey("EducationAttributeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("SE.Core.Entities.Education", "Education")
+                        .WithMany("EducationAttributeEducations")
+                        .HasForeignKey("EducationId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

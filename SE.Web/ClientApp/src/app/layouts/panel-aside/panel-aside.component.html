@@ -11,13 +11,13 @@
     </div>
     <h4 class="name">Howdy, Steve!</h4>
     <nav class="navbar-sidebar2">
-      <ul class="list-unstyled navbar__list">
+      <ul routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="list-unstyled navbar__list">
         <li>
-          <a class="active" href="db.html">
-            <i class="ion-ios-gear-outline"></i>Dashboard
+          <a routerLink="/panel" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+            <i class="ion-ios-gear-outline"></i>Gösterge Paneli
           </a>
         </li>
-        <li class="has-sub">
+        <!--<li class="has-sub">
           <a class="js-arrow" href="#">
             <i class="ion-social-buffer-outline"></i>My Listings
           </a>
@@ -35,21 +35,21 @@
               <span class="inbox-num expired">12</span>
             </li>
           </ul>
-        </li>
+        </li>-->
 
         <li>
-          <a href="db-bookings.html">
-            <i class="ion-ios-copy-outline"></i>Bookings
+          <a  routerLink="/panel/egitim-listesi" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" >
+            <i class="ion-ios-copy-outline"></i>Eğitimler
           </a>
         </li>
-        <li>
+        <!--<li>
           <a href="db-messages.html">
             <i class="ion-ios-email-outline"></i>Inbox
           </a>
           <span class="inbox-num pending">3</span>
-        </li>
+        </li>-->
 
-        <li>
+        <!--<li>
           <a href="db-favourites.html">
             <i class="ion-ios-heart-outline"></i>Favourites
           </a>
@@ -92,7 +92,7 @@
           <a href="#">
             <i class="ion-ios-upload-outline"></i>Logout
           </a>
-        </li>
+        </li>-->
       </ul>
     </nav>
   </div>

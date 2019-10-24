@@ -5,6 +5,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { PanelLayoutComponent } from './layouts/panel-layout/panel-layout.component';
 import { DashBoardComponent } from './pages/panel-pages/dashboard/dashboard.component';
+import { EducationListComponent } from './pages/panel-pages/education/education-list/education-list.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,9 @@ const routes: Routes = [
     children: [
       {
         path: '', component: DashBoardComponent
+      },
+      {
+        path: 'egitim-listesi', component: EducationListComponent
       }
     ]
   },

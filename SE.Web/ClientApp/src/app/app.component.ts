@@ -28,8 +28,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this._script.loadScripts('body', ['assets/js/se-plugin.js'], true)
       .then(result => {
-        this._script.loadScripts('body', [' assets/js/se-main.js'], true);
-        this._script.loadScripts('body', [' assets/js/dashboard.js'], true);
+        this._script.loadScripts('body', ['assets/js/perfect-scrollbar.min.js'], true);
+        this._script.loadScripts('body', ['assets/js/se-main.js'], true);
+        this._script.loadScripts('body', ['assets/js/dashboard.js'], true);
       });
   }
 }

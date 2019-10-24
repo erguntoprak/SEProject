@@ -14,6 +14,7 @@ import { HomeModule } from './pages/home/home.module';
 import { LoginModule } from './pages/login/login.module';
 import { PanelLayoutModule } from './layouts/panel-layout/panel-layout.module';
 import { DashBoardModule } from './pages/panel-pages/dashboard/dashboard.module';
+import { EducationListModule } from './pages/panel-pages/education/education-list/education-list.module';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { DashBoardModule } from './pages/panel-pages/dashboard/dashboard.module'
     HomeModule,
     LoginModule,
     PanelLayoutModule,
-    DashBoardModule
+    DashBoardModule,
+    EducationListModule
   ],
   bootstrap: [AppComponent]
 })

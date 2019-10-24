@@ -8,7 +8,7 @@ namespace SE.Core.Entities
     public class User:IdentityUser
     {
         public string FirsName { get; set; }
-
         public string LastName { get; set; }
+        public ICollection<Education> Educations { get; set; }
     }
 }

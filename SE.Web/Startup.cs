@@ -94,8 +94,8 @@ namespace SE.Web
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
-                //spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-
+                spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+                 
                 if (env.IsDevelopment())
                 {
                     spa.UseAngularCliServer(npmScript: "start");

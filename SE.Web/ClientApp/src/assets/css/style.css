@@ -1388,12 +1388,10 @@ ul.list-inline li {
     z-index: 9999;
 }
 
-.header.transparent.scroll .site-navbar-wrap.v1 {
-
-    background-color: #6c3;
+  .header.transparent.scroll .site-navbar-wrap.v1 {
+    background-color: #46cd38;
     box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.3);
-
-}
+  }
 
 .header.transparent.scroll .site-navbar-wrap.v2 {
 
