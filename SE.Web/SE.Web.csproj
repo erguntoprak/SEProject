@@ -32,7 +32,11 @@
 
   <ItemGroup>
     <None Remove="ClientApp\src\app\core.module.ts" />
+    <None Remove="ClientApp\src\app\layouts\elements\base-control-value-accessor.ts" />
     <None Remove="ClientApp\src\app\layouts\elements\se-button\se-button.component.ts" />
+    <None Remove="ClientApp\src\app\layouts\elements\se-checkbox\se-checkbox.component.ts" />
+    <None Remove="ClientApp\src\app\layouts\elements\se-dropdown\se-dropdown.component.ts" />
+    <None Remove="ClientApp\src\app\layouts\elements\se-textbox\se-textbox.component.ts" />
     <None Remove="ClientApp\src\app\layouts\footer\footer.component.ts" />
     <None Remove="ClientApp\src\app\layouts\header\header.component.ts" />
     <None Remove="ClientApp\src\app\layouts\panel-aside\panel-aside.component.ts" />
@@ -63,7 +67,11 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\app\core.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\layouts\elements\base-control-value-accessor.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\layouts\elements\se-button\se-button.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\layouts\elements\se-checkbox\se-checkbox.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\layouts\elements\se-dropdown\se-dropdown.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\layouts\elements\se-textbox\se-textbox.component.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\layouts\footer\footer.component.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\layouts\header\header.component.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\layouts\panel-aside\panel-aside.component.ts" />

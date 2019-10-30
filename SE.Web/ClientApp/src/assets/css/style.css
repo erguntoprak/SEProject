@@ -3164,13 +3164,14 @@ ul.list-inline li {
 .single-place:hover .single-place-image {
     transform: scale(1.1);
 }
-
+.dash-content{
+  padding:10px 0;
+}
 .explore-place {
-    transition: all 0.5s;
-    transform: translateY(40px);
-    opacity: 0;
-    transition-delay: 0.4s;
-
+  transition: all 0.5s;
+  transform: translateY(40px);
+  opacity: 0;
+  transition-delay: 0.4s;
 }
 
 

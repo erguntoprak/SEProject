@@ -6,6 +6,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { PanelLayoutComponent } from './layouts/panel-layout/panel-layout.component';
 import { DashBoardComponent } from './pages/panel-pages/dashboard/dashboard.component';
 import { EducationListComponent } from './pages/panel-pages/education/education-list/education-list.component';
+import { EducationCreateComponent } from './pages/panel-pages/education/education-create/education-create.component';
 
 const routes: Routes = [
   {
@@ -29,6 +30,9 @@ const routes: Routes = [
       },
       {
         path: 'egitim-listesi', component: EducationListComponent
+      },
+      {
+        path: 'egitim-ekle', component: EducationCreateComponent
       }
     ]
   },
