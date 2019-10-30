@@ -15,6 +15,7 @@ import { BaseControlValueAccessor } from '../base-control-value-accessor';
 })
 export class SeTextBox extends BaseControlValueAccessor<string>{
 
-  @Input() placeholder: string;
+  @Input() placeholder: string = '';
+  @Input() disabled: boolean;
 
 }

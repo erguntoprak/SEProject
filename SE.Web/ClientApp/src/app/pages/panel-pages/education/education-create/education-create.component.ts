@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'se-education-create',
   templateUrl: './education-create.component.html'
 })
-export class EducationCreateComponent {
+export class EducationCreateComponent implements OnInit {
     educationForm: FormGroup;
     submitted = false;
 
@@ -18,7 +18,7 @@ export class EducationCreateComponent {
     }
     onSubmit() {
       this.submitted = true;
-
+      debugger;
       // stop here if form is invalid
       if (this.educationForm.invalid) {
           return;

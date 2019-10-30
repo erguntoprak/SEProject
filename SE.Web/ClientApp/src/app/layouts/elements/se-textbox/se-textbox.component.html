@@ -1,1 +1,8 @@
-<input type="text" class="form-control filter-input" placeholder="{{placeholder}}">
+<input type="text"
+class="form-control filter-input"
+[placeholder]="placeholder"
+[value]="value"
+[disabled]="disabled"
+(input)="onChanged($event.target.value)"
+(blur)="onTouched()"
+>
