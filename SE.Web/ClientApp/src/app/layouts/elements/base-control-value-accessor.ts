@@ -6,8 +6,8 @@ export class BaseControlValueAccessor<T> implements ControlValueAccessor {
   /**
    * Call when value has changed programmatically
    */
-  private onChanged() {}
-  private onTouched() {}
+  protected onChanged(newValue:T) {}
+  protected onTouched() {}
   public value: T;
 
 
@@ -15,8 +15,8 @@ export class BaseControlValueAccessor<T> implements ControlValueAccessor {
   /**
    * Model -> View changes
    */
-  public writeValue(obj: T): void { debugger; this.value = obj; }
-  public registerOnChange(fn: any): void {debugger; this.onChanged = fn; }
-  public registerOnTouched(fn: any): void {debugger; this.onTouched = fn; }
+  public writeValue(obj: T): void { this.value = obj; }
+  public registerOnChange(fn: any): void { this.onChanged = fn; }
+  public registerOnTouched(fn: any): void { this.onTouched = fn; }
   public setDisabledState?(isDisabled: boolean): void { this.disabled = isDisabled; }
 }

@@ -7091,6 +7091,9 @@ input[type="radio"] {
 .switcher-button i:before {
     -webkit-animation: rotation 2s infinite linear;
 }
+.cke_button__about {
+display: none!important;
+}
 
 @-webkit-keyframes rotation {
     from {

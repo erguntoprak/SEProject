@@ -18,17 +18,7 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label>Category</label>
-                    <div class="nice-select filter-input" tabindex="0">
-                      <span class="current">Select Categories</span>
-                      <ul class="list">
-                        <li class="option selected focus">Hotels</li>
-                        <li class="option">Restaurants</li>
-                        <li class="option">Shopping</li>
-                        <li class="option">Eat &amp; Drink</li>
-                        <li class="option">Events</li>
-                        <li class="option">Fitness</li>
-                      </ul>
-                    </div>
+                   <se-dropdown formControlName="educationType" title="Eğitim Tipi" [dataList]="category"></se-dropdown>
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -38,6 +28,7 @@
                       type="text"
                       class="form-control filter-input"
                       placeholder="Keywords should be separated by commas"
+                      
                     />
                   </div>
                 </div>
@@ -55,12 +46,7 @@
                   <form>
                     <div class="form-group">
                       <label for="list_info">Description</label>
-                      <textarea
-                        class="form-control"
-                        id="list_info"
-                        rows="4"
-                        placeholder="Enter your text here"
-                      ></textarea>
+                      <textarea [froalaEditor] formControlName="description"></textarea>
                     </div>
                   </form>
                 </div>
