@@ -11,5 +11,6 @@ namespace SE.Web.Controllers
     [ApiController]
     public class AttributeController : ControllerBase
     {
+
     }
 }

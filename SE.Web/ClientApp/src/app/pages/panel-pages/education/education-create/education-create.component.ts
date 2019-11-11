@@ -1,63 +1,83 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { v4 as uuid } from 'uuid';
-
+import * as $ from 'jquery';
 @Component({
-  selector: 'se-education-create',
-  templateUrl: './education-create.component.html'
+    selector: 'se-education-create',
+    templateUrl: './education-create.component.html'
 })
 export class EducationCreateComponent implements OnInit {
     educationForm: FormGroup;
     submitted = false;
-    category = [{"Text":'İlk Okul',"Value":1},
-    {"Text":'Orta Okul',"Value":2},
-    {"Text":'Lise',"Value":3},
-    {"Text":'Üniversite',"Value":4},
-    {"Text":'Dil Okulları',"Value":5}
-  ];
-  urlImages: KeyValueModel[] = [];
-  physicalFacilities = ["Elevator in building", "Air Conditioned", "Free Wi Fi", "Free Parking on premises", "Instant Book","Pet Friendly"]
-  removeImage(id) {
-    this.urlImages = this.urlImages.filter(el => el.key !== id);
-    var deleteImage = document.getElementById(id);
-    deleteImage.remove();
-  }
-  onSelectFile(event) {
-    if (event.target.files && event.target.files[0]) {
-      var filesAmount = event.target.files.length;
-      for (let i = 0; i < filesAmount; i++) {
-        var reader = new FileReader();
+    category = [{ "Text": 'İlk Okul', "Value": 1 },
+    { "Text": 'Orta Okul', "Value": 2 },
+    { "Text": 'Lise', "Value": 3 },
+    { "Text": 'Üniversite', "Value": 4 },
+    { "Text": 'Dil Okulları', "Value": 5 }
+    ];
 
-        reader.onload = (event: any) => {
-          this.urlImages.push({ key: uuid() , value: event.target.result});
-        }
-
-        reader.readAsDataURL(event.target.files[i]);
-      }
+    physicalFacilities = [{ "Id": 1, "Name": "Deneme1" },
+        { "Id": 2, "Name": "Deneme2" },
+        { "Id": 3, "Name": "Deneme3" },
+        { "Id": 4, "Name": "Deneme4" },
+        { "Id": 5, "Name": "Deneme5" }
+    ];
+    urlImages: KeyValueModel[] = [];
+    removeImage(id) {
+        this.urlImages = this.urlImages.filter(el => el.key !== id);
+        var deleteImage = document.getElementById(id);
+        deleteImage.remove();
     }
-  }
+    onSelectFile(event) {
+        if (event.target.files && event.target.files[0]) {
+            var filesAmount = event.target.files.length;
+            for (let i = 0; i < filesAmount; i++) {
+                var reader = new FileReader();
 
-  constructor(private formBuilder: FormBuilder) { }
+                reader.onload = (event: any) => {
+                    this.urlImages.push({ key: uuid(), value: event.target.result });
+                }
 
-  ngOnInit() {
-  
+                reader.readAsDataURL(event.target.files[i]);
+            }
+        }
+    }
+
+    constructor(private formBuilder: FormBuilder) { }
+
+    ngOnInit() {
+        $(document).ready(function () {
+            //@ts-ignore
+            CKEDITOR.replace('editor1');
+        });
         this.educationForm = this.formBuilder.group({
-          educationName: ['asdasd', Validators.required],
-          educationType : [0,Validators.required],
-          description: ['',Validators.required],
-          physicalFacilities: this.formBuilder.array([])
+            educationName: ['asdasd', Validators.required],
+            educationType: [0, Validators.required],
+            description: ['', Validators.required],
+            physicalFacilities: this.formBuilder.array([])
         });
     }
+    onChange(name: string, isChecked: boolean) {
+        const emailFormArray = <FormArray>this.educationForm.controls.physicalFacilities;
+
+        if (isChecked) {
+            emailFormArray.push(new FormControl(name));
+        } else {
+            let index = emailFormArray.controls.findIndex(x => x.value == name)
+            emailFormArray.removeAt(index);
+        }
+    }
     onSubmit() {
-      this.submitted = true;
-      //@ts-ignore
-      this.educationForm.get('description').setValue(CKEDITOR.instances.editor.getData());
+        debugger;
+        this.submitted = true;
+        //@ts-ignore
+        this.educationForm.get('description').setValue(CKEDITOR.instances.editor1.getData());
 
-      if (this.educationForm.invalid) {
-          return;
-      }
+        if (this.educationForm.invalid) {
+            return;
+        }
 
-      // display form values on success
-      alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.educationForm.value, null, 4));
-  }
+        // display form values on success
+        alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.educationForm.value, null, 4));
+    }
 }

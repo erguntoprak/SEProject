@@ -14,9 +14,6 @@ import { v4 as uuid } from 'uuid';
   ]
 })
 export class SeCheckBox extends BaseControlValueAccessor<number> {
-  @Input() text: string;
-
-  generateValue() {
-    return uuid();
-  }
+    @Input() text: string;
+    id = uuid();
 }

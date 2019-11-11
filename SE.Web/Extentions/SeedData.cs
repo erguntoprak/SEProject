@@ -12,6 +12,7 @@ namespace SE.Web.Extentions
     {
         public static void SeedDataSaved(EntitiesDbContext context)
         {
+            context.Database.Migrate();
             if (!context.EducationAttributeCategory.Any())
             {
                 var fizikselImkanlar = new EducationAttributeCategory() { Name = "Fiziksel İmkanlar" };
