@@ -4,18 +4,22 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EducationCreateComponent } from './education-create.component';
 import { SeTextBox } from '../../../../layouts/elements/se-textbox/se-textbox.component';
 import { SeDropdown } from 'src/app/layouts/elements/se-dropdown/se-dropdown.component';
-import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
+import { SeCheckBox } from 'src/app/layouts/elements/se-checkbox/se-checkbox.component';
+
+
 @NgModule({
   declarations: [
     EducationCreateComponent,
     SeTextBox,
-    SeDropdown
+    SeDropdown,
+    SeCheckBox
   ],
-  imports: [SharedModule,FormsModule,ReactiveFormsModule,FroalaEditorModule.forRoot(), FroalaViewModule.forRoot()],
+  imports: [SharedModule, FormsModule, ReactiveFormsModule],
   exports: [
     EducationCreateComponent,
     SeTextBox,
-    SeDropdown
+    SeDropdown,
+    SeCheckBox
   ]
 })
 export class EducationCreateModule { }

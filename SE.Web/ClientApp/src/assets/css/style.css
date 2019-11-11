@@ -51,6 +51,26 @@
 /*-----------------------------------------------------------
             General Styles 
 -------------------------------------------------------------*/
+.remove-button {
+  position: absolute;
+  z-index:2;
+  color: white;
+  height: 30px;
+  width: 30px;
+  border-radius: 20px;
+  right: 1px;
+  background-color: red;
+}
+  .remove-button:hover {
+    background-color: #cc0000;
+  }
+  .remove-button .ion-android-close {
+    position: absolute;
+    right: 9px;
+    font-size: 22px;
+  }
+
+
 
 dl,
 dt,
@@ -58,8 +78,8 @@ dd,
 ol,
 ul,
 li {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 a {
@@ -7093,6 +7113,9 @@ input[type="radio"] {
 }
 .cke_button__about {
 display: none!important;
+}
+.ae-font .ae-picker-label:before{
+    top:-2px!important;
 }
 
 @-webkit-keyframes rotation {

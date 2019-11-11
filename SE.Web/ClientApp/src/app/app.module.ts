@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { CKEditorModule } from 'ngx-ckeditor';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SeButton } from './layouts/elements/se-button/se-button.component';
@@ -34,7 +33,6 @@ import { EducationCreateModule } from './pages/panel-pages/education/education-c
     PanelLayoutModule,
     DashBoardModule,
     EducationListModule,
-    CKEditorModule,
     EducationCreateModule
   ],
   bootstrap: [AppComponent]

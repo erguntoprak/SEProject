@@ -7,11 +7,15 @@ interface RegisterModel {
   email: string;
   password: string;
 }
-interface User{
+interface User {
   id:string;
   name:string;
   surname:string;
   email:string;
   userName:string;
   token:string;
+}
+interface KeyValueModel {
+  key: any;
+  value: any;
 }
