@@ -23,7 +23,6 @@ namespace SE.Data
             modelBuilder.ApplyConfiguration(new EducationAttributeMap());
             modelBuilder.ApplyConfiguration(new UserMap());
             modelBuilder.ApplyConfiguration(new CategoryMap());
-     
         }
         public DbSet<Education> Education { get; set; }
         public DbSet<EducationAttribute> EducationAttribute { get; set; }

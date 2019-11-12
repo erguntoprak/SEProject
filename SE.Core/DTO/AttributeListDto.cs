@@ -7,7 +7,7 @@ namespace SE.Core.DTO
     public class AttributeListDto
     {
         public string CategoryName { get; set; }
-        public int Id { get; set; }
-        public string Name { get; set; }
+        public List<AttributeDto> AttributeDtoList { get; set; }
+        public bool Selected { get; set; }
     }
 }

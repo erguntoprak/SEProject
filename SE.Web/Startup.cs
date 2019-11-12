@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using SE.Core.Entities;
 using SE.Data;
+using SE.Web.Extentions;
 using SE.Web.Model;
 using SE.Web.Model.Validations;
 using System;
@@ -39,6 +40,7 @@ namespace SE.Web
                 cfg.Password.RequireNonAlphanumeric = false;
             }).AddEntityFrameworkStores<EntitiesDbContext>();
 
+
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -60,7 +62,7 @@ namespace SE.Web
             string sqlConnection = @"Server =(LocalDB)\mssqllocaldb; Database = SeData; Trusted_Connection = True;";
             services.AddDbContext<EntitiesDbContext>(dbcontextoption => dbcontextoption.UseSqlServer(sqlConnection, b => b.MigrationsAssembly("SE.Web")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddFluentValidation();
-
+            services.DependencyRegister();
             services.AddTransient<IValidator<LoginModel>, LoginModelValidator>();
 
             services.AddSpaStaticFiles(configuration =>

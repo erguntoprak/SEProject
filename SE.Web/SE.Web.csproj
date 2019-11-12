@@ -61,6 +61,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SE.Business\SE.Business.csproj" />
     <ProjectReference Include="..\SE.Core\SE.Core.csproj" />
     <ProjectReference Include="..\SE.Data\SE.Data.csproj" />
   </ItemGroup>

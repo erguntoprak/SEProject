@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { v4 as uuid } from 'uuid';
 import * as $ from 'jquery';
+import { BaseService } from '../../../../shared/base.service';
 @Component({
     selector: 'se-education-create',
     templateUrl: './education-create.component.html'
@@ -15,14 +16,17 @@ export class EducationCreateComponent implements OnInit {
     { "Text": 'Üniversite', "Value": 4 },
     { "Text": 'Dil Okulları', "Value": 5 }
     ];
-
-    physicalFacilities = [{ "Id": 1, "Name": "Deneme1" },
-        { "Id": 2, "Name": "Deneme2" },
-        { "Id": 3, "Name": "Deneme3" },
-        { "Id": 4, "Name": "Deneme4" },
-        { "Id": 5, "Name": "Deneme5" }
+    attributeList: any;
+    physicalFacilities = [{ "Id": 1, "Name": "Deneme1","Selected":true},
+        { "Id": 2, "Name": "Deneme2", "Selected": true },
+        { "Id": 3, "Name": "Deneme3", "Selected": true },
+        { "Id": 4, "Name": "Deneme4", "Selected": true },
+        { "Id": 5, "Name": "Deneme5", "Selected": true }
     ];
     urlImages: KeyValueModel[] = [];
+
+    constructor(private formBuilder: FormBuilder, private baseService: BaseService) { }
+
     removeImage(id) {
         this.urlImages = this.urlImages.filter(el => el.key !== id);
         var deleteImage = document.getElementById(id);
@@ -43,9 +47,12 @@ export class EducationCreateComponent implements OnInit {
         }
     }
 
-    constructor(private formBuilder: FormBuilder) { }
 
     ngOnInit() {
+        this.baseService.getAll("Attribute/GetAllAttributeList").subscribe(data => {
+            debugger;
+            this.attributeList = data;
+        });
         $(document).ready(function () {
             //@ts-ignore
             CKEDITOR.replace('editor1');
