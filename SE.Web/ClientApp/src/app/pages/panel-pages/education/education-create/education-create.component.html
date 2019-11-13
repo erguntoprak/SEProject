@@ -57,27 +57,27 @@
               </div>
             </div>
           </div>
-          <div class="db-add-list-wrap">
+          <div *ngFor="let attribute of attributeList" class="db-add-list-wrap">
             <div class="act-title">
-              <h5><i class="ion-ios-home"></i> Fiziksel İmkanlar</h5>
+              <h5><i class="ion-ios-home"></i>{{ attribute.categoryName }}</h5>
             </div>
             <div class="db-add-listing">
               <div class="row">
                 <div class="col-md-12">
                   <div class="form-group">
-                    <div *ngFor="let physicalFacilityItem of physicalFacilities" class="filter-checkbox">
-                      <se-checkbox (change)="onChange(physicalFacilityItem.Id, $event.target.checked)" [text]="physicalFacilityItem.Name"></se-checkbox>
+                    <div *ngFor="let attribute of attribute.attributeDtoList" class="filter-checkbox">
+                      <se-checkbox (change)="onChange(attribute.id, $event.target.checked)" [text]="attribute.name"></se-checkbox>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="db-add-listing">
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                   <button type="submit"> Kaydet</button>
-                  </div>
+          </div>
+          <div class="db-add-list-wrap">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <button type="submit"> Kaydet</button>
                 </div>
               </div>
             </div>

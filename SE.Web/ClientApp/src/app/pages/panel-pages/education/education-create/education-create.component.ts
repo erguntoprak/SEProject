@@ -10,12 +10,7 @@ import { BaseService } from '../../../../shared/base.service';
 export class EducationCreateComponent implements OnInit {
     educationForm: FormGroup;
     submitted = false;
-    category = [{ "Text": 'İlk Okul', "Value": 1 },
-    { "Text": 'Orta Okul', "Value": 2 },
-    { "Text": 'Lise', "Value": 3 },
-    { "Text": 'Üniversite', "Value": 4 },
-    { "Text": 'Dil Okulları', "Value": 5 }
-    ];
+    category : any;
     attributeList: any;
     physicalFacilities = [{ "Id": 1, "Name": "Deneme1","Selected":true},
         { "Id": 2, "Name": "Deneme2", "Selected": true },
@@ -50,8 +45,10 @@ export class EducationCreateComponent implements OnInit {
 
     ngOnInit() {
         this.baseService.getAll("Attribute/GetAllAttributeList").subscribe(data => {
-            debugger;
             this.attributeList = data;
+        });
+        this.baseService.getAll("Category/GetAllCategoryList").subscribe(data => {
+            this.category = data;
         });
         $(document).ready(function () {
             //@ts-ignore
@@ -61,17 +58,17 @@ export class EducationCreateComponent implements OnInit {
             educationName: ['asdasd', Validators.required],
             educationType: [0, Validators.required],
             description: ['', Validators.required],
-            physicalFacilities: this.formBuilder.array([])
+            attributes: this.formBuilder.array([])
         });
     }
-    onChange(name: string, isChecked: boolean) {
-        const emailFormArray = <FormArray>this.educationForm.controls.physicalFacilities;
+    onChange(id: string, isChecked: boolean) {
+        const attributes = <FormArray>this.educationForm.controls.attributes;
 
         if (isChecked) {
-            emailFormArray.push(new FormControl(name));
+            attributes.push(new FormControl(id));
         } else {
-            let index = emailFormArray.controls.findIndex(x => x.value == name)
-            emailFormArray.removeAt(index);
+            let index = attributes.controls.findIndex(x => x.value == id)
+            attributes.removeAt(index);
         }
     }
     onSubmit() {

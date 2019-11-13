@@ -47,6 +47,23 @@ namespace SE.Web.Extentions
                 context.EducationAttribute.AddRange(attributes);
                 context.SaveChanges();
             }
+
+            if (!context.Category.Any())
+            {
+                var categoryList = new List<Category>{
+                    new Category { Name="Özel Anaokul" },
+                    new Category { Name="Özel İlkokul" },
+                    new Category { Name="Özel Ortaokul" },
+                    new Category { Name="Özel Lise" },
+                    new Category { Name="Özel Anadolu Lisesi" },
+                    new Category { Name="Kolej" },
+                    new Category { Name="Dil Okulu & Kursu" },
+                    new Category { Name="Kişisel Gelişim Kursu" },
+                    new Category { Name="Kurs Merkezi" }
+                };
+                context.Category.AddRange(categoryList);
+                context.SaveChanges();
+            }
         }
     }
 }

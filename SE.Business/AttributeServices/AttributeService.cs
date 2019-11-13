@@ -21,21 +21,28 @@ namespace SE.Business.AttributeServices
 
         public List<AttributeListDto> GetAllEducationAttributeList()
         {
-            var educationAttributeList = (from r in _educationAttributeRepo.Table
-                                          join s in _educationAttributeCategoryRepo.Table
-                                          on r.EducationAttributeCategoryId equals s.Id
-                                          group new { r, s } by new { s.Name }
-                                         into grp
-                                          select new AttributeListDto
-                                          {
-                                              CategoryName = grp.Key.Name,
-                                              AttributeDtoList = grp.Select(d => new AttributeDto
+            try
+            {
+                var educationAttributeList = (from r in _educationAttributeRepo.Table
+                                              join s in _educationAttributeCategoryRepo.Table
+                                              on r.EducationAttributeCategoryId equals s.Id
+                                              group new { r, s } by new { s.Name }
+                             into grp
+                                              select new AttributeListDto
                                               {
-                                                  Id = d.r.Id,
-                                                  Name = d.r.Name
-                                              }).ToList()
-                                          }).ToList();
-            return educationAttributeList;
+                                                  CategoryName = grp.Key.Name,
+                                                  AttributeDtoList = grp.Select(d => new AttributeDto
+                                                  {
+                                                      Id = d.r.Id,
+                                                      Name = d.r.Name
+                                                  }).ToList()
+                                              }).ToList();
+                return educationAttributeList;
+            }
+            catch (Exception ex)
+            {
+                throw ex; 
+            }
         }
     }
 }

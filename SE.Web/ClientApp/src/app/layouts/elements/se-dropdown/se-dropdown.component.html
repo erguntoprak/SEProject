@@ -3,7 +3,7 @@
 <div class="nice-select filter-input" tabindex="0">
   <span class="current">{{title}}</span>
   <ul class="list">
-    <li *ngFor="let item of dataList" (click)="selectedValue(item.Value)" class="option">{{item.Text}}</li>
+    <li *ngFor="let item of dataList" (click)="selectedValue(item.id)" class="option">{{item.name}}</li>
   </ul>
 </div>
 
