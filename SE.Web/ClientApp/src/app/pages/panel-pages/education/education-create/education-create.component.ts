@@ -1,32 +1,55 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { v4 as uuid } from 'uuid';
-import * as $ from 'jquery';
 import { BaseService } from '../../../../shared/base.service';
+import { ResponseModel } from '../../../../shared/response-model';
 @Component({
     selector: 'se-education-create',
     templateUrl: './education-create.component.html'
 })
 export class EducationCreateComponent implements OnInit {
     educationForm: FormGroup;
+    errorList = [];
     submitted = false;
-    category : any;
-    attributeList: any;
-    physicalFacilities = [{ "Id": 1, "Name": "Deneme1","Selected":true},
-        { "Id": 2, "Name": "Deneme2", "Selected": true },
-        { "Id": 3, "Name": "Deneme3", "Selected": true },
-        { "Id": 4, "Name": "Deneme4", "Selected": true },
-        { "Id": 5, "Name": "Deneme5", "Selected": true }
-    ];
+    category: object;
+    attributeList: object;
     urlImages: KeyValueModel[] = [];
 
     constructor(private formBuilder: FormBuilder, private baseService: BaseService) { }
 
+    ngOnInit() {
+        this.getAllCallMethod();
+        //@ts-ignore
+        CKEDITOR.replace('editor1');
+        this.educationForm = this.formBuilder.group({
+            educationName: ['asdasd', Validators.required],
+            educationType: [0, Validators.required],
+            description: ['', Validators.required],
+            attributes: this.formBuilder.array([])
+        });
+    }
+
+    onSubmit() {
+        debugger;
+        this.submitted = true;
+        //@ts-ignore
+        this.educationForm.get('description').setValue(CKEDITOR.instances.editor1.getData());
+
+        if (this.educationForm.invalid) {
+            return;
+        }
+
+        // display form values on success
+        alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.educationForm.value, null, 4));
+    }
+
+    //remove selected image
     removeImage(id) {
         this.urlImages = this.urlImages.filter(el => el.key !== id);
         var deleteImage = document.getElementById(id);
         deleteImage.remove();
     }
+    //select image
     onSelectFile(event) {
         if (event.target.files && event.target.files[0]) {
             var filesAmount = event.target.files.length;
@@ -41,26 +64,7 @@ export class EducationCreateComponent implements OnInit {
             }
         }
     }
-
-
-    ngOnInit() {
-        this.baseService.getAll("Attribute/GetAllAttributeList").subscribe(data => {
-            this.attributeList = data;
-        });
-        this.baseService.getAll("Category/GetAllCategoryList").subscribe(data => {
-            this.category = data;
-        });
-        $(document).ready(function () {
-            //@ts-ignore
-            CKEDITOR.replace('editor1');
-        });
-        this.educationForm = this.formBuilder.group({
-            educationName: ['asdasd', Validators.required],
-            educationType: [0, Validators.required],
-            description: ['', Validators.required],
-            attributes: this.formBuilder.array([])
-        });
-    }
+    //Checkbox change checked type
     onChange(id: string, isChecked: boolean) {
         const attributes = <FormArray>this.educationForm.controls.attributes;
 
@@ -71,17 +75,19 @@ export class EducationCreateComponent implements OnInit {
             attributes.removeAt(index);
         }
     }
-    onSubmit() {
-        debugger;
-        this.submitted = true;
-        //@ts-ignore
-        this.educationForm.get('description').setValue(CKEDITOR.instances.editor1.getData());
-
-        if (this.educationForm.invalid) {
-            return;
-        }
-
-        // display form values on success
-        alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.educationForm.value, null, 4));
+    //Gel All
+    getAllCallMethod() {
+        this.baseService.getAll<ResponseModel>("Attribute/GetAllAttributeList").subscribe(responseModel => {
+            this.attributeList = responseModel.data;
+            if (responseModel.errorMessage.length > 0) {
+                this.errorList = this.errorList.concat(responseModel.errorMessage);
+            }
+        });
+        this.baseService.getAll<ResponseModel>("Category/GetAllCategoryList").subscribe(responseModel => {
+            this.category = responseModel.data;
+            if (responseModel.errorMessage.length > 0) {
+                this.errorList = this.errorList.concat(responseModel.errorMessage);
+            }
+        });
     }
 }

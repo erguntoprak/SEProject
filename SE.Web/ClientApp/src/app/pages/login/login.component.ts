@@ -56,7 +56,6 @@ export class LoginComponent implements OnInit {
       password: this.loginForm.value.password
     };
     this.authService.login(this.loginModel).subscribe(data => {
-      debugger;
       this.spinner.hide();
       this.router.navigate(['/']);
     });

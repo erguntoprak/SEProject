@@ -13,38 +13,38 @@ namespace SE.Web.Extentions
         public static void SeedDataSaved(EntitiesDbContext context)
         {
             context.Database.Migrate();
-            if (!context.EducationAttributeCategory.Any())
+            if (!context.AttributeCategory.Any())
             {
-                var fizikselImkanlar = new EducationAttributeCategory() { Name = "Fiziksel İmkanlar" };
-                var hizmetler = new EducationAttributeCategory() { Name = "Hizmetler" };
-                var kulupler = new EducationAttributeCategory() { Name = "Kulüpler" };
+                var fizikselImkanlar = new AttributeCategory() { Name = "Fiziksel İmkanlar" };
+                var hizmetler = new AttributeCategory() { Name = "Hizmetler" };
+                var kulupler = new AttributeCategory() { Name = "Kulüpler" };
 
-                context.EducationAttributeCategory.Add(fizikselImkanlar);
-                context.EducationAttributeCategory.Add(hizmetler);
-                context.EducationAttributeCategory.Add(kulupler);
+                context.AttributeCategory.Add(fizikselImkanlar);
+                context.AttributeCategory.Add(hizmetler);
+                context.AttributeCategory.Add(kulupler);
 
-                var attributes = new List<EducationAttribute>
+                var attributes = new List<Core.Entities.Attribute>
                 {
-                    new EducationAttribute {EducationAttributeCategoryId=fizikselImkanlar.Id, Name="Uyku Odası", Description="", DisplayOrder=0},
-                    new EducationAttribute {EducationAttributeCategoryId=fizikselImkanlar.Id, Name="Yemekhane", Description="", DisplayOrder=1},
-                    new EducationAttribute {EducationAttributeCategoryId=fizikselImkanlar.Id, Name="Havuz", Description="", DisplayOrder=2},
-                    new EducationAttribute {EducationAttributeCategoryId=fizikselImkanlar.Id, Name="Oyun Alanı", Description="", DisplayOrder=3},
-                    new EducationAttribute {EducationAttributeCategoryId=fizikselImkanlar.Id, Name="Bahçe", Description="", DisplayOrder=3},
+                    new Core.Entities.Attribute { AttributeCategoryId= fizikselImkanlar.Id, Name="Uyku Odası", Description="", DisplayOrder=0},
+                    new Core.Entities.Attribute { AttributeCategoryId= fizikselImkanlar.Id, Name="Yemekhane", Description="", DisplayOrder=1},
+                    new Core.Entities.Attribute { AttributeCategoryId= fizikselImkanlar.Id, Name="Havuz", Description="", DisplayOrder=2},
+                    new Core.Entities.Attribute { AttributeCategoryId= fizikselImkanlar.Id, Name="Oyun Alanı", Description="", DisplayOrder=3},
+                    new Core.Entities.Attribute { AttributeCategoryId= fizikselImkanlar.Id, Name="Bahçe", Description="", DisplayOrder=3},
 
-                    new EducationAttribute {EducationAttributeCategoryId=hizmetler.Id, Name="Güvenlik", Description="", DisplayOrder=0},
-                    new EducationAttribute {EducationAttributeCategoryId=hizmetler.Id, Name="Rehberlik", Description="", DisplayOrder=1},
-                    new EducationAttribute {EducationAttributeCategoryId=hizmetler.Id, Name="Servis", Description="", DisplayOrder=2},
-                    new EducationAttribute {EducationAttributeCategoryId=hizmetler.Id, Name="Oyun Grubu", Description="", DisplayOrder=3},
-                    new EducationAttribute {EducationAttributeCategoryId=hizmetler.Id, Name="Organik Beslenme", Description="", DisplayOrder=3},
+                    new Core.Entities.Attribute { AttributeCategoryId= hizmetler.Id, Name="Güvenlik", Description="", DisplayOrder=0},
+                    new Core.Entities.Attribute { AttributeCategoryId= hizmetler.Id, Name="Rehberlik", Description="", DisplayOrder=1},
+                    new Core.Entities.Attribute { AttributeCategoryId= hizmetler.Id, Name="Servis", Description="", DisplayOrder=2},
+                    new Core.Entities.Attribute { AttributeCategoryId= hizmetler.Id, Name="Oyun Grubu", Description="", DisplayOrder=3},
+                    new Core.Entities.Attribute { AttributeCategoryId= hizmetler.Id, Name="Organik Beslenme", Description="", DisplayOrder=3},
 
-                    new EducationAttribute {EducationAttributeCategoryId=kulupler.Id, Name="Satranç", Description="", DisplayOrder=0},
-                    new EducationAttribute {EducationAttributeCategoryId=kulupler.Id, Name="Rehberlik", Description="", DisplayOrder=1},
-                    new EducationAttribute {EducationAttributeCategoryId=kulupler.Id, Name="Müzik Kulübü", Description="", DisplayOrder=2},
-                    new EducationAttribute {EducationAttributeCategoryId=kulupler.Id, Name="Gezi Kulübü", Description="", DisplayOrder=3},
-                    new EducationAttribute {EducationAttributeCategoryId=kulupler.Id, Name="Akıl ve Zeka Oyunları", Description="", DisplayOrder=3},
+                    new Core.Entities.Attribute { AttributeCategoryId= kulupler.Id, Name="Satranç", Description="", DisplayOrder=0},
+                    new Core.Entities.Attribute { AttributeCategoryId= kulupler.Id, Name="Rehberlik", Description="", DisplayOrder=1},
+                    new Core.Entities.Attribute { AttributeCategoryId= kulupler.Id, Name="Müzik Kulübü", Description="", DisplayOrder=2},
+                    new Core.Entities.Attribute { AttributeCategoryId= kulupler.Id, Name="Gezi Kulübü", Description="", DisplayOrder=3},
+                    new Core.Entities.Attribute { AttributeCategoryId= kulupler.Id, Name="Akıl ve Zeka Oyunları", Description="", DisplayOrder=3},
 
                 };
-                context.EducationAttribute.AddRange(attributes);
+                context.Attribute.AddRange(attributes);
                 context.SaveChanges();
             }
 

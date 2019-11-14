@@ -90,7 +90,7 @@ namespace SE.Web.Controllers
                 responseModel.ErrorMessage.Add("Email veya password yanlış");
                 return NotFound(responseModel);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 responseModel.ErrorMessage.Add("Bilinmeyen bir hata oluştu.Lütfen işlemi tekrar deneyiniz.");
                 return StatusCode(StatusCodes.Status500InternalServerError, responseModel);

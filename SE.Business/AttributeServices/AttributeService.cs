@@ -10,10 +10,10 @@ namespace SE.Business.AttributeServices
 {
     public class AttributeService : IAttributeService
     {
-        private readonly IRepository<EducationAttribute> _educationAttributeRepo;
-        private readonly IRepository<EducationAttributeCategory> _educationAttributeCategoryRepo;
+        private readonly IRepository<Core.Entities.Attribute> _educationAttributeRepo;
+        private readonly IRepository<AttributeCategory> _educationAttributeCategoryRepo;
 
-        public AttributeService(IRepository<EducationAttribute> educationAttributeRepo, IRepository<EducationAttributeCategory> educationAttributeCategoryRepo)
+        public AttributeService(IRepository<Core.Entities.Attribute> educationAttributeRepo, IRepository<AttributeCategory> educationAttributeCategoryRepo)
         {
             _educationAttributeRepo = educationAttributeRepo;
             _educationAttributeCategoryRepo = educationAttributeCategoryRepo;
@@ -25,7 +25,7 @@ namespace SE.Business.AttributeServices
             {
                 var educationAttributeList = (from r in _educationAttributeRepo.Table
                                               join s in _educationAttributeCategoryRepo.Table
-                                              on r.EducationAttributeCategoryId equals s.Id
+                                              on r.AttributeCategoryId equals s.Id
                                               group new { r, s } by new { s.Name }
                              into grp
                                               select new AttributeListDto

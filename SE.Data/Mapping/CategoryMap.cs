@@ -11,7 +11,7 @@ namespace SE.Data.Mapping
     {
         public void Configure(EntityTypeBuilder<Category> builder)
         {
-            builder.ToTable("EducationCategory");
+            builder.ToTable("Category");
             builder.HasKey(d => d.Id);
 
             builder.Property(d => d.Name).HasMaxLength(100).IsRequired();

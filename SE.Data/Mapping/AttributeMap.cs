@@ -7,9 +7,9 @@ using System.Text;
 
 namespace SE.Data.Mapping
 {
-    public class EducationAttributeMap : IEntityTypeConfiguration<EducationAttribute>
+    public class AttributeMap : IEntityTypeConfiguration<Core.Entities.Attribute>
     {
-        public void Configure(EntityTypeBuilder<EducationAttribute> builder)
+        public void Configure(EntityTypeBuilder<Core.Entities.Attribute> builder)
         {
             builder.ToTable("EducationAttribute");
             builder.HasKey(x => x.Id);

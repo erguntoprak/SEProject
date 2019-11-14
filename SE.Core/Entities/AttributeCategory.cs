@@ -4,13 +4,11 @@ using System.Text;
 
 namespace SE.Core.Entities
 {
-    public class Category:BaseEntity
+    public class AttributeCategory:BaseEntity
     {
         public string Name { get; set; }
-
-        public ICollection<Education> Educations { get; set; }
+        public ICollection<Attribute> Attributes{ get; set; }
         public ICollection<CategoryAttributeCategory> CategoryAttributeCategories { get; set; }
-
 
     }
 }

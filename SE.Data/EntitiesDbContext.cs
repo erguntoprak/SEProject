@@ -18,16 +18,16 @@ namespace SE.Data
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new EducationMap());
-            modelBuilder.ApplyConfiguration(new EducationAttributeCategoryMap());
-            modelBuilder.ApplyConfiguration(new EducationAttributeEducationMap());
-            modelBuilder.ApplyConfiguration(new EducationAttributeMap());
+            modelBuilder.ApplyConfiguration(new AttributeCategoryMap());
+            modelBuilder.ApplyConfiguration(new AttributeEducationMap());
+            modelBuilder.ApplyConfiguration(new AttributeMap());
             modelBuilder.ApplyConfiguration(new UserMap());
             modelBuilder.ApplyConfiguration(new CategoryMap());
         }
         public DbSet<Education> Education { get; set; }
-        public DbSet<EducationAttribute> EducationAttribute { get; set; }
-        public DbSet<EducationAttributeCategory> EducationAttributeCategory { get; set; }
-        public DbSet<EducationAttributeEducation> EducationAttributeEducation { get; set; }
+        public DbSet<Core.Entities.Attribute> Attribute { get; set; }
+        public DbSet<AttributeCategory> AttributeCategory { get; set; }
+        public DbSet<AttributeEducation> AttributeEducation { get; set; }
         public DbSet<Category> Category { get; set; }
 
 

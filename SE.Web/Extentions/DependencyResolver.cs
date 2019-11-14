@@ -12,8 +12,8 @@ namespace SE.Web.Extentions
         public static void DependencyRegister(this IServiceCollection serviceProvider)
         {
             serviceProvider.AddScoped<DbContext, EntitiesDbContext>();
-            serviceProvider.AddScoped<IRepository<EducationAttribute>, Repository<EducationAttribute>>();
-            serviceProvider.AddScoped<IRepository<EducationAttributeCategory>, Repository<EducationAttributeCategory>>();
+            serviceProvider.AddScoped<IRepository<Attribute>, Repository<Attribute>>();
+            serviceProvider.AddScoped<IRepository<AttributeCategory>, Repository<AttributeCategory>>();
             serviceProvider.AddScoped<IRepository<Category>, Repository<Category>>();
 
             serviceProvider.AddScoped<IAttributeService, AttributeService>();

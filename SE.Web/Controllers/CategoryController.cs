@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SE.Business.CategoryServices;
 using SE.Core.DTO;
+using SE.Web.Model;
 
 namespace SE.Web.Controllers
 {
@@ -13,21 +14,24 @@ namespace SE.Web.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        private readonly ICategoryService _categoryService; 
+        private readonly ICategoryService _categoryService;
         public CategoryController(ICategoryService categoryService)
         {
             _categoryService = categoryService;
         }
         [HttpGet("GetAllCategoryList")]
-        public List<CategoryDto> GetAllCategoryList()
+        public IActionResult GetAllCategoryList()
         {
+            ResponseModel responseModel = new ResponseModel();
             try
             {
-                return _categoryService.GetAllCategoryList();
+                responseModel.Data = _categoryService.GetAllCategoryList();
+                return Ok(responseModel);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                responseModel.ErrorMessage.Add("Bilinmeyen bir hata oluştu.Lütfen işlemi tekrar deneyiniz.");
+                return StatusCode(StatusCodes.Status500InternalServerError, responseModel);
             }
         }
     }

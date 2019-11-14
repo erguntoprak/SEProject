@@ -11,9 +11,9 @@ export class BaseService{
 
  
 
-  public getAll(url: string){
+  public getAll<T>(url: string){
     return this.httpClient
-      .get(`${this.domain}/${url}`);
+      .get<T>(`${this.domain}/${url}`);
   }
 
   public getById(url: string,id: number) {

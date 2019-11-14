@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SE.Business.AttributeServices;
 using SE.Core.DTO;
+using SE.Web.Model;
 
 namespace SE.Web.Controllers
 {
@@ -19,10 +20,19 @@ namespace SE.Web.Controllers
             _attributeService = attributeService;
         }
         [HttpGet("GetAllAttributeList")]
-        public List<AttributeListDto> GetAllAttributeList()
+        public IActionResult GetAllAttributeList()
         {
-            var attributeList = _attributeService.GetAllEducationAttributeList();
-            return attributeList;
+            ResponseModel responseModel = new ResponseModel();
+            try
+            {
+                responseModel.Data = _attributeService.GetAllEducationAttributeList();
+                return Ok(responseModel);
+            }
+            catch (Exception)
+            {
+                responseModel.ErrorMessage.Add("Bilinmeyen bir hata oluştu.Lütfen işlemi tekrar deneyiniz.");
+                return StatusCode(StatusCodes.Status500InternalServerError, responseModel);
+            }
         }
     }
 }
