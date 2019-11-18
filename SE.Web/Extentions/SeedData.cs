@@ -45,11 +45,7 @@ namespace SE.Web.Extentions
 
                 };
                 context.Attribute.AddRange(attributes);
-                context.SaveChanges();
-            }
 
-            if (!context.Category.Any())
-            {
                 var categoryList = new List<Category>{
                     new Category { Name="Özel Anaokul" },
                     new Category { Name="Özel İlkokul" },
@@ -63,7 +59,47 @@ namespace SE.Web.Extentions
                 };
                 context.Category.AddRange(categoryList);
                 context.SaveChanges();
+
+
+                context.CategoryAttributeCategory.Add(new CategoryAttributeCategory
+                {
+                    AttributeCategoryId = fizikselImkanlar.Id,
+                    CategoryId = 1
+                });
+                context.CategoryAttributeCategory.Add(new CategoryAttributeCategory
+                {
+                    AttributeCategoryId = hizmetler.Id,
+                    CategoryId = 1
+                });
+                context.CategoryAttributeCategory.Add(new CategoryAttributeCategory
+                {
+                    AttributeCategoryId = kulupler.Id,
+                    CategoryId = 1
+                });
+
+                context.CategoryAttributeCategory.Add(new CategoryAttributeCategory
+                {
+                    AttributeCategoryId = fizikselImkanlar.Id,
+                    CategoryId = 2
+                });
+                context.CategoryAttributeCategory.Add(new CategoryAttributeCategory
+                {
+                    AttributeCategoryId = hizmetler.Id,
+                    CategoryId = 2
+                });
+                context.CategoryAttributeCategory.Add(new CategoryAttributeCategory
+                {
+                    AttributeCategoryId = kulupler.Id,
+                    CategoryId = 3
+                });
+
+                context.SaveChanges();
+
+
+                context.SaveChanges();
             }
+
+           
         }
     }
 }

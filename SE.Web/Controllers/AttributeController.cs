@@ -19,13 +19,13 @@ namespace SE.Web.Controllers
         {
             _attributeService = attributeService;
         }
-        [HttpGet("GetAllAttributeList")]
-        public IActionResult GetAllAttributeList()
+        [HttpGet("GetAllAttributeByEducationCategoryId")]
+        public IActionResult GetAllAttributeByEducationCategoryId(int categoryId)
         {
             ResponseModel responseModel = new ResponseModel();
             try
             {
-                responseModel.Data = _attributeService.GetAllEducationAttributeList();
+                responseModel.Data = _attributeService.GetAllAttributeByEducationCategoryId(categoryId);
                 return Ok(responseModel);
             }
             catch (Exception)

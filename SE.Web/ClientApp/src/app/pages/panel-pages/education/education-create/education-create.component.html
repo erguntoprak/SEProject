@@ -18,7 +18,7 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label>Category</label>
-                    <se-dropdown formControlName="educationType" title="Eğitim Tipi" [dataList]="category">
+                    <se-dropdown formControlName="educationType" (change)="educationTypeOnChange($event)" title="Eğitim Tipi" [dataList]="category">
                     </se-dropdown>
                   </div>
                 </div>

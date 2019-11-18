@@ -1,4 +1,4 @@
-import { Component, Input, forwardRef } from '@angular/core';
+import { Component, Input, forwardRef, EventEmitter, Output } from '@angular/core';
 import { BaseControlValueAccessor } from '../base-control-value-accessor';
 import { v4 as uuid } from 'uuid';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -17,8 +17,10 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 export class SeDropdown extends BaseControlValueAccessor<number> {
   @Input() title: string;
   @Input() dataList: Array<Object>;
+  @Output() change = new EventEmitter<number>();
 
-  selectedValue(newValue:number){
+  selectedValue(newValue: number) {
+    this.change.emit(newValue);
     this.onChanged(newValue);
   }
 }

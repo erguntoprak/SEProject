@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SE.Web.Migrations
 {
-    public partial class AddTableRelation : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -50,7 +50,7 @@ namespace SE.Web.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "EducationAttributeCategory",
+                name: "AttributeCategory",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -59,7 +59,20 @@ namespace SE.Web.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EducationAttributeCategory", x => x.Id);
+                    table.PrimaryKey("PK_AttributeCategory", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Category",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Category", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -169,6 +182,54 @@ namespace SE.Web.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EducationAttribute",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    Description = table.Column<string>(maxLength: 100, nullable: false),
+                    AttributeCategoryId = table.Column<int>(nullable: false),
+                    DisplayOrder = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EducationAttribute", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EducationAttribute_AttributeCategory_AttributeCategoryId",
+                        column: x => x.AttributeCategoryId,
+                        principalTable: "AttributeCategory",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CategoryAttributeCategory",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CategoryId = table.Column<int>(nullable: false),
+                    AttributeCategoryId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CategoryAttributeCategory", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CategoryAttributeCategory_AttributeCategory_AttributeCategoryId",
+                        column: x => x.AttributeCategoryId,
+                        principalTable: "AttributeCategory",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CategoryAttributeCategory_Category_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Category",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Education",
                 columns: table => new
                 {
@@ -176,11 +237,18 @@ namespace SE.Web.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(maxLength: 100, nullable: false),
                     Description = table.Column<string>(maxLength: 100, nullable: true),
-                    UserId = table.Column<string>(nullable: false)
+                    UserId = table.Column<string>(nullable: false),
+                    CategoryId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Education", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Education_Category_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Category",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Education_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -190,48 +258,26 @@ namespace SE.Web.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "EducationAttribute",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 100, nullable: false),
-                    Description = table.Column<string>(maxLength: 100, nullable: false),
-                    EducationAttributeCategoryId = table.Column<int>(nullable: false),
-                    DisplayOrder = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EducationAttribute", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_EducationAttribute_EducationAttributeCategory_EducationAttributeCategoryId",
-                        column: x => x.EducationAttributeCategoryId,
-                        principalTable: "EducationAttributeCategory",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "EducationAttributeEducation",
+                name: "AttributeEducation",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     EducationId = table.Column<int>(nullable: false),
-                    EducationAttributeId = table.Column<int>(nullable: false),
+                    AttributeId = table.Column<int>(nullable: false),
                     IsSelected = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EducationAttributeEducation", x => x.Id);
+                    table.PrimaryKey("PK_AttributeEducation", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_EducationAttributeEducation_EducationAttribute_EducationAttributeId",
-                        column: x => x.EducationAttributeId,
+                        name: "FK_AttributeEducation_EducationAttribute_AttributeId",
+                        column: x => x.AttributeId,
                         principalTable: "EducationAttribute",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_EducationAttributeEducation_Education_EducationId",
+                        name: "FK_AttributeEducation_Education_EducationId",
                         column: x => x.EducationId,
                         principalTable: "Education",
                         principalColumn: "Id",
@@ -278,24 +324,39 @@ namespace SE.Web.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AttributeEducation_AttributeId",
+                table: "AttributeEducation",
+                column: "AttributeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AttributeEducation_EducationId",
+                table: "AttributeEducation",
+                column: "EducationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CategoryAttributeCategory_AttributeCategoryId",
+                table: "CategoryAttributeCategory",
+                column: "AttributeCategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CategoryAttributeCategory_CategoryId",
+                table: "CategoryAttributeCategory",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Education_CategoryId",
+                table: "Education",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Education_UserId",
                 table: "Education",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EducationAttribute_EducationAttributeCategoryId",
+                name: "IX_EducationAttribute_AttributeCategoryId",
                 table: "EducationAttribute",
-                column: "EducationAttributeCategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EducationAttributeEducation_EducationAttributeId",
-                table: "EducationAttributeEducation",
-                column: "EducationAttributeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EducationAttributeEducation_EducationId",
-                table: "EducationAttributeEducation",
-                column: "EducationId");
+                column: "AttributeCategoryId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -316,7 +377,10 @@ namespace SE.Web.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "EducationAttributeEducation");
+                name: "AttributeEducation");
+
+            migrationBuilder.DropTable(
+                name: "CategoryAttributeCategory");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -328,7 +392,10 @@ namespace SE.Web.Migrations
                 name: "Education");
 
             migrationBuilder.DropTable(
-                name: "EducationAttributeCategory");
+                name: "AttributeCategory");
+
+            migrationBuilder.DropTable(
+                name: "Category");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

@@ -12,9 +12,7 @@ namespace SE.Web.Extentions
         public static void DependencyRegister(this IServiceCollection serviceProvider)
         {
             serviceProvider.AddScoped<DbContext, EntitiesDbContext>();
-            serviceProvider.AddScoped<IRepository<Attribute>, Repository<Attribute>>();
-            serviceProvider.AddScoped<IRepository<AttributeCategory>, Repository<AttributeCategory>>();
-            serviceProvider.AddScoped<IRepository<Category>, Repository<Category>>();
+            serviceProvider.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
             serviceProvider.AddScoped<IAttributeService, AttributeService>();
             serviceProvider.AddScoped<ICategoryService, CategoryService>();

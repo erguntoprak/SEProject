@@ -10,22 +10,27 @@ namespace SE.Business.AttributeServices
 {
     public class AttributeService : IAttributeService
     {
-        private readonly IRepository<Core.Entities.Attribute> _educationAttributeRepo;
-        private readonly IRepository<AttributeCategory> _educationAttributeCategoryRepo;
+        private readonly IRepository<Core.Entities.Attribute> _attributeRepo;
+        private readonly IRepository<AttributeCategory> _attributeCategoryRepo;
+        private readonly IRepository<CategoryAttributeCategory> _categoryAttributeCategoryRepo;
 
-        public AttributeService(IRepository<Core.Entities.Attribute> educationAttributeRepo, IRepository<AttributeCategory> educationAttributeCategoryRepo)
+        public AttributeService(IRepository<Core.Entities.Attribute> attributeRepo, IRepository<AttributeCategory> attributeCategoryRepo, IRepository<CategoryAttributeCategory> categoryAttributeCategoryRepo)
         {
-            _educationAttributeRepo = educationAttributeRepo;
-            _educationAttributeCategoryRepo = educationAttributeCategoryRepo;
+            _attributeRepo = attributeRepo;
+            _attributeCategoryRepo = attributeCategoryRepo;
+            _categoryAttributeCategoryRepo = categoryAttributeCategoryRepo;
         }
 
-        public List<AttributeListDto> GetAllEducationAttributeList()
+        public List<AttributeListDto> GetAllAttributeByEducationCategoryId(int categoryId)
         {
             try
             {
-                var educationAttributeList = (from r in _educationAttributeRepo.Table
-                                              join s in _educationAttributeCategoryRepo.Table
+                var attributeCategoryList = _categoryAttributeCategoryRepo.Table.Where(d => d.CategoryId == categoryId).Select(d=>d.AttributeCategoryId).ToList();
+
+                var educationAttributeList = (from r in _attributeRepo.Table
+                                              join s in _attributeCategoryRepo.Table
                                               on r.AttributeCategoryId equals s.Id
+                                              where attributeCategoryList.Contains(s.Id)
                                               group new { r, s } by new { s.Name }
                              into grp
                                               select new AttributeListDto

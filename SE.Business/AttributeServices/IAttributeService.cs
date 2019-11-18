@@ -7,6 +7,6 @@ namespace SE.Business.AttributeServices
 {
     public interface IAttributeService
     {
-        List<AttributeListDto> GetAllEducationAttributeList();
+        List<AttributeListDto> GetAllAttributeByEducationCategoryId(int categoryId);
     }
 }

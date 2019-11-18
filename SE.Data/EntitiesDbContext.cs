@@ -23,12 +23,14 @@ namespace SE.Data
             modelBuilder.ApplyConfiguration(new AttributeMap());
             modelBuilder.ApplyConfiguration(new UserMap());
             modelBuilder.ApplyConfiguration(new CategoryMap());
+            modelBuilder.ApplyConfiguration(new CategoryAttributeCategoryMap());
         }
         public DbSet<Education> Education { get; set; }
         public DbSet<Core.Entities.Attribute> Attribute { get; set; }
         public DbSet<AttributeCategory> AttributeCategory { get; set; }
         public DbSet<AttributeEducation> AttributeEducation { get; set; }
         public DbSet<Category> Category { get; set; }
+        public DbSet<CategoryAttributeCategory> CategoryAttributeCategory { get; set; } 
 
 
     }
