@@ -14,6 +14,8 @@ using Microsoft.IdentityModel.Tokens;
 using SE.Core.Entities;
 using SE.Data;
 using SE.Web.Extentions;
+using SE.Web.Infrastructure.EmailSenders;
+using SE.Web.Infrastructure.Jwt;
 using SE.Web.Model;
 using SE.Web.Model.Validations;
 using System;
@@ -38,7 +40,8 @@ namespace SE.Web
                 cfg.User.RequireUniqueEmail = true;
                 cfg.Password.RequireUppercase = false;
                 cfg.Password.RequireNonAlphanumeric = false;
-            }).AddEntityFrameworkStores<EntitiesDbContext>();
+                cfg.SignIn.RequireConfirmedEmail = true;
+            }).AddEntityFrameworkStores<EntitiesDbContext>().AddDefaultTokenProviders();
 
 
             services.AddAuthentication(x =>
@@ -64,6 +67,8 @@ namespace SE.Web
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddFluentValidation();
             services.DependencyRegister();
             services.AddTransient<IValidator<LoginModel>, LoginModelValidator>();
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
+            services.Configure<JwtSecurityTokenSetting>(Configuration.GetSection("Token"));
 
             services.AddSpaStaticFiles(configuration =>
             {

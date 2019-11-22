@@ -6,10 +6,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SE.Core.Entities;
+using SE.Web.Infrastructure.EmailSenders;
+using SE.Web.Infrastructure.Helpers;
+using SE.Web.Infrastructure.Jwt;
 using SE.Web.Model;
 
 namespace SE.Web.Controllers
@@ -20,13 +25,17 @@ namespace SE.Web.Controllers
     {
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
+        private readonly JwtSecurityTokenSetting _jwtSecurityTokenSetting;
+        private readonly IEmailSender _emailSender;
         public IConfiguration _config;
 
 
-        public AccountController(SignInManager<User> signInManager, UserManager<User> userManager, IConfiguration config)
+        public AccountController(SignInManager<User> signInManager, UserManager<User> userManager, IConfiguration config, IEmailSender emailSender, IOptions<JwtSecurityTokenSetting> jwtSecurityTokenSetting)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _emailSender = emailSender;
+            _jwtSecurityTokenSetting = jwtSecurityTokenSetting.Value;
             _config = config;
         }
 
@@ -56,23 +65,22 @@ namespace SE.Web.Controllers
                             {
                             new Claim(JwtRegisteredClaimNames.Sub,user.Email),
                             new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
-                        };
+                            };
 
-                            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("Token").GetSection("Key").Value));
-                            //İlerki sürümlerde kullanılcak
-                            var creds = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256Signature);
+                            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSecurityTokenSetting.Key));
+                            var creds = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 
                             var token = new JwtSecurityToken(
-                                issuer: _config.GetSection("Token").GetSection("Issuer").Value,
-                                audience: _config.GetSection("Token").GetSection("Audience").Value,
-                                claims: claims,
+                                _jwtSecurityTokenSetting.Issuer,
+                                _jwtSecurityTokenSetting.Audience,
+                                claims,
                                 expires: DateTime.UtcNow.AddMinutes(30),
                                 signingCredentials: creds
                                 );
 
                             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-                            
-                            
+
+
                             UserModel userModel = new UserModel()
                             {
                                 Id = user.Id,
@@ -111,46 +119,30 @@ namespace SE.Web.Controllers
                         responseModel.ErrorMessage = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
                         return BadRequest(responseModel);
                     }
-
+                    if (_userManager.Users.Any(d => d.UserName == registerModel.UserName))
+                    {
+                        responseModel.ErrorMessage.Add("Kullanıcı adı daha önce kullanılmıştır.");
+                        return Ok(responseModel);
+                    }
+                    if (_userManager.Users.Any(d => d.Email == registerModel.Email))
+                    {
+                        responseModel.ErrorMessage.Add("E-posta daha önce kullanılmıştır.");
+                        return BadRequest(responseModel);
+                    }
                     User user = new User
                     {
                         UserName = registerModel.UserName,
-                        Email = registerModel.Email
+                        Email = registerModel.Email,
+                        PhoneNumber = registerModel.Phone
                     };
                     var result = await _userManager.CreateAsync(user, registerModel.Password);
 
                     if (result.Succeeded)
                     {
-                        var claims = new[]
-                        {
-                            new Claim(JwtRegisteredClaimNames.Sub,user.Email),
-                            new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
-                    };
-
-                        var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
-                        var creds = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-
-                        var token = new JwtSecurityToken(
-                            _config["Tokens:Issuer"],
-                            _config["Tokens:Audience"],
-                            claims,
-                            expires: DateTime.UtcNow.AddMinutes(30),
-                            signingCredentials: creds
-                            );
-
-                        var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-                        var savedUser = await _userManager.FindByEmailAsync(registerModel.Email);
-
-                        UserModel userModel = new UserModel()
-                        {
-                            Id = savedUser.Id,
-                            Name = savedUser.FirsName,
-                            Surname = savedUser.LastName,
-                            Email = savedUser.Email,
-                            UserName = savedUser.UserName,
-                            Token = tokenString
-                        };
-                        responseModel.Data = userModel;
+                        //var savedUser = await _userManager.FindByEmailAsync(registerModel.Email);
+                        //var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(savedUser);
+                        //var confirmationLink = $"{HelperMethods.GetBaseUrl(HttpContext)}?userId={savedUser.Id}&confirmation-token={confirmationToken}";
+                        //await _emailSender.SendEmailAsync(savedUser.Email, "E-posta adresinizi onaylayın!", EmailMessages.GetEmailConfirmationHtml(savedUser.FirsName, confirmationLink));
                         return Ok(responseModel);
 
                     }
@@ -158,11 +150,11 @@ namespace SE.Web.Controllers
                 responseModel.ErrorMessage.Add("Tüm bilgileri eksiksiz giriniz.");
                 return NotFound(responseModel);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 responseModel.ErrorMessage.Add("Bilinmeyen bir hata oluştu.Lütfen işlemi tekrar deneyiniz.");
                 return StatusCode(StatusCodes.Status500InternalServerError, responseModel);
-            }           
+            }
         }
     }
 }

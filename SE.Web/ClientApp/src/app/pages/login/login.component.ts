@@ -5,8 +5,6 @@ import { FormBuilder, FormGroup, NgForm, Validators, FormControl, FormGroupDirec
 import { BaseService } from '../../shared/base.service';
 import { MustMatch } from '../../shared/helpers/must-match.validator';
 import { NgxSpinnerService } from "ngx-spinner";
-import { ResponseModel } from '../../shared/response-model';
-import { PhoneNumberValidator } from '../../shared/helpers/phone-number.validator';
 
 
 
@@ -21,6 +19,7 @@ export class LoginComponent implements OnInit {
     loginForm: FormGroup;
     submittedLogin = false;
     submittedRegister = false;
+    errorList = [];
     loginModel: LoginModel;
     registerModel: RegisterModel;
     constructor(private formBuilder: FormBuilder, private baseService: BaseService, private spinner: NgxSpinnerService, private authService: AuthService, private router: Router) { }
@@ -43,12 +42,8 @@ export class LoginComponent implements OnInit {
             });
     }
     onLoginSubmit() {
-        debugger;
         this.submittedLogin = true;
-
         this.spinner.show();
-        debugger;
-
         if (this.loginForm.invalid) {
             this.spinner.hide();
             return;
@@ -59,7 +54,7 @@ export class LoginComponent implements OnInit {
         };
         this.authService.login(this.loginModel).subscribe(data => {
             this.spinner.hide();
-            this.router.navigate(['/']);
+            this.router.navigate(['/panel']);
         });
     }
 
@@ -76,9 +71,16 @@ export class LoginComponent implements OnInit {
             phone: this.registerForm.value.phone,
             password: this.registerForm.value.password
         }
-        this.authService.signup(this.registerModel).subscribe(data => {
+        this.authService.signup(this.registerModel).subscribe(responseModel => {
+            debugger;
+            if (responseModel.errorMessage.length > 0) {
+                for (var error in responseModel.errorMessage) 
+                {
+                    this.errorList.push(error);
+                }  
+            }
             this.submittedLogin = false;
-            this.router.navigate(['/']);
+            this.router.navigate(['/giris']);
         });
 
     }

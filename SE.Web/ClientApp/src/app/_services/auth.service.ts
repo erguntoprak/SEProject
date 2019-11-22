@@ -38,19 +38,9 @@ export class AuthService {
   }
 
   signup(registerModel:RegisterModel) {
-    return this.baseService.post("Account/Register", registerModel)
+    return this.baseService.post<ResponseModel>("Account/Register", registerModel)
     .pipe(
-      catchError(this.handleError),
-      tap(res => {
-        this.handleAuthentication(
-          res.data.id,
-          res.data.name,
-          res.data.surname,
-          res.data.email,
-          res.data.userName,
-          res.data.token
-        );
-      })
+      catchError(this.handleError)
     );
   }
 
