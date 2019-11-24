@@ -139,10 +139,10 @@ namespace SE.Web.Controllers
 
                     if (result.Succeeded)
                     {
-                        //var savedUser = await _userManager.FindByEmailAsync(registerModel.Email);
-                        //var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(savedUser);
-                        //var confirmationLink = $"{HelperMethods.GetBaseUrl(HttpContext)}?userId={savedUser.Id}&confirmation-token={confirmationToken}";
-                        //await _emailSender.SendEmailAsync(savedUser.Email, "E-posta adresinizi onaylayın!", EmailMessages.GetEmailConfirmationHtml(savedUser.FirsName, confirmationLink));
+                        var savedUser = await _userManager.FindByEmailAsync(registerModel.Email);
+                        var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(savedUser);
+                        var confirmationLink = $"{HelperMethods.GetBaseUrl(HttpContext)}e-posta-onay?userId={savedUser.Id}&confirmation-token={confirmationToken}";
+                        await _emailSender.SendEmailAsync(savedUser.Email, "E-posta adresinizi onaylayın!", EmailMessages.GetEmailConfirmationHtml(savedUser.UserName, confirmationLink));
                         return Ok(responseModel);
 
                     }

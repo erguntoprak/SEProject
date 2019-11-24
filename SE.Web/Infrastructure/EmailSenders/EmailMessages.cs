@@ -330,7 +330,7 @@ table[class=body] .img-responsive {
                   <table border = '0' cellpadding='0' cellspacing='0'>
                     <tr>
                       <td>
-                        <p>Merhaba" + name+ @"</p>
+                        <p>Merhaba" + name + @"</p>
                         <p>Eğitim kurumunuzu daha kolay bulunur hale getirmenin en kolay yolu ve izmiregitimkurumlari.com ayrıcalıklarından yararlanmak için e-posta adresinizi onaylayın.</p>
                         <table border = '0' cellpadding= '0' cellspacing= '0' class='btn btn-primary'>
                           <tbody>
@@ -339,7 +339,7 @@ table[class=body] .img-responsive {
                                 < table border='0' cellpadding='0' cellspacing='0'>
                                   <tbody>
                                     <tr>
-                                      <td> <a href = '"+confirmationLink+@"' target='_blank'>E-posta adresinizi onaylayın!</a> </td>
+                                      <td> <a href = '" + confirmationLink + @"' target='_blank'>E-posta adresinizi onaylayın!</a> </td>
                                     </tr>
                                   </tbody>
                                 </table>
@@ -382,8 +382,33 @@ table[class=body] .img-responsive {
   </body>
 </html>";
 
+            var a = @"<!DOCTYPE html>
+                        <html>
+                            <head>
+                            </head>
+                            <body>
 
-            return emailConfirmationHtml;
+                                <p>Merhaba" + name + @"</p>
+                                <p>Eğitim kurumunuzu daha kolay bulunur hale getirmenin en kolay yolu ve izmiregitimkurumlari.com 
+                                ayrıcalıklarından yararlanmak için e-posta adresinizi onaylayın.</p>
+                                <a href = '" + confirmationLink + @"' target='_blank'>E-posta adresinizi onaylayın!</a>
+  <div class='footer'>
+              <table border = '0' cellpadding='0' cellspacing='0'>
+                <tr>
+                  <td class='content-block'>
+                    <span class='apple-link'>Company Inc, 3 Abbey Road, San Francisco CA 94102</span>
+                    <br> Copyright 2020 <a href = 'www.izmiregitimkurumlari.com' > izmiregitimkurumlari </ a >.
+                  </ td >
+                </ tr >
+
+
+              </ table >
+            </ div >
+                            </body>
+                        </html>";
+
+
+            return a;
         }
 
     }
