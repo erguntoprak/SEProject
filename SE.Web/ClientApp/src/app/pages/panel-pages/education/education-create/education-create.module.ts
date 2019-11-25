@@ -5,6 +5,8 @@ import { EducationCreateComponent } from './education-create.component';
 import { SeTextBox } from '../../../../layouts/elements/se-textbox/se-textbox.component';
 import { SeDropdown } from 'src/app/layouts/elements/se-dropdown/se-dropdown.component';
 import { SeCheckBox } from 'src/app/layouts/elements/se-checkbox/se-checkbox.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatStepperModule} from '@angular/material';
 
 
 @NgModule({
@@ -14,7 +16,7 @@ import { SeCheckBox } from 'src/app/layouts/elements/se-checkbox/se-checkbox.com
     SeDropdown,
     SeCheckBox
   ],
-  imports: [SharedModule, FormsModule, ReactiveFormsModule],
+    imports: [SharedModule, FormsModule, ReactiveFormsModule, BrowserAnimationsModule, MatStepperModule],
   exports: [
     EducationCreateComponent,
     SeTextBox,

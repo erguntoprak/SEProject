@@ -62,7 +62,7 @@ namespace SE.Web
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("Token").GetSection("Key").Value))
                     };
                 });
-            string sqlConnection = @"Server =.; Database = EducationDb; Trusted_Connection = True;";
+            string sqlConnection = @"Server =(localdb)\MSSQLLocalDB; Database = EducationDb; Trusted_Connection = True;";
             services.AddDbContext<EntitiesDbContext>(dbcontextoption => dbcontextoption.UseSqlServer(sqlConnection, b => b.MigrationsAssembly("SE.Web")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddFluentValidation();
             services.DependencyRegister();
