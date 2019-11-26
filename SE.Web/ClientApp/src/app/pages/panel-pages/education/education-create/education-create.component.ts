@@ -8,7 +8,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
     selector: 'se-education-create',
     templateUrl: './education-create.component.html'
 })
-export class EducationCreateComponent implements OnInit,AfterViewInit {
+export class EducationCreateComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         //@ts-ignore
         CKEDITOR.replace('editor1');
@@ -19,38 +19,49 @@ export class EducationCreateComponent implements OnInit,AfterViewInit {
     category: object;
     attributeList: object;
     urlImages: KeyValueModel[] = [];
+    nextStepOneControl: boolean = true;
+    nextStepTwoControl: boolean = false;
 
-    isLinear = false;
 
 
     constructor(private formBuilder: FormBuilder, private baseService: BaseService, private spinner: NgxSpinnerService) { }
 
-    ngOnInit() {
+
+    nextStepOneClick() {
         debugger;
+        if (this.educationForm.controls.generalEducation.errors == null) {
+            this.nextStepOneControl = false;
+            this.nextStepTwoControl = true;
+        }
+    }
+
+    ngOnInit() {
         this.spinner.show();
 
         this.educationForm = this.formBuilder.group({
             generalEducation: this.formBuilder.group(
                 {
-                    educationName: ['asdasd', Validators.required],
-                    educationType: [0, Validators.required],
+                    educationName: ['', Validators.required],
+                    educationType: ['', Validators.required],
                     description: ['', Validators.required],
                 }
             ),
             attributes: this.formBuilder.array([])
         });
-       
+
         this.getAllCallMethod();
-      
-       
+
+
 
         this.spinner.hide();
     }
 
     onSubmit() {
-        this.submitted = true;
+
+        this.submitted = false;
         //@ts-ignore
-        this.educationForm.controls.generalEducation.controls.get('description').setValue(CKEDITOR.instances.editor1.getData());
+        this.educationForm.controls.generalEducation.controls.description.setValue(CKEDITOR.instances.editor1.getData());
+        debugger;
         if (this.educationForm.invalid) {
             return;
         }

@@ -1,173 +1,104 @@
 
-  <form [formGroup]="educationForm" (ngSubmit)="onSubmit()">
-    <mat-vertical-stepper [linear]="isLinear" #stepper>
-      <mat-step formGroupName="generalEducation">
-        <div class="db-add-list-wrap">
-          <div class="act-title">
-            <h5><i class="ion-ios-information"></i> Genel Bilgiler</h5>
-          </div>
-          <div class="db-add-listing">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label>Eğitim Adı</label>
-                  <se-textbox formControlName="educationName" placeholder="Eğitim Adı"></se-textbox>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label>Category</label>
-                  <se-dropdown formControlName="educationType" (change)="educationTypeOnChange($event)" title="Eğitim Tipi" [dataList]="category">
-                  </se-dropdown>
-                </div>
-              </div>
-              <div class="col-md-12">
-                <div class="form-group">
-                  <label for="list_info">Eğitim Hakkında</label>
-                  <textarea id="editor1"></textarea>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="db-add-list-wrap">
-          <div class="act-title">
-            <h5><i class="ion-image"></i> Gallery :</h5>
-          </div>
-          <div class="row" style="padding:30px;">
-            <div class="col-md-2" style="padding:10px;" *ngFor='let url of urlImages'>
-              <div class="single-place">
-                <span class="remove-button" (click)="removeImage(url.key)"><i class="ion-android-close"></i></span>
-                <img [id]="url.key" class="single-place-image" [src]="url.value">
-              </div>
-            </div>
-          </div>
-          <div class="db-add-listing">
-            <div class="form-group">
-              <div class="form-group">
-                <div class="add-listing__input-file-box">
-                  <input class="add-listing__input-file" type="file" multiple (change)="onSelectFile($event)">
-                  <div class="add-listing__input-file-wrap">
-                    <i class="ion-ios-cloud-upload"></i>
-                    <p>Görselleri eklemek için tıklayınız.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <button mat-button matStepperNext>Next</button>
-      </mat-step>
-      <mat-step>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
-      </mat-step>
-      <mat-step>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button (click)="stepper.reset()">Reset</button>
-      </mat-step>
-    </mat-vertical-stepper>
-  </form>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-  <!--<div class="dash-content">
+  <div class="dash-content">
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
           <form [formGroup]="educationForm" (ngSubmit)="onSubmit()">
-            <div class="db-add-list-wrap">
-              <div class="act-title">
-                <h5><i class="ion-ios-information"></i> Genel Bilgiler</h5>
-              </div>
-              <div class="db-add-listing">
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label>Eğitim Adı</label>
-                      <se-textbox formControlName="educationName" placeholder="Eğitim Adı"></se-textbox>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label>Category</label>
-                      <se-dropdown formControlName="educationType" (change)="educationTypeOnChange($event)" title="Eğitim Tipi" [dataList]="category">
-                      </se-dropdown>
-                    </div>
-                  </div>
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <label for="list_info">Eğitim Hakkında</label>
-                      <textarea id="editor1"></textarea>
-                    </div>
-                  </div>
+            <ng-container formGroupName="generalEducation" *ngIf="nextStepOneControl">
+              <div class="db-add-list-wrap">
+                <div class="act-title">
+                  <h5><i class="ion-ios-information"></i> Genel Bilgiler</h5>
                 </div>
-              </div>
-            </div>
-            <div class="db-add-list-wrap">
-              <div class="act-title">
-                <h5><i class="ion-image"></i> Gallery :</h5>
-              </div>
-              <div class="row" style="padding:30px;">
-                <div class="col-md-2" style="padding:10px;" *ngFor='let url of urlImages'>
-                  <div class="single-place">
-                    <span class="remove-button" (click)="removeImage(url.key)"><i class="ion-android-close"></i></span>
-                    <img [id]="url.key" class="single-place-image" [src]="url.value">
-                  </div>
-                </div>
-              </div>
-              <div class="db-add-listing">
-                <div class="form-group">
-                  <div class="form-group">
-                    <div class="add-listing__input-file-box">
-                      <input class="add-listing__input-file" type="file" multiple (change)="onSelectFile($event)">
-                      <div class="add-listing__input-file-wrap">
-                        <i class="ion-ios-cloud-upload"></i>
-                        <p>Görselleri eklemek için tıklayınız.</p>
+                <div class="db-add-listing">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Eğitim Adı</label>
+                        <se-textbox formControlName="educationName"  placeholder="Eğitim Adı"></se-textbox>
+                        <!--<div class="not-valid" *ngIf="nextStepOne && educationForm.controls.generalEducation.controls.educationName.errors!=null ? educationForm.controls.generalEducation.controls.educationName.errors.required:false">
+                          Lütfen eğitim adı giriniz.
+                        </div>-->
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Category</label>
+                        <se-dropdown formControlName="educationType" (change)="educationTypeOnChange($event)" title="Eğitim Tipi" [dataList]="category">
+                        </se-dropdown>
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label for="list_info">Eğitim Hakkında</label>
+                        <textarea id="editor1"></textarea>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div *ngFor="let attribute of attributeList" class="db-add-list-wrap">
-              <div class="act-title">
-                <h5><i class="ion-ios-home"></i>{{ attribute.categoryName }}</h5>
-              </div>
-              <div class="db-add-listing">
-                <div class="row">
-                  <div class="col-md-12">
+              <div class="db-add-list-wrap">
+                <div class="act-title">
+                  <h5><i class="ion-image"></i> Gallery :</h5>
+                </div>
+                <div class="row" style="padding:30px;">
+                  <div class="col-md-2" style="padding:10px;" *ngFor='let url of urlImages'>
+                    <div class="single-place">
+                      <span class="remove-button" (click)="removeImage(url.key)"><i class="ion-android-close"></i></span>
+                      <img [id]="url.key" class="single-place-image" [src]="url.value">
+                    </div>
+                  </div>
+                </div>
+                <div class="db-add-listing">
+                  <div class="form-group">
                     <div class="form-group">
-                      <div *ngFor="let attribute of attribute.attributeDtoList" class="filter-checkbox">
-                        <se-checkbox (change)="onChange(attribute.id, $event.target.checked)" [text]="attribute.name"></se-checkbox>
+                      <div class="add-listing__input-file-box">
+                        <input class="add-listing__input-file" type="file" multiple (change)="onSelectFile($event)">
+                        <div class="add-listing__input-file-wrap">
+                          <i class="ion-ios-cloud-upload"></i>
+                          <p>Görselleri eklemek için tıklayınız.</p>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="db-add-list-wrap">
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <button type="submit"> Kaydet</button>
+              <div class="db-add-list-wrap">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <button type="submit"> Kaydet</button>
+                    </div>
+                    <div class="form-group">
+                      <button type="button" (click)="nextStepOneClick()" > Devam Et</button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </ng-container>
+            <ng-container *ngIf="nextStepTwoControl">
+              <div *ngFor="let attribute of attributeList" class="db-add-list-wrap">
+                <div class="act-title">
+                  <h5><i class="ion-ios-home"></i>{{ attribute.categoryName }}</h5>
+                </div>
+                <div class="db-add-listing">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <div *ngFor="let attribute of attribute.attributeDtoList" class="filter-checkbox">
+                          <se-checkbox (change)="onChange(attribute.id, $event.target.checked)" [text]="attribute.name"></se-checkbox>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+              
+          
           </form>
         </div>
       </div>
     </div>
-  </div>-->
+  </div>
