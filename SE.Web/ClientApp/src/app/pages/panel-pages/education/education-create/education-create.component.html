@@ -6,7 +6,7 @@
       <div class="row">
         <div class="col-md-12">
           <form [formGroup]="educationForm" (ngSubmit)="onSubmit()">
-            <ng-container formGroupName="generalEducation" *ngIf="nextStepOneControl">
+            <div formGroupName="generalEducation" *ngIf="nextStepOneControl">
               <div class="db-add-list-wrap">
                 <div class="act-title">
                   <h5><i class="ion-ios-information"></i> Genel Bilgiler</h5>
@@ -16,23 +16,29 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label>Eğitim Adı</label>
-                        <se-textbox formControlName="educationName"  placeholder="Eğitim Adı"></se-textbox>
-                        <!--<div class="not-valid" *ngIf="nextStepOne && educationForm.controls.generalEducation.controls.educationName.errors!=null ? educationForm.controls.generalEducation.controls.educationName.errors.required:false">
+                        <se-textbox formControlName="educationName" [cssClass]="(nextStepOneValidation && educationForm.controls.generalEducation.controls.educationName.errors!=null ? educationForm.controls.generalEducation.controls.educationName.errors.required:false)?'is-invalid':''"  placeholder="Eğitim Adı"></se-textbox>
+                        <div class="not-valid" *ngIf="nextStepOneValidation && educationForm.controls.generalEducation.controls.educationName.errors!=null ? educationForm.controls.generalEducation.controls.educationName.errors.required:false">
                           Lütfen eğitim adı giriniz.
-                        </div>-->
+                        </div>
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label>Category</label>
-                        <se-dropdown formControlName="educationType" (change)="educationTypeOnChange($event)" title="Eğitim Tipi" [dataList]="category">
+                        <label>Eğitim Türü</label>
+                        <se-dropdown formControlName="educationType" [cssClass]="(nextStepOneValidation && educationForm.controls.generalEducation.controls.educationType.errors!=null ? educationForm.controls.generalEducation.controls.educationType.errors.min:false)?'is-invalid':''" (change)="educationTypeOnChange($event)" title="Eğitim Tipi" [dataList]="category">
                         </se-dropdown>
+                        <div class="not-valid" *ngIf="nextStepOneValidation && educationForm.controls.generalEducation.controls.educationType.errors!=null ? educationForm.controls.generalEducation.controls.educationType.errors.min:false">
+                          Lütfen eğitim türü seçiniz.
+                        </div>
                       </div>
                     </div>
                     <div class="col-md-12">
                       <div class="form-group">
                         <label for="list_info">Eğitim Hakkında</label>
                         <textarea id="editor1"></textarea>
+                        <div class="not-valid" *ngIf="nextStepOneValidation && educationForm.controls.generalEducation.controls.description.errors!=null ? educationForm.controls.generalEducation.controls.description.errors.required:false">
+                          Lütfen eğitim hakkında yazı giriniz.
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -62,21 +68,12 @@
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div class="db-add-list-wrap">
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <button type="submit"> Kaydet</button>
-                    </div>
-                    <div class="form-group">
-                      <button type="button" (click)="nextStepOneClick()" > Devam Et</button>
-                    </div>
+                  <div class="form-group">
+                    <button type="button" (click)="nextStepOneClick()">Devam Et</button>
                   </div>
                 </div>
               </div>
-            </ng-container>
+            </div>
             <ng-container *ngIf="nextStepTwoControl">
               <div *ngFor="let attribute of attributeList" class="db-add-list-wrap">
                 <div class="act-title">
@@ -89,6 +86,12 @@
                         <div *ngFor="let attribute of attribute.attributeDtoList" class="filter-checkbox">
                           <se-checkbox (change)="onChange(attribute.id, $event.target.checked)" [text]="attribute.name"></se-checkbox>
                         </div>
+                      </div>
+                      <div class="form-group">
+                        <button type="button" (click)="previousStepTwoClick()">Geri</button>
+                      </div>
+                      <div class="form-group">
+                        <button type="button" (click)="nextStepTwoClick()">Devam Et</button>
                       </div>
                     </div>
                   </div>

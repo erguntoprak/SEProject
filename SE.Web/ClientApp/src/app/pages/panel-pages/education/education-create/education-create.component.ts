@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray, FormControl, AbstractControl } from '@angular/forms';
 import { v4 as uuid } from 'uuid';
 import { BaseService } from '../../../../shared/base.service';
 import { ResponseModel } from '../../../../shared/response-model';
@@ -21,18 +21,33 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
     urlImages: KeyValueModel[] = [];
     nextStepOneControl: boolean = true;
     nextStepTwoControl: boolean = false;
-
+    nextStepOneValidation: boolean = false;
 
 
     constructor(private formBuilder: FormBuilder, private baseService: BaseService, private spinner: NgxSpinnerService) { }
 
 
     nextStepOneClick() {
-        debugger;
-        if (this.educationForm.controls.generalEducation.errors == null) {
+      
+        //@ts-ignore
+        this.educationForm.controls.generalEducation.controls.description.setValue(CKEDITOR.instances.editor1.getData());
+        if (this.educationForm.controls.generalEducation.status == 'VALID') {
+            let imagesData = this.urlImages.map(({ value }) => value);
+            const images = <FormArray>this.educationForm.controls.images;
+            for (let image of imagesData) {
+                images.push(new FormControl(image));
+            }
+            debugger;
             this.nextStepOneControl = false;
             this.nextStepTwoControl = true;
         }
+        else {
+            this.nextStepOneValidation = true;
+        }
+    }
+    previousStepTwoClick() {
+        this.nextStepOneControl = true;
+        this.nextStepTwoControl = false;
     }
 
     ngOnInit() {
@@ -42,11 +57,12 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
             generalEducation: this.formBuilder.group(
                 {
                     educationName: ['', Validators.required],
-                    educationType: ['', Validators.required],
+                    educationType: [0, Validators.min(1)],
                     description: ['', Validators.required],
                 }
             ),
-            attributes: this.formBuilder.array([])
+            attributes: this.formBuilder.array([]),
+            images:this.formBuilder.array([])
         });
 
         this.getAllCallMethod();
@@ -59,8 +75,7 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
     onSubmit() {
 
         this.submitted = false;
-        //@ts-ignore
-        this.educationForm.controls.generalEducation.controls.description.setValue(CKEDITOR.instances.editor1.getData());
+
         debugger;
         if (this.educationForm.invalid) {
             return;
