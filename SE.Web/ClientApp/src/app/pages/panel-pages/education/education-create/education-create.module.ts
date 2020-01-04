@@ -6,7 +6,9 @@ import { SeTextBox } from '../../../../layouts/elements/se-textbox/se-textbox.co
 import { SeDropdown } from 'src/app/layouts/elements/se-dropdown/se-dropdown.component';
 import { SeCheckBox } from 'src/app/layouts/elements/se-checkbox/se-checkbox.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxMaskModule, IConfig } from 'ngx-mask'
 
+export let options: Partial<IConfig> | (() => Partial<IConfig>);
 
 @NgModule({
   declarations: [
@@ -15,7 +17,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     SeDropdown,
     SeCheckBox
   ],
-    imports: [SharedModule, FormsModule, ReactiveFormsModule, BrowserAnimationsModule],
+  imports: [SharedModule, FormsModule, ReactiveFormsModule, BrowserAnimationsModule, NgxMaskModule.forRoot(options)],
   exports: [
     EducationCreateComponent,
     SeTextBox,

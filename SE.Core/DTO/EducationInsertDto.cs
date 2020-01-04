@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace SE.Core.DTO
+{
+    public class EducationInsertDto
+    {
+        public EducationGeneralInformationDto GeneralInformation { get; set; }
+        public int[] Attributes { get; set; }
+        public string[] Images { get; set; }
+        public List<EducationQuestionDto> Questions { get; set; }
+        public EducationAddressDto AddressInformation { get; set; }
+        public EducationContactInformationDto ContactInformation { get; set; }
+    }
+}

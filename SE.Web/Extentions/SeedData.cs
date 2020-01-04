@@ -93,9 +93,37 @@ namespace SE.Web.Extentions
                     CategoryId = 3
                 });
 
-                context.SaveChanges();
+                context.City.Add(new City { Name="İzmir" });
 
-
+                context.District.Add(new District { Name = "ALİAĞA", CityId = 1 });
+                context.District.Add(new District { Name = "BALÇOVA", CityId = 1 });
+                context.District.Add(new District { Name = "BAYINDIR", CityId = 1 });
+                context.District.Add(new District { Name = "BAYRAKLI", CityId = 1 });
+                context.District.Add(new District { Name = "BERGAMA", CityId = 1 });
+                context.District.Add(new District { Name = "BEYDAĞ", CityId = 1 });
+                context.District.Add(new District { Name = "BORNOVA", CityId = 1 });
+                context.District.Add(new District { Name = "BUCA", CityId = 1 });
+                context.District.Add(new District { Name = "ÇEŞME", CityId = 1 });
+                context.District.Add(new District { Name = "ÇİĞLİ", CityId = 1 });
+                context.District.Add(new District { Name = "DİKİLİ", CityId = 1 });
+                context.District.Add(new District { Name = "FOÇA", CityId = 1 });
+                context.District.Add(new District { Name = "GAZİEMİR", CityId = 1 });
+                context.District.Add(new District { Name = "GÜZELBAHÇE", CityId = 1 });
+                context.District.Add(new District { Name = "KARABAĞLAR", CityId = 1 });
+                context.District.Add(new District { Name = "KARABURUN", CityId = 1 });
+                context.District.Add(new District { Name = "KARŞIYAKA", CityId = 1 });
+                context.District.Add(new District { Name = "KEMALPAŞA", CityId = 1 });
+                context.District.Add(new District { Name = "KINIK", CityId = 1 });
+                context.District.Add(new District { Name = "KİRAZ", CityId = 1 });
+                context.District.Add(new District { Name = "KONAK", CityId = 1 });
+                context.District.Add(new District { Name = "MENDERES", CityId = 1 });
+                context.District.Add(new District { Name = "NARLIDERE", CityId = 1 });
+                context.District.Add(new District { Name = "ÖDEMİŞ", CityId = 1 });
+                context.District.Add(new District { Name = "SEFERİHİSAR", CityId = 1 });
+                context.District.Add(new District { Name = "SELÇUK", CityId = 1 });
+                context.District.Add(new District { Name = "TİRE", CityId = 1 });
+                context.District.Add(new District { Name = "TORBALI", CityId = 1 });
+                context.District.Add(new District { Name = "URLA", CityId = 1 });
                 context.SaveChanges();
             }
 

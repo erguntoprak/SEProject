@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -44,9 +44,9 @@ namespace SE.Business.AttributeServices
                                               }).ToList();
                 return educationAttributeList;
             }
-            catch (Exception ex)
+            catch 
             {
-                throw ex; 
+                throw; 
             }
         }
     }

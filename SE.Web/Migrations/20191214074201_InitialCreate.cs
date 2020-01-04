@@ -76,6 +76,19 @@ namespace SE.Web.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "City",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_City", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -258,6 +271,26 @@ namespace SE.Web.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "District",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    CityId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_District", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_District_City_CityId",
+                        column: x => x.CityId,
+                        principalTable: "City",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AttributeEducation",
                 columns: table => new
                 {
@@ -280,6 +313,27 @@ namespace SE.Web.Migrations
                         name: "FK_AttributeEducation_Education_EducationId",
                         column: x => x.EducationId,
                         principalTable: "Education",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Neighbourhood",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    DistrictId = table.Column<int>(nullable: false),
+                    PostCode = table.Column<string>(maxLength: 20, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Neighbourhood", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Neighbourhood_District_DistrictId",
+                        column: x => x.DistrictId,
+                        principalTable: "District",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -344,6 +398,11 @@ namespace SE.Web.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_District_CityId",
+                table: "District",
+                column: "CityId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Education_CategoryId",
                 table: "Education",
                 column: "CategoryId");
@@ -357,6 +416,11 @@ namespace SE.Web.Migrations
                 name: "IX_EducationAttribute_AttributeCategoryId",
                 table: "EducationAttribute",
                 column: "AttributeCategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Neighbourhood_DistrictId",
+                table: "Neighbourhood",
+                column: "DistrictId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -383,6 +447,9 @@ namespace SE.Web.Migrations
                 name: "CategoryAttributeCategory");
 
             migrationBuilder.DropTable(
+                name: "Neighbourhood");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -392,6 +459,9 @@ namespace SE.Web.Migrations
                 name: "Education");
 
             migrationBuilder.DropTable(
+                name: "District");
+
+            migrationBuilder.DropTable(
                 name: "AttributeCategory");
 
             migrationBuilder.DropTable(
@@ -399,6 +469,9 @@ namespace SE.Web.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "City");
         }
     }
 }

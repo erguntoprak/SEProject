@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using SE.Business.AddressServices;
 using SE.Business.AttributeServices;
 using SE.Business.CategoryServices;
 using SE.Core.Entities;
@@ -19,6 +20,7 @@ namespace SE.Web.Extentions
 
             serviceProvider.AddScoped<IAttributeService, AttributeService>();
             serviceProvider.AddScoped<ICategoryService, CategoryService>();
+            serviceProvider.AddScoped<IAddressService, AddressService>();
 
 
 

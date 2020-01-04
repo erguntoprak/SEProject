@@ -22,10 +22,10 @@ namespace SE.Business.CategoryServices
                 var categoryList = _categoryRepo.Table.Select(d=> new CategoryDto { Name=d.Name, Id=d.Id }).ToList();
                 return categoryList;
             }
-            catch (Exception ex)
+            catch 
             {
 
-                throw ex;
+                throw;
             }
         }
     }

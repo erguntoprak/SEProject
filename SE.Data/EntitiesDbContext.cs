@@ -24,13 +24,22 @@ namespace SE.Data
             modelBuilder.ApplyConfiguration(new UserMap());
             modelBuilder.ApplyConfiguration(new CategoryMap());
             modelBuilder.ApplyConfiguration(new CategoryAttributeCategoryMap());
+            modelBuilder.ApplyConfiguration(new CityMap());
+            modelBuilder.ApplyConfiguration(new DistrictMap());
+            modelBuilder.ApplyConfiguration(new NeighbourhoodMap());
         }
         public DbSet<Education> Education { get; set; }
         public DbSet<Core.Entities.Attribute> Attribute { get; set; }
         public DbSet<AttributeCategory> AttributeCategory { get; set; }
         public DbSet<AttributeEducation> AttributeEducation { get; set; }
         public DbSet<Category> Category { get; set; }
-        public DbSet<CategoryAttributeCategory> CategoryAttributeCategory { get; set; } 
+        public DbSet<CategoryAttributeCategory> CategoryAttributeCategory { get; set; }
+
+        public DbSet<City> City { get; set; }
+        public DbSet<District> District { get; set; }
+        public DbSet<Neighbourhood> Neighbourhood { get; set; }
+
+
 
 
     }

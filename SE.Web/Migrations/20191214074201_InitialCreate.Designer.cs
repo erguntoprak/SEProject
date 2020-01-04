@@ -10,7 +10,7 @@ using SE.Data;
 namespace SE.Web.Migrations
 {
     [DbContext(typeof(EntitiesDbContext))]
-    [Migration("20191118200026_InitialCreate")]
+    [Migration("20191214074201_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -226,6 +226,40 @@ namespace SE.Web.Migrations
                     b.ToTable("CategoryAttributeCategory");
                 });
 
+            modelBuilder.Entity("SE.Core.Entities.City", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("City");
+                });
+
+            modelBuilder.Entity("SE.Core.Entities.District", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CityId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CityId");
+
+                    b.ToTable("District");
+                });
+
             modelBuilder.Entity("SE.Core.Entities.Education", b =>
                 {
                     b.Property<int>("Id")
@@ -251,6 +285,28 @@ namespace SE.Web.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Education");
+                });
+
+            modelBuilder.Entity("SE.Core.Entities.Neighbourhood", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("DistrictId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.Property<string>("PostCode")
+                        .HasMaxLength(20);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DistrictId");
+
+                    b.ToTable("Neighbourhood");
                 });
 
             modelBuilder.Entity("SE.Core.Entities.User", b =>
@@ -389,6 +445,14 @@ namespace SE.Web.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("SE.Core.Entities.District", b =>
+                {
+                    b.HasOne("SE.Core.Entities.City", "City")
+                        .WithMany("Districts")
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("SE.Core.Entities.Education", b =>
                 {
                     b.HasOne("SE.Core.Entities.Category", "Category")
@@ -399,6 +463,14 @@ namespace SE.Web.Migrations
                     b.HasOne("SE.Core.Entities.User", "User")
                         .WithMany("Educations")
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SE.Core.Entities.Neighbourhood", b =>
+                {
+                    b.HasOne("SE.Core.Entities.District", "District")
+                        .WithMany("Neighbourhoods")
+                        .HasForeignKey("DistrictId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

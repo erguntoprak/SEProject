@@ -1579,9 +1579,11 @@ ul.buttons {
     }
 
 .db-add-list-wrap {
-  margin-bottom: 50px
+  margin-bottom: 30px
 }
-
+.next-step{
+  float:right;
+}
 .db-add-listing {
   padding: 30px
 }
