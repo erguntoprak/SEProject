@@ -8,19 +8,17 @@ namespace SE.Business.AddressServices
 {
     public class AddressService : IAddressService
     {
-        private readonly IRepository<City> _cityRepo;
-        private readonly IRepository<District> _districtRepo;
 
-        public AddressService(IRepository<City> cityRepo, IRepository<District> districtRepo)
+        private readonly IUnitOfWork _unitOfWork;
+        public AddressService(IUnitOfWork unitOfWork)
         {
-            _cityRepo = cityRepo;
-            _districtRepo = districtRepo;
+            _unitOfWork = unitOfWork;
         }
         public AddressDto GetCityNameDistricts()
         {
             try
             {
-                AddressDto addressDto = _cityRepo.Include(d => d.Districts).Select(d => new AddressDto {
+                AddressDto addressDto = _unitOfWork.CityRepository.Include(d => d.Districts).Select(d => new AddressDto {
                     CityDto = new CityDto {
                         Id = d.Id,
                         Name = d.Name

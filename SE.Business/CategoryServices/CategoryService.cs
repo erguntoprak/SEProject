@@ -10,21 +10,20 @@ namespace SE.Business.CategoryServices
 {
     public class CategoryService : ICategoryService
     {
-        private readonly IRepository<Category> _categoryRepo;
-        public CategoryService(IRepository<Category> categoryRepo)
+        private readonly IUnitOfWork _unitOfWork;
+        public CategoryService(IUnitOfWork unitOfWork)
         {
-            _categoryRepo = categoryRepo;
+            _unitOfWork = unitOfWork;
         }
         public List<CategoryDto> GetAllCategoryList()
         {
             try
             {
-                var categoryList = _categoryRepo.Table.Select(d=> new CategoryDto { Name=d.Name, Id=d.Id }).ToList();
+                var categoryList = _unitOfWork.CategoryRepository.Table.Select(d=> new CategoryDto { Name=d.Name, Id=d.Id }).ToList();
                 return categoryList;
             }
             catch 
             {
-
                 throw;
             }
         }

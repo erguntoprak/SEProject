@@ -9,6 +9,7 @@ namespace SE.Core.Entities
         public string Name { get; set; }
         public int CityId { get; set; }
         public City City { get; set; }
-        public ICollection<Neighbourhood> Neighbourhoods { get; set; }
+        public ICollection<EducationAddress> EducationAddress { get; set; }
+
     }
 }

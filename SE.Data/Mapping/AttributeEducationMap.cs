@@ -11,7 +11,7 @@ namespace SE.Data.Mapping
     {
         public void Configure(EntityTypeBuilder<AttributeEducation> builder)
         {
-
+            builder.ToTable("AttributeEducation");
             builder.HasKey(x => x.Id);
 
             builder.HasOne(mapping => mapping.Education)

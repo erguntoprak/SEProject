@@ -7,6 +7,8 @@ import { SeDropdown } from 'src/app/layouts/elements/se-dropdown/se-dropdown.com
 import { SeCheckBox } from 'src/app/layouts/elements/se-checkbox/se-checkbox.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxMaskModule, IConfig } from 'ngx-mask'
+import { AngularEditorModule } from '@kolkov/angular-editor';
+
 
 export let options: Partial<IConfig> | (() => Partial<IConfig>);
 
@@ -17,7 +19,7 @@ export let options: Partial<IConfig> | (() => Partial<IConfig>);
     SeDropdown,
     SeCheckBox
   ],
-  imports: [SharedModule, FormsModule, ReactiveFormsModule, BrowserAnimationsModule, NgxMaskModule.forRoot(options)],
+  imports: [SharedModule, FormsModule, ReactiveFormsModule, BrowserAnimationsModule, NgxMaskModule.forRoot(options), AngularEditorModule ],
   exports: [
     EducationCreateComponent,
     SeTextBox,

@@ -10,39 +10,37 @@ namespace SE.Business.AttributeServices
 {
     public class AttributeService : IAttributeService
     {
-        private readonly IRepository<Core.Entities.Attribute> _attributeRepo;
-        private readonly IRepository<AttributeCategory> _attributeCategoryRepo;
-        private readonly IRepository<CategoryAttributeCategory> _categoryAttributeCategoryRepo;
 
-        public AttributeService(IRepository<Core.Entities.Attribute> attributeRepo, IRepository<AttributeCategory> attributeCategoryRepo, IRepository<CategoryAttributeCategory> categoryAttributeCategoryRepo)
+        private readonly IUnitOfWork _unitOfWork;
+        public AttributeService(IUnitOfWork unitOfWork)
         {
-            _attributeRepo = attributeRepo;
-            _attributeCategoryRepo = attributeCategoryRepo;
-            _categoryAttributeCategoryRepo = categoryAttributeCategoryRepo;
+            _unitOfWork = unitOfWork;
         }
 
         public List<AttributeListDto> GetAllAttributeByEducationCategoryId(int categoryId)
         {
             try
             {
-                var attributeCategoryList = _categoryAttributeCategoryRepo.Table.Where(d => d.CategoryId == categoryId).Select(d=>d.AttributeCategoryId).ToList();
+                var attributeCategoryList = _unitOfWork.CategoryAttributeCategoryRepository.Table.Where(d => d.CategoryId == categoryId).Select(d=>d.AttributeCategoryId).ToList();
 
-                var educationAttributeList = (from r in _attributeRepo.Table
-                                              join s in _attributeCategoryRepo.Table
+                var educationAttributeList = (from r in _unitOfWork.AttributeRepository.Table
+                                              join s in _unitOfWork.AttributeCategoryRepository.Table
                                               on r.AttributeCategoryId equals s.Id
                                               where attributeCategoryList.Contains(s.Id)
-                                              group new { r, s } by new { s.Name }
-                             into grp
-                                              select new AttributeListDto
-                                              {
-                                                  CategoryName = grp.Key.Name,
-                                                  AttributeDtoList = grp.Select(d => new AttributeDto
-                                                  {
-                                                      Id = d.r.Id,
-                                                      Name = d.r.Name
-                                                  }).ToList()
-                                              }).ToList();
-                return educationAttributeList;
+                                              select r);
+
+                var educationAttributeGroupList = educationAttributeList.AsEnumerable().GroupBy(d => d.AttributeCategoryId).Select(d=> new AttributeListDto {
+                CategoryName = _unitOfWork.AttributeCategoryRepository.Table.Where(x=>x.Id==d.Key).FirstOrDefault().Name,
+                AttributeDtoList = d.Select(x=> new AttributeDto
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                }).ToList()
+                }).ToList();
+
+
+
+                return educationAttributeGroupList;
             }
             catch 
             {

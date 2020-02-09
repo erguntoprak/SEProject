@@ -6,11 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using NETCore.MailKit.Core;
 using SE.Core.Entities;
 using SE.Web.Infrastructure.EmailSenders;
 using SE.Web.Infrastructure.Helpers;
@@ -26,15 +26,16 @@ namespace SE.Web.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
         private readonly JwtSecurityTokenSetting _jwtSecurityTokenSetting;
-        private readonly IEmailSender _emailSender;
+        private readonly IEmailService _emailService;
         public IConfiguration _config;
 
 
-        public AccountController(SignInManager<User> signInManager, UserManager<User> userManager, IConfiguration config, IEmailSender emailSender, IOptions<JwtSecurityTokenSetting> jwtSecurityTokenSetting)
+        public AccountController(SignInManager<User> signInManager, UserManager<User> userManager, IConfiguration config, IOptions<JwtSecurityTokenSetting> jwtSecurityTokenSetting, IEmailService emailService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
-            _emailSender = emailSender;
+            _emailService = emailService;
+            //_emailSender = emailSender;
             _jwtSecurityTokenSetting = jwtSecurityTokenSetting.Value;
             _config = config;
         }
@@ -61,23 +62,25 @@ namespace SE.Web.Controllers
 
                         if (result.Succeeded)
                         {
-                            var claims = new[]
+                            var claims = new ClaimsIdentity(new Claim[]
                             {
-                            new Claim(JwtRegisteredClaimNames.Sub,user.Email),
-                            new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
-                            };
+                                new Claim(ClaimTypes.Name, user.Id.ToString())
+                            });
 
                             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSecurityTokenSetting.Key));
                             var creds = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+                            var tokenHandler = new JwtSecurityTokenHandler();
+                            var tokenDescriptor = new SecurityTokenDescriptor()
+                            {
+                                Subject = claims,
+                                Expires = DateTime.UtcNow.AddDays(7),
+                                SigningCredentials = creds,
+                                Issuer = _jwtSecurityTokenSetting.Issuer,
+                                Audience = _jwtSecurityTokenSetting.Audience
 
-                            var token = new JwtSecurityToken(
-                                _jwtSecurityTokenSetting.Issuer,
-                                _jwtSecurityTokenSetting.Audience,
-                                claims,
-                                expires: DateTime.UtcNow.AddMinutes(30),
-                                signingCredentials: creds
-                                );
-
+                            };
+                              
+                            var token = tokenHandler.CreateToken(tokenDescriptor);
                             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
 
@@ -98,7 +101,7 @@ namespace SE.Web.Controllers
                 responseModel.ErrorMessage.Add("Email veya password yanlış");
                 return NotFound(responseModel);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 responseModel.ErrorMessage.Add("Bilinmeyen bir hata oluştu.Lütfen işlemi tekrar deneyiniz.");
                 return StatusCode(StatusCodes.Status500InternalServerError, responseModel);
@@ -141,8 +144,8 @@ namespace SE.Web.Controllers
                     {
                         var savedUser = await _userManager.FindByEmailAsync(registerModel.Email);
                         var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(savedUser);
-                        var confirmationLink = $"{HelperMethods.GetBaseUrl(HttpContext)}e-posta-onay?userId={savedUser.Id}&confirmation-token={confirmationToken}";
-                        await _emailSender.SendEmailAsync(savedUser.Email, "E-posta adresinizi onaylayın!", EmailMessages.GetEmailConfirmationHtml(savedUser.UserName, confirmationLink));
+                        var confirmationLink = $"{HelperMethods.GetBaseUrl(HttpContext)}/e-posta-onay?userId={savedUser.Id}&confirmation-token={confirmationToken}";
+                        await _emailService.SendAsync(savedUser.Email, "E-posta adresinizi onaylayın!", EmailMessages.GetEmailConfirmationHtml(savedUser.UserName, confirmationLink));
                         return Ok(responseModel);
 
                     }

@@ -7,7 +7,7 @@ namespace SE.Core.Entities
     public class Category:BaseEntity
     {
         public string Name { get; set; }
-
+        public string SeoUrl { get; set; }
         public ICollection<Education> Educations { get; set; }
         public ICollection<CategoryAttributeCategory> CategoryAttributeCategories { get; set; }
 

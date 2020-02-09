@@ -7,6 +7,7 @@ import { PanelLayoutComponent } from './layouts/panel-layout/panel-layout.compon
 import { DashBoardComponent } from './pages/panel-pages/dashboard/dashboard.component';
 import { EducationListComponent } from './pages/panel-pages/education/education-list/education-list.component';
 import { EducationCreateComponent } from './pages/panel-pages/education/education-create/education-create.component';
+import { AuthGuard } from './_services/auth-guard.service';
 
 const routes: Routes = [
   {
@@ -14,7 +15,8 @@ const routes: Routes = [
     component: SiteLayoutComponent,
     children: [
       {
-        path: '', component: HomeComponent
+        path: '',
+        loadChildren: () => import('./pages/home/home.module').then(m => m.HomeModule)
       },
       {
         path: 'giris', component: LoginComponent
@@ -24,6 +26,7 @@ const routes: Routes = [
   {
     path: 'panel',
     component: PanelLayoutComponent,
+    canActivate: [AuthGuard],
     children: [
       {
         path: '', component: DashBoardComponent

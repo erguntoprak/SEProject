@@ -11,7 +11,7 @@ namespace SE.Data.Mapping
     {
         public void Configure(EntityTypeBuilder<Core.Entities.Attribute> builder)
         {
-            builder.ToTable("EducationAttribute");
+            builder.ToTable("Attribute");
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Name).HasMaxLength(100).IsRequired();

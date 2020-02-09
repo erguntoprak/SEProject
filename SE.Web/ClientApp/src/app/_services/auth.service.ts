@@ -8,10 +8,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  user = new BehaviorSubject<User>(null);
+  user : BehaviorSubject<User>;
  
   constructor(private baseService:BaseService,private router:Router){
-
+    this.user = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('userData')));
   }
 
   login(loginModel:LoginModel){
@@ -19,7 +19,6 @@ export class AuthService {
     .pipe(
       catchError(this.handleError),
       tap(res => {
-        debugger;
         this.handleAuthentication(
           res.data.id,
           res.data.name,

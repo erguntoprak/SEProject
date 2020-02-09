@@ -11,7 +11,7 @@ namespace SE.Data.Mapping
     {
         public void Configure(EntityTypeBuilder<CategoryAttributeCategory> builder)
         {
-
+            builder.ToTable("CategoryAttributeCategory");
             builder.HasKey(x => x.Id);
 
             builder.HasOne(mapping => mapping.Category)

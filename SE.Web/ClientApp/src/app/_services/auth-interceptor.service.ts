@@ -20,8 +20,8 @@ export class AuthInterceptorService implements HttpInterceptor {
       take(1),
       exhaustMap(user => {
         let headers = new HttpHeaders();
+        headers = headers.set('Content-Type', 'application/json');
         if (!user) {
-          headers = headers.set('Content-Type', 'application/json');
           const modifiedReq = req.clone({
             headers: headers
           });

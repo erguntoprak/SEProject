@@ -25,7 +25,6 @@ namespace SE.Data
                     .ToList();
                 entries.ForEach(entry => entry.State = EntityState.Unchanged);
             }
-            _context.SaveChanges();
             return exception.ToString();
         }
         private DbSet<TEntity> _entities;
@@ -41,7 +40,6 @@ namespace SE.Data
             try
             {
                 Entities.Remove(entity);
-                _context.SaveChanges();
             }
             catch (DbUpdateException exception)
             {
@@ -59,7 +57,6 @@ namespace SE.Data
             try
             {
                 Entities.Add(entity);
-                _context.SaveChanges();
             }
             catch (DbUpdateException exception)
             {
@@ -75,7 +72,6 @@ namespace SE.Data
             try
             {
                 Entities.Update(entity);
-                _context.SaveChanges();
             }
             catch (DbUpdateException exception)
             {

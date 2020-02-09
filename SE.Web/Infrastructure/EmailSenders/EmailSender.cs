@@ -1,76 +1,106 @@
 ﻿using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using NETCore.MailKit.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SE.Web.Infrastructure.EmailSenders
 {
-    public class EmailSender : IEmailSender
+    public class EmailSender : IEmailService
     {
 
         private readonly EmailSettings _emailSettings;
-        private readonly IHostingEnvironment _env;
 
 
-        public EmailSender(IOptions<EmailSettings> emailSettings, IHostingEnvironment env)
+        public EmailSender(IOptions<EmailSettings> emailSettings)
         {
             _emailSettings = emailSettings.Value;
-            _env = env;
         }
 
-
-       public async Task SendEmailAsync(string email, string subject, string message)
-    {
-        try
+        public void Send(string mailTo, string subject, string message, bool isHtml = false)
         {
-            var mimeMessage = new MimeMessage();
+            throw new NotImplementedException();
+        }
 
-            mimeMessage.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.Sender));
+        public void Send(string mailTo, string subject, string message, Encoding encoding, bool isHtml = false)
+        {
+            throw new NotImplementedException();
+        }
 
-            mimeMessage.To.Add(new MailboxAddress(email));
+        public void Send(string mailTo, string mailCc, string mailBcc, string subject, string message, bool isHtml = false)
+        {
+            throw new NotImplementedException();
+        }
 
-            mimeMessage.Subject = subject;
+        public void Send(string mailTo, string mailCc, string mailBcc, string subject, string message, Encoding encoding, bool isHtml = false)
+        {
+            throw new NotImplementedException();
+        }
 
-            mimeMessage.Body = new TextPart("html")
+        public async Task SendAsync(string mailTo, string subject, string message, bool isHtml = false)
+        {
+            try
             {
-                Text = message
-            };
+                var mimeMessage = new MimeMessage();
 
-            using (var client = new SmtpClient())
-            {
-                // For demo-purposes, accept all SSL certificates (in case the server supports STARTTLS)
-                client.ServerCertificateValidationCallback = (s, c, h, e) => true;
+                mimeMessage.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.Sender));
 
-                if (_env.IsDevelopment())
+                mimeMessage.To.Add(new MailboxAddress(mailTo));
+
+                mimeMessage.Subject = subject;
+
+                mimeMessage.Body = new TextPart("html")
                 {
+                    Text = message
+                };
+
+                using (var client = new SmtpClient())
+                {
+                    // For demo-purposes, accept all SSL certificates (in case the server supports STARTTLS)
+                    client.ServerCertificateValidationCallback = (s, c, h, e) => true;
+
+
                     // The third parameter is useSSL (true if the client should make an SSL-wrapped
                     // connection to the server; otherwise, false).
                     await client.ConnectAsync(_emailSettings.MailServer, _emailSettings.MailPort, false);
+
+                    // Note: only needed if the SMTP server requires authentication
+                    await client.AuthenticateAsync(_emailSettings.Sender, _emailSettings.Password);
+
+                    await client.SendAsync(mimeMessage);
+
+                    await client.DisconnectAsync(true);
                 }
-                else
-                {
-                    await client.ConnectAsync(_emailSettings.MailServer);
-                }
 
-                // Note: only needed if the SMTP server requires authentication
-                await client.AuthenticateAsync(_emailSettings.Sender, _emailSettings.Password);
-
-                await client.SendAsync(mimeMessage);
-
-                await client.DisconnectAsync(true);
             }
+            catch (Exception ex)
+            {
+                // TODO: handle exception
+                throw new InvalidOperationException(ex.Message);
+            }
+        }
 
-        }
-        catch (Exception ex)
+        public Task SendAsync(string mailTo, string subject, string message, Encoding encoding, bool isHtml = false)
         {
-            // TODO: handle exception
-            throw new InvalidOperationException(ex.Message);
+            throw new NotImplementedException();
+        }
+
+        public Task SendAsync(string mailTo, string mailCc, string mailBcc, string subject, string message, bool isHtml = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SendAsync(string mailTo, string mailCc, string mailBcc, string subject, string message, Encoding encoding, bool isHtml = false)
+        {
+            throw new NotImplementedException();
         }
     }
-    }
+
+   
+
 }

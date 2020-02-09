@@ -28,7 +28,7 @@ namespace SE.Web.Controllers
                 responseModel.Data = _attributeService.GetAllAttributeByEducationCategoryId(categoryId);
                 return Ok(responseModel);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 responseModel.ErrorMessage.Add("Bilinmeyen bir hata oluştu.Lütfen işlemi tekrar deneyiniz.");
                 return StatusCode(StatusCodes.Status500InternalServerError, responseModel);

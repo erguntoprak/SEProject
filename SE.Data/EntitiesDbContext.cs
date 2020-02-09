@@ -2,9 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using SE.Core.Entities;
 using SE.Data.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SE.Data
 {
@@ -26,18 +23,24 @@ namespace SE.Data
             modelBuilder.ApplyConfiguration(new CategoryAttributeCategoryMap());
             modelBuilder.ApplyConfiguration(new CityMap());
             modelBuilder.ApplyConfiguration(new DistrictMap());
-            modelBuilder.ApplyConfiguration(new NeighbourhoodMap());
+            modelBuilder.ApplyConfiguration(new EducationAddressMap());
+            modelBuilder.ApplyConfiguration(new ImageMap());
+            modelBuilder.ApplyConfiguration(new QuestionMap());
+
         }
         public DbSet<Education> Education { get; set; }
-        public DbSet<Core.Entities.Attribute> Attribute { get; set; }
+        public DbSet<Attribute> Attribute { get; set; }
         public DbSet<AttributeCategory> AttributeCategory { get; set; }
         public DbSet<AttributeEducation> AttributeEducation { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<CategoryAttributeCategory> CategoryAttributeCategory { get; set; }
-
         public DbSet<City> City { get; set; }
         public DbSet<District> District { get; set; }
-        public DbSet<Neighbourhood> Neighbourhood { get; set; }
+        public DbSet<EducationAddress> EducationAddress { get; set; }
+        public DbSet<Image> Image { get; set; }
+        public DbSet<Question> Question { get; set; }
+
+
 
 
 

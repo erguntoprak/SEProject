@@ -8,7 +8,7 @@ namespace SE.Web.Model
     public class EducationAddressModel
     {
         public string Address { get; set; }
-        public int City { get; set; }
-        public int District { get; set; }
+        public int CityId { get; set; }
+        public int DistrictId { get; set; }
     }
 }

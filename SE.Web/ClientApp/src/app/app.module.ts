@@ -28,7 +28,6 @@ import { EducationCreateModule } from './pages/panel-pages/education/education-c
     HttpClientModule,
     SharedModule,
     SiteLayoutModule,
-    HomeModule,
     LoginModule,
     PanelLayoutModule,
     DashBoardModule,

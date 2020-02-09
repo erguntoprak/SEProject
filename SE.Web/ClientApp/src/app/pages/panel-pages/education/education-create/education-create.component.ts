@@ -4,6 +4,8 @@ import { v4 as uuid } from 'uuid';
 import { BaseService } from '../../../../shared/base.service';
 import { ResponseModel } from '../../../../shared/response-model';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { AngularEditorConfig } from '@kolkov/angular-editor';
+
 @Component({
   selector: 'se-education-create',
   templateUrl: './education-create.component.html'
@@ -45,8 +47,8 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
       addressInformation: this.formBuilder.group(
         {
           address: ['', Validators.required],
-          city: [0, Validators.min(1)],
-          district: [0, Validators.min(1)]
+          cityId: [0, Validators.min(1)],
+          districtId: [0, Validators.min(1)]
         }
       ),
       contactInformation: this.formBuilder.group(
@@ -64,13 +66,10 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
     this.getAllCallMethod();
   }
   ngAfterViewInit() {
-    //@ts-ignore
-    CKEDITOR.replace('editor1');
     this.spinner.hide();
   }
 
   onSubmit() {
-    debugger;
     this.spinner.show();
     this.submitted = false;
     if (this.educationForm.invalid) {
@@ -98,8 +97,6 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
 
   //steps
   nextStepOneClick() {
-    //@ts-ignore
-    this.educationForm.controls.generalInformation.controls.description.setValue(CKEDITOR.instances.editor1.getData());
     if (this.educationForm.controls.generalInformation.status == 'VALID' && this.urlImages.length > 0) {
       window.scroll(0, 0);
       let imagesData = this.urlImages.map(({ value }) => value);
@@ -191,4 +188,45 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
       }
     });
   }
+  editorConfig: AngularEditorConfig = {
+    editable: true,
+    spellcheck: true,
+    height: '15rem',
+    minHeight: '5rem',
+    maxHeight: 'auto',
+    width: 'auto',
+    minWidth: '0',
+    translate: 'no',
+    enableToolbar: true,
+    showToolbar: true,
+    placeholder: 'Buraya metin giriniz...',
+    defaultParagraphSeparator: 'p',
+    defaultFontName: '',
+    defaultFontSize: '',
+    fonts: [
+      
+    ],
+    customClasses: [
+      {
+        name: 'quote',
+        class: 'quote',
+      },
+      {
+        name: 'redText',
+        class: 'redText'
+      },
+      {
+        name: 'titleText',
+        class: 'titleText',
+        tag: 'h1',
+      },
+    ],
+    uploadUrl: 'v1/image',
+    sanitize: true,
+    toolbarPosition: 'top',
+    toolbarHiddenButtons: [
+      ['bold', 'italic'],
+      ['fontSize']
+    ]
+  };
 }

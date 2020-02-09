@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SE.Core.Entities;
 using SE.Data;
+using SE.Web.Infrastructure.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,37 +26,37 @@ namespace SE.Web.Extentions
 
                 var attributes = new List<Core.Entities.Attribute>
                 {
-                    new Core.Entities.Attribute { AttributeCategoryId= fizikselImkanlar.Id, Name="Uyku Odası", Description="", DisplayOrder=0},
-                    new Core.Entities.Attribute { AttributeCategoryId= fizikselImkanlar.Id, Name="Yemekhane", Description="", DisplayOrder=1},
-                    new Core.Entities.Attribute { AttributeCategoryId= fizikselImkanlar.Id, Name="Havuz", Description="", DisplayOrder=2},
-                    new Core.Entities.Attribute { AttributeCategoryId= fizikselImkanlar.Id, Name="Oyun Alanı", Description="", DisplayOrder=3},
-                    new Core.Entities.Attribute { AttributeCategoryId= fizikselImkanlar.Id, Name="Bahçe", Description="", DisplayOrder=3},
+                    new Core.Entities.Attribute { AttributeCategory= fizikselImkanlar, Name="Uyku Odası", Description="", DisplayOrder=0},
+                    new Core.Entities.Attribute { AttributeCategory= fizikselImkanlar, Name="Yemekhane", Description="", DisplayOrder=1},
+                    new Core.Entities.Attribute { AttributeCategory= fizikselImkanlar, Name="Havuz", Description="", DisplayOrder=2},
+                    new Core.Entities.Attribute { AttributeCategory= fizikselImkanlar, Name="Oyun Alanı", Description="", DisplayOrder=3},
+                    new Core.Entities.Attribute { AttributeCategory= fizikselImkanlar, Name="Bahçe", Description="", DisplayOrder=3},
 
-                    new Core.Entities.Attribute { AttributeCategoryId= hizmetler.Id, Name="Güvenlik", Description="", DisplayOrder=0},
-                    new Core.Entities.Attribute { AttributeCategoryId= hizmetler.Id, Name="Rehberlik", Description="", DisplayOrder=1},
-                    new Core.Entities.Attribute { AttributeCategoryId= hizmetler.Id, Name="Servis", Description="", DisplayOrder=2},
-                    new Core.Entities.Attribute { AttributeCategoryId= hizmetler.Id, Name="Oyun Grubu", Description="", DisplayOrder=3},
-                    new Core.Entities.Attribute { AttributeCategoryId= hizmetler.Id, Name="Organik Beslenme", Description="", DisplayOrder=3},
+                    new Core.Entities.Attribute { AttributeCategory= hizmetler, Name="Güvenlik", Description="", DisplayOrder=0},
+                    new Core.Entities.Attribute { AttributeCategory= hizmetler, Name="Rehberlik", Description="", DisplayOrder=1},
+                    new Core.Entities.Attribute { AttributeCategory= hizmetler, Name="Servis", Description="", DisplayOrder=2},
+                    new Core.Entities.Attribute { AttributeCategory= hizmetler, Name="Oyun Grubu", Description="", DisplayOrder=3},
+                    new Core.Entities.Attribute { AttributeCategory= hizmetler, Name="Organik Beslenme", Description="", DisplayOrder=3},
 
-                    new Core.Entities.Attribute { AttributeCategoryId= kulupler.Id, Name="Satranç", Description="", DisplayOrder=0},
-                    new Core.Entities.Attribute { AttributeCategoryId= kulupler.Id, Name="Rehberlik", Description="", DisplayOrder=1},
-                    new Core.Entities.Attribute { AttributeCategoryId= kulupler.Id, Name="Müzik Kulübü", Description="", DisplayOrder=2},
-                    new Core.Entities.Attribute { AttributeCategoryId= kulupler.Id, Name="Gezi Kulübü", Description="", DisplayOrder=3},
-                    new Core.Entities.Attribute { AttributeCategoryId= kulupler.Id, Name="Akıl ve Zeka Oyunları", Description="", DisplayOrder=3},
+                    new Core.Entities.Attribute { AttributeCategory= kulupler, Name="Satranç", Description="", DisplayOrder=0},
+                    new Core.Entities.Attribute { AttributeCategory= kulupler, Name="Rehberlik", Description="", DisplayOrder=1},
+                    new Core.Entities.Attribute { AttributeCategory= kulupler, Name="Müzik Kulübü", Description="", DisplayOrder=2},
+                    new Core.Entities.Attribute { AttributeCategory= kulupler, Name="Gezi Kulübü", Description="", DisplayOrder=3},
+                    new Core.Entities.Attribute { AttributeCategory= kulupler, Name="Akıl ve Zeka Oyunları", Description="", DisplayOrder=3},
 
                 };
                 context.Attribute.AddRange(attributes);
 
                 var categoryList = new List<Category>{
-                    new Category { Name="Özel Anaokul" },
-                    new Category { Name="Özel İlkokul" },
-                    new Category { Name="Özel Ortaokul" },
-                    new Category { Name="Özel Lise" },
-                    new Category { Name="Özel Anadolu Lisesi" },
-                    new Category { Name="Kolej" },
-                    new Category { Name="Dil Okulu & Kursu" },
-                    new Category { Name="Kişisel Gelişim Kursu" },
-                    new Category { Name="Kurs Merkezi" }
+                    new Category { Name="Özel Anaokul",SeoUrl=UrlHelper.FriendlyUrl("Özel Anaokul") },
+                    new Category { Name="Özel İlkokul",SeoUrl=UrlHelper.FriendlyUrl("Özel İlkokul") },
+                    new Category { Name="Özel Ortaokul" ,SeoUrl=UrlHelper.FriendlyUrl("Özel Ortaokul")},
+                    new Category { Name="Özel Lise",SeoUrl=UrlHelper.FriendlyUrl("Özel Lise") },
+                    new Category { Name="Özel Anadolu Lisesi",SeoUrl=UrlHelper.FriendlyUrl("Özel Anadolu Lisesi") },
+                    new Category { Name="Kolej",SeoUrl=UrlHelper.FriendlyUrl("Kolej") },
+                    new Category { Name="Dil Okulu & Kursu",SeoUrl=UrlHelper.FriendlyUrl("Dil Okulu & Kursu") },
+                    new Category { Name="Kişisel Gelişim Kursu",SeoUrl=UrlHelper.FriendlyUrl("Kişisel Gelişim Kursu") },
+                    new Category { Name="Kurs Merkezi",SeoUrl=UrlHelper.FriendlyUrl("Kurs Merkezi") }
                 };
                 context.Category.AddRange(categoryList);
                 context.SaveChanges();
@@ -63,37 +64,38 @@ namespace SE.Web.Extentions
 
                 context.CategoryAttributeCategory.Add(new CategoryAttributeCategory
                 {
-                    AttributeCategoryId = fizikselImkanlar.Id,
+                    AttributeCategory = fizikselImkanlar,
                     CategoryId = 1
                 });
                 context.CategoryAttributeCategory.Add(new CategoryAttributeCategory
                 {
-                    AttributeCategoryId = hizmetler.Id,
+                    AttributeCategory = hizmetler,
                     CategoryId = 1
                 });
                 context.CategoryAttributeCategory.Add(new CategoryAttributeCategory
                 {
-                    AttributeCategoryId = kulupler.Id,
+                    AttributeCategory = kulupler,
                     CategoryId = 1
                 });
 
                 context.CategoryAttributeCategory.Add(new CategoryAttributeCategory
                 {
-                    AttributeCategoryId = fizikselImkanlar.Id,
+                    AttributeCategory = fizikselImkanlar,
                     CategoryId = 2
                 });
                 context.CategoryAttributeCategory.Add(new CategoryAttributeCategory
                 {
-                    AttributeCategoryId = hizmetler.Id,
+                    AttributeCategory = hizmetler,
                     CategoryId = 2
                 });
                 context.CategoryAttributeCategory.Add(new CategoryAttributeCategory
                 {
-                    AttributeCategoryId = kulupler.Id,
+                    AttributeCategory = kulupler,
                     CategoryId = 3
                 });
 
-                context.City.Add(new City { Name="İzmir" });
+                context.City.Add(new City { Name = "İzmir" });
+                context.SaveChanges();
 
                 context.District.Add(new District { Name = "ALİAĞA", CityId = 1 });
                 context.District.Add(new District { Name = "BALÇOVA", CityId = 1 });
@@ -127,7 +129,7 @@ namespace SE.Web.Extentions
                 context.SaveChanges();
             }
 
-           
+
         }
     }
 }

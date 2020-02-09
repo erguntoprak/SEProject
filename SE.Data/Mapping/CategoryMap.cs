@@ -15,7 +15,7 @@ namespace SE.Data.Mapping
             builder.HasKey(d => d.Id);
 
             builder.Property(d => d.Name).HasMaxLength(100).IsRequired();
-
+            builder.Property(x => x.SeoUrl).HasMaxLength(120);
             builder.HasMany(d => d.Educations).WithOne(d => d.Category).HasForeignKey(d => d.CategoryId).IsRequired().OnDelete(DeleteBehavior.Cascade);
 
          

@@ -52,14 +52,13 @@ export class LoginComponent implements OnInit {
             email: this.loginForm.value.email,
             password: this.loginForm.value.password
         };
-        this.authService.login(this.loginModel).subscribe(data => {
+      this.authService.login(this.loginModel).subscribe(data => {
             this.spinner.hide();
             this.router.navigate(['/panel']);
         });
     }
 
     onRegisterSubmit() {
-        debugger;
         this.submittedLogin = true;
         this.submittedRegister = true;
         if (this.registerForm.invalid) {
@@ -72,7 +71,6 @@ export class LoginComponent implements OnInit {
             password: this.registerForm.value.password
         }
         this.authService.signup(this.registerModel).subscribe(responseModel => {
-            debugger;
             if (responseModel.errorMessage.length > 0) {
                 for (var error in responseModel.errorMessage) 
                 {
