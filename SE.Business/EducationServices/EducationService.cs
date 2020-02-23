@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using FluentValidation;
 using SE.Core.DTO;
 using SE.Core.Entities;
 using SE.Data;
@@ -11,14 +12,22 @@ namespace SE.Business.EducationServices
     public class EducationService : IEducationService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public EducationService(IUnitOfWork unitOfWork)
+        private readonly IValidator<EducationInsertDto> _educationInsertDtoValidator;
+
+        public EducationService(IUnitOfWork unitOfWork, IValidator<EducationInsertDto> educationInsertDtoValidator)
         {
             _unitOfWork = unitOfWork;
+            _educationInsertDtoValidator = educationInsertDtoValidator;
         }
         public void InsertEducation(EducationInsertDto educationInsertDto)
         {
             try
             {
+                var educationInsertDtoValidate = _educationInsertDtoValidator.Validate(educationInsertDto, ruleSet: "all");
+                if (!educationInsertDtoValidate.IsValid)
+                {
+                    throw new ValidationException(educationInsertDtoValidate.Errors);
+                }
                 var education = new Education
                 {
                     Name = educationInsertDto.GeneralInformation.EducationName,
@@ -49,7 +58,7 @@ namespace SE.Business.EducationServices
                     DistrictId = educationInsertDto.AddressInformation.DistrictId,
                 };
                 education.EducationAddress = address;
-                foreach(var image in educationInsertDto.Images)
+                foreach (var image in educationInsertDto.Images)
                 {
                     education.Images.Add(new Image
                     {
@@ -64,7 +73,7 @@ namespace SE.Business.EducationServices
                         Title = questionItem.Question,
                         Answer = questionItem.Answer
                     });
-                   
+
                 }
                 foreach (var attributeId in educationInsertDto.Attributes)
                 {
@@ -90,11 +99,11 @@ namespace SE.Business.EducationServices
                                     join c in _unitOfWork.CategoryRepository.Table on e.CategoryId equals c.Id
                                     join a in _unitOfWork.AddressRepository.Table on e.EducationAddress.Id equals a.Id
                                     join d in _unitOfWork.DistrictRepository.Table on a.DistrictId equals d.Id
-                                    let image = (from i in _unitOfWork.ImageRepository.Table where      i.EducationId==e.Id select i.ImageBase64).FirstOrDefault()
+                                    let image = (from i in _unitOfWork.ImageRepository.Table where i.EducationId == e.Id select i.ImageBase64).FirstOrDefault()
                                     where e.UserId == userId
                                     select new EducationListDto
                                     {
-                                        Name=e.Name,
+                                        Name = e.Name,
                                         CategoryName = c.Name,
                                         CategorySeoUrl = c.SeoUrl,
                                         DistrictName = d.Name,
@@ -103,7 +112,7 @@ namespace SE.Business.EducationServices
                                         SeoUrl = e.SeoUrl
                                     }).ToList();
             return educationListDto;
-                                   
+
         }
     }
 }

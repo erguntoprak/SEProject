@@ -1,39 +1,33 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { SeButton } from './layouts/elements/se-button/se-button.component';
-import { HttpClientModule } from '@angular/common/http';
-import { SharedModule } from './shared/shared.module';
-import { CoreModule } from './core.module';
-import { SiteLayoutModule } from './layouts/site-layout/site-layout.module';
-import { NgxSpinnerModule } from 'ngx-spinner';
-import { HomeModule } from './pages/home/home.module';
-import { LoginModule } from './pages/login/login.module';
 import { PanelLayoutModule } from './layouts/panel-layout/panel-layout.module';
-import { DashBoardModule } from './pages/panel-pages/dashboard/dashboard.module';
-import { EducationListModule } from './pages/panel-pages/education/education-list/education-list.module';
-import { EducationCreateModule } from './pages/panel-pages/education/education-create/education-create.module';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { SiteLayoutModule } from './layouts/site-layout/site-layout.module';
+import { AuthInterceptorService } from './_services/auth-interceptor.service';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    SeButton
+    AppComponent
   ],
   imports: [
     BrowserModule,
-    CoreModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
-    NgxSpinnerModule,
-    HttpClientModule,
-    SharedModule,
-    SiteLayoutModule,
-    LoginModule,
     PanelLayoutModule,
-    DashBoardModule,
-    EducationListModule,
-    EducationCreateModule
+    SiteLayoutModule,
+    NgxSpinnerModule,
+    HttpClientModule
   ],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true
+    }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

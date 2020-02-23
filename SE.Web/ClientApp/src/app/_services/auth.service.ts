@@ -5,7 +5,7 @@ import { BehaviorSubject, throwError } from 'rxjs';
 import { ResponseModel } from '../shared/response-model';
 import { catchError,tap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
-
+import { User, LoginModel, RegisterModel } from '../shared/models';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   user : BehaviorSubject<User>;

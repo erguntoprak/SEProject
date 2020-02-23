@@ -4,11 +4,9 @@ import { BaseService } from './base.service';
 import { CommonModule } from '@angular/common';
 
 @NgModule({
-  imports: [CommonModule, NgxSpinnerModule],
+  imports: [CommonModule],
   exports: [
-    CommonModule,
-    NgxSpinnerModule
-  ],
-  providers: [BaseService]
+    CommonModule
+  ]
 })
 export class SharedModule { }

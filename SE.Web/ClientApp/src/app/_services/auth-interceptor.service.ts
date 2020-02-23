@@ -23,12 +23,14 @@ export class AuthInterceptorService implements HttpInterceptor {
         headers = headers.set('Content-Type', 'application/json');
         if (!user) {
           const modifiedReq = req.clone({
+            url: `https://localhost:44362/api/${req.url}`,
             headers: headers
           });
           return next.handle(modifiedReq);
         }
         headers = headers.set('Authorization', `Bearer ${user.token}`);
         const modifiedReq = req.clone({
+          url: `https://localhost:44362/api/${req.url}`,
           headers: headers
         });
         return next.handle(modifiedReq);

@@ -122,19 +122,15 @@ namespace SE.Web.Controllers
                         responseModel.ErrorMessage = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
                         return BadRequest(responseModel);
                     }
-                    if (_userManager.Users.Any(d => d.UserName == registerModel.UserName))
-                    {
-                        responseModel.ErrorMessage.Add("Kullanıcı adı daha önce kullanılmıştır.");
-                        return Ok(responseModel);
-                    }
                     if (_userManager.Users.Any(d => d.Email == registerModel.Email))
                     {
                         responseModel.ErrorMessage.Add("E-posta daha önce kullanılmıştır.");
                         return BadRequest(responseModel);
                     }
+                  
                     User user = new User
                     {
-                        UserName = registerModel.UserName,
+                        UserName = "egitimkurumu",
                         Email = registerModel.Email,
                         PhoneNumber = registerModel.Phone
                     };

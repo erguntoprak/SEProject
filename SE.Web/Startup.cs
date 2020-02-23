@@ -12,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using SE.Business.Infrastructure.FluentValidation.Validations;
+using SE.Core.DTO;
 using SE.Core.Entities;
 using SE.Data;
 using SE.Web.Extentions;
@@ -66,6 +68,8 @@ namespace SE.Web
             services.AddDbContext<EntitiesDbContext>(dbcontextoption => dbcontextoption.UseSqlServer(sqlConnection, b => b.MigrationsAssembly("SE.Web")));
             services.DependencyRegister();
             services.AddTransient<IValidator<LoginModel>, LoginModelValidator>();
+            services.AddSingleton<IValidator<EducationInsertDto>, EducationInsertDtoValidation>();
+
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
             services.Configure<JwtSecurityTokenSetting>(Configuration.GetSection("Token"));
             services.AddAutoMapper(typeof(Startup));
@@ -102,17 +106,6 @@ namespace SE.Web
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
-            });
-
-            app.UseSpa(spa =>
-            {
-                spa.Options.SourcePath = "ClientApp";
-                spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-
-                if (env.IsDevelopment())
-                {
-                    spa.UseAngularCliServer(npmScript: "start");
-                }
             });
         }
     }

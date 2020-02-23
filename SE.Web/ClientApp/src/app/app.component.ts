@@ -1,31 +1,24 @@
-import { Component, AfterViewInit, OnInit } from '@angular/core';
-import { Router, NavigationStart, NavigationEnd } from '@angular/router';
+import { Component } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ScriptLoaderService } from './_services/script-loader.service';
+import { Router, NavigationStart, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, AfterViewInit {
-  title = 'ClientApp';
+export class AppComponent {
+  constructor(private spinner: NgxSpinnerService, private _router: Router) {
 
-  constructor(private _script: ScriptLoaderService,private _router: Router, private spinner: NgxSpinnerService) {
+  }
+  ngOnInit() {
     this._router.events.subscribe((route) => {
-      if (route instanceof NavigationStart) {     
-          this.spinner.show();
+      if (route instanceof NavigationStart) {
+        this.spinner.show();
       }
       if (route instanceof NavigationEnd) {
         this.spinner.hide();
       }
     });
-  }
-
-  ngOnInit() {
-   
-  }
-  ngAfterViewInit() {
-    
   }
 }

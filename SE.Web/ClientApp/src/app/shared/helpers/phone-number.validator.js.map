@@ -1,1 +1,0 @@
-{"version":3,"file":"phone-number.validator.js","sourceRoot":"","sources":["phone-number.validator.ts"],"names":[],"mappings":";;AAEA,SAAgB,oBAAoB,CAAC,OAAwB;IAIzD,IAAM,KAAK,GAAG,OAAO,CAAC,IAAI,CAAC,OAAO,CAAC,KAAK,CAAC,CAAA;IACzC,OAAO,KAAK;QACR,CAAC,CAAC,IAAI;QACN,CAAC,CAAC,EAAE,aAAa,EAAE,EAAE,KAAK,EAAE,KAAK,EAAE,KAAK,EAAE,OAAO,CAAC,KAAK,EAAE,EAAE,CAAA;AACnE,CAAC;AARD,oDAQC"}

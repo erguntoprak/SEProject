@@ -3,7 +3,8 @@ import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { SharedModule } from '../../shared/shared.module';
 import { SiteLayoutComponent } from './site-layout.component';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
+
 @NgModule({
   declarations: [
     HeaderComponent,

@@ -17,7 +17,8 @@ import { PanelFooterComponent } from '../panel-footer/panel-footer.component';
     PanelLayoutComponent,
     PanelAsideComponent,
     PanelHeaderComponent,
-    PanelFooterComponent
+    PanelFooterComponent,
+    RouterModule
   ]
 })
 export class PanelLayoutModule { }

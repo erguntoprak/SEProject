@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -22,7 +23,7 @@ namespace SE.Web.Controllers
     public class EducationController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly IEducationService _educationService; 
+        private readonly IEducationService _educationService;
         public EducationController(IMapper mapper, IEducationService educationService)
         {
             _mapper = mapper;
@@ -31,23 +32,33 @@ namespace SE.Web.Controllers
         [HttpPost("AddEducation")]
         public IActionResult AddEducationAsync([FromBody]EducationInsertModel educationInsertModel)
         {
+            ResponseModel responseModel = new ResponseModel();
             try
             {
+                if (User.FindFirstValue(ClaimTypes.Name) == null || User.FindFirstValue(ClaimTypes.Name) == string.Empty)
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest, responseModel);
+                }
                 educationInsertModel.GeneralInformation.UserId = User.FindFirstValue(ClaimTypes.Name);
                 educationInsertModel.GeneralInformation.SeoUrl = UrlHelper.FriendlyUrl(educationInsertModel.GeneralInformation.EducationName);
-                if (educationInsertModel !=null)
+                if (educationInsertModel != null)
                 {
                     var educationInsertDto = _mapper.Map<EducationInsertDto>(educationInsertModel);
                     _educationService.InsertEducation(educationInsertDto);
-                    return Ok();
+                    return Ok(responseModel);
                 }
-                return StatusCode(StatusCodes.Status400BadRequest);
+                return StatusCode(StatusCodes.Status400BadRequest, responseModel);
 
             }
-            catch (Exception ex) 
+            catch (ValidationException ex)
             {
-
-                throw ex;
+                responseModel.ErrorMessage.AddRange(ex.Errors.Select(d=>d.ErrorMessage));
+                return StatusCode(StatusCodes.Status400BadRequest, responseModel);
+            }
+            catch (Exception ex)
+            {
+                responseModel.ErrorMessage.Add(ex.Message);
+                return StatusCode(StatusCodes.Status400BadRequest, responseModel);
             }
         }
         [HttpGet("GetAllEducationList")]

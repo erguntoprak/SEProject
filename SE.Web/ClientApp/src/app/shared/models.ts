@@ -1,14 +1,13 @@
-interface LoginModel {
+export interface LoginModel {
     email: string;
     password: string;
 }
-interface RegisterModel {
-    userName: string;
+export interface RegisterModel {
     email: string;
     phone: string;
     password: string;
 }
-interface User {
+export interface User {
     id: string;
     name: string;
     surname: string;
@@ -16,7 +15,7 @@ interface User {
     userName: string;
     token: string;
 }
-interface KeyValueModel {
+export interface KeyValueModel {
     key: any;
     value: any;
 }
