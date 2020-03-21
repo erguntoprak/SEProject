@@ -1,6 +1,6 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
-using FluentValidation;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,18 +10,16 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using SE.Business.Infrastructure.FluentValidation.Validations;
-using SE.Core.DTO;
+using SE.Business.EmailSenders;
+using SE.Business.Infrastructure.Autofac;
 using SE.Core.Entities;
 using SE.Data;
 using SE.Web.Extentions;
-using SE.Web.Infrastructure.EmailSenders;
 using SE.Web.Infrastructure.Jwt;
-using SE.Web.Model;
-using SE.Web.Model.Validations;
-using System;
+using System.IO;
 using System.Text;
 
 namespace SE.Web
@@ -34,6 +32,7 @@ namespace SE.Web
         }
 
         public IConfiguration Configuration { get; }
+
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -67,16 +66,11 @@ namespace SE.Web
             string sqlConnection = @"Server =.; Database = EducationDb; Trusted_Connection = True;";
             services.AddDbContext<EntitiesDbContext>(dbcontextoption => dbcontextoption.UseSqlServer(sqlConnection, b => b.MigrationsAssembly("SE.Web")));
             services.DependencyRegister();
-            services.AddTransient<IValidator<LoginModel>, LoginModelValidator>();
-            services.AddSingleton<IValidator<EducationInsertDto>, EducationInsertDtoValidation>();
-
+            services.AddCors();
+            services.AddDirectoryBrowser();
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
             services.Configure<JwtSecurityTokenSetting>(Configuration.GetSection("Token"));
             services.AddAutoMapper(typeof(Startup));
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/dist";
-            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -90,23 +84,22 @@ namespace SE.Web
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseSpaStaticFiles();
             app.UseRouting();
             app.UseCors(x => x
                .AllowAnyOrigin()
                .AllowAnyMethod()
                .AllowAnyHeader());
             app.UseAuthentication();
-            app.UseAuthorization();
-            app.UseEndpoints(endpoints =>
+            app.UseDirectoryBrowser(new DirectoryBrowserOptions
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
+                FileProvider = new PhysicalFileProvider(
+            Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images")),
+                RequestPath = "/MyImages"
             });
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }
 }

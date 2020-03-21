@@ -23,11 +23,11 @@ namespace SE.Business.AddressServices
                         Id = d.Id,
                         Name = d.Name
                     },
-                    DistrictDtoList = d.Districts.Select(c=> new DistrictDto
+                    DistrictListDto = d.Districts.Select(c=> new DistrictDto
                     {
                         Id = c.Id,
                         Name = c.Name
-                    }).ToArray()
+                    }).ToList()
                 }).FirstOrDefault();
                 return addressDto;
             }

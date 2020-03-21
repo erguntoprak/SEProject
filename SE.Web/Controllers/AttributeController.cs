@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SE.Business.AttributeServices;
-using SE.Core.DTO;
-using SE.Web.Model;
+using SE.Web.Model.Category;
 
 namespace SE.Web.Controllers
 {
@@ -16,24 +14,25 @@ namespace SE.Web.Controllers
     [Authorize]
     public class AttributeController : ControllerBase
     {
+        private readonly IMapper _mapper;
         private readonly IAttributeService _attributeService;
-        public AttributeController(IAttributeService attributeService)
+
+        public AttributeController(IAttributeService attributeService, IMapper mapper)
         {
             _attributeService = attributeService;
+            _mapper = mapper;
         }
         [HttpGet("GetAllAttributeByEducationCategoryId")]
         public IActionResult GetAllAttributeByEducationCategoryId(int categoryId)
         {
-            ResponseModel responseModel = new ResponseModel();
             try
             {
-                responseModel.Data = _attributeService.GetAllAttributeByEducationCategoryId(categoryId);
-                return Ok(responseModel);
+                var categoryAttributeListModel = _mapper.Map<List<CategoryAttributeListModel>>(_attributeService.GetAllAttributeByEducationCategoryId(categoryId));
+                return Ok(categoryAttributeListModel);
             }
             catch (Exception ex)
             {
-                responseModel.ErrorMessage.Add("Bilinmeyen bir hata oluştu.Lütfen işlemi tekrar deneyiniz.");
-                return StatusCode(StatusCodes.Status500InternalServerError, responseModel);
+                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu.Lütfen işlemi tekrar deneyiniz.");
             }
         }
     }

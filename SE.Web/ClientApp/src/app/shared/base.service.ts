@@ -19,7 +19,10 @@ export class BaseService{
     return this.httpClient
       .get(`${url}/${id}`);
   }
-
+  public getByName<T>(url: string, name: string) {
+    return this.httpClient
+      .get<T>(`${url}${name}`);
+  }
   public post<T>(url: string, item: any): Observable<any> {
     return this.httpClient
       .post<T>(`${url}`, JSON.stringify(item));
@@ -33,7 +36,7 @@ export class BaseService{
 
   public delete(url:string, id: number) {
     return this.httpClient
-      .delete(`${url}/${id}`);
+      .delete(`${url}${id}`);
   }
 
 

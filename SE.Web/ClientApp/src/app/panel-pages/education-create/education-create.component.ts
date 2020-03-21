@@ -2,10 +2,12 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { v4 as uuid } from 'uuid';
 import { BaseService } from '../../shared/base.service';
-import { KeyValueModel } from '../../shared/models';
-import { ResponseModel } from '../../shared/response-model';
+import { KeyValueModel, CategoryAttributeListModel, CategoryModel, AddressModel, CityModel, DistrictModel } from '../../shared/models';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'se-education-create',
@@ -16,10 +18,10 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
   educationForm: FormGroup;
   errorList = [];
   imageMaxSizeMessages = [];
-  categories: Array<Object>;
-  attributeList: object;
-  cityList: Array<Object> = [];
-  districtList: Array<Object>;
+  categories: CategoryModel[];
+  attributeList: CategoryAttributeListModel[];
+  city: CityModel;
+  districtList: DistrictModel[];
   urlImages: KeyValueModel[] = [];
   questionItems: FormArray;
   nextStepOneControl: boolean = true;
@@ -30,12 +32,13 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
 
 
 
-  constructor(private formBuilder: FormBuilder, private baseService: BaseService) { }
+  constructor(private formBuilder: FormBuilder, private baseService: BaseService, private router: Router, private toastr: ToastrService,private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
     this.educationForm = this.formBuilder.group({
       generalInformation: this.formBuilder.group(
         {
+          id: [0, Validators.required],
           educationName: ['', Validators.required],
           educationType: [0, Validators.min(1)],
           description: [''],
@@ -68,14 +71,25 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit() {
-    debugger;
+    this.spinner.show();
     if (this.educationForm.invalid) {
       this.nextStepThreeValidation = true;
       return;
     }
-    this.baseService.post<ResponseModel>("Education/AddEducation", this.educationForm.value).subscribe(data => {
-
-    });
+    
+    this.baseService.post("Education/AddEducation", this.educationForm.value).subscribe(response => {
+      this.router.navigate(['/panel/egitimler']);
+      this.spinner.hide();
+      this.toastr.success('Kayıt işlemi gerçekleşti.', 'Başarılı!');
+      },
+      (error: HttpErrorResponse) => {
+        debugger;
+        this.errorList = this.errorList.concat(error.error);
+        window.scroll(0, 0);
+        this.nextStepThreeControl = false;
+        this.nextStepOneControl = true;
+        this.spinner.hide();
+      });
   }
   getQuestionControl() {
     let questionItems = this.educationForm.get('questions') as FormArray;
@@ -96,11 +110,6 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
   nextStepOneClick() {
     if (this.educationForm.controls.generalInformation.status == 'VALID' && this.urlImages.length > 0) {
       window.scroll(0, 0);
-      let imagesData = this.urlImages.map(({ value }) => value);
-      const images = <FormArray>this.educationForm.controls.images;
-      for (let image of imagesData) {
-        images.push(new FormControl(image));
-      }
       this.nextStepOneControl = false;
       this.nextStepTwoControl = true;
     }
@@ -125,13 +134,17 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
   }
 
   //remove selected image
-  removeImage(id) {
+  removeImage(id, value) {
+    const images = <FormArray>this.educationForm.controls.images;
     this.urlImages = this.urlImages.filter(el => el.key !== id);
     var deleteImage = document.getElementById(id);
     deleteImage.remove();
+    let index = images.controls.findIndex(x => x.value == value)
+    images.removeAt(index);
   }
   //select image
   onSelectFile(event) {
+    const images = <FormArray>this.educationForm.controls.images;
     this.imageMaxSizeMessages = [];
     if (event.target.files && event.target.files[0]) {
       var filesAmount = event.target.files.length;
@@ -140,6 +153,7 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
         if (event.target.files[i].size < 211111) {
           reader.onload = (event: any) => {
             this.urlImages.push({ key: uuid(), value: event.target.result });
+            images.push(new FormControl(event.target.result));
           }
           reader.readAsDataURL(event.target.files[i]);
         }
@@ -161,29 +175,20 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
     }
   }
   //Dropdown selectedId change attributes
-  educationTypeOnChange(event) {  
+  educationTypeOnChange(event) {
     var categoryId = event.target.value.split(": ");
-    this.baseService.getAll<ResponseModel>("Attribute/GetAllAttributeByEducationCategoryId?categoryId=" + categoryId[1]).subscribe(responseModel => {
-      this.attributeList = responseModel.data;
-      if (responseModel.errorMessage.length > 0) {
-        this.errorList = this.errorList.concat(responseModel.errorMessage);
-      }
+    this.baseService.getAll<CategoryAttributeListModel[]>("Attribute/GetAllAttributeByEducationCategoryId?categoryId=" + categoryId[1]).subscribe(attributeList => {
+      this.attributeList = attributeList;
     });
   }
   //Gel All Method
   getAllCallMethod() {
-    this.baseService.getAll<ResponseModel>("Category/GetAllCategoryList").subscribe(responseModel => {
-      this.categories = responseModel.data;
-      if (responseModel.errorMessage.length > 0) {
-        this.errorList = this.errorList.concat(responseModel.errorMessage);
-      }
+    this.baseService.getAll<CategoryModel[]>("Category/GetAllCategoryList").subscribe(categories => {
+      this.categories = categories;
     });
-    this.baseService.getAll<ResponseModel>("Address/GetCityNameDistricts").subscribe(responseModel => {
-      this.cityList.push(responseModel.data.cityDto);
-      this.districtList = responseModel.data.districtDtoList;
-      if (responseModel.errorMessage.length > 0) {
-        this.errorList = this.errorList.concat(responseModel.errorMessage);
-      }
+    this.baseService.getAll<AddressModel>("Address/GetCityNameDistricts").subscribe(addressModel => {
+      this.city = addressModel.cityModel;
+      this.districtList = addressModel.districtListModel;
     });
   }
   editorConfig: AngularEditorConfig = {

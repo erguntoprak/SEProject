@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SE.Business.CategoryServices;
-using SE.Core.DTO;
-using SE.Web.Model;
+using SE.Web.Model.Category;
 
 namespace SE.Web.Controllers
 {
@@ -17,23 +15,23 @@ namespace SE.Web.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
-        public CategoryController(ICategoryService categoryService)
+        private readonly IMapper _mapper;
+        public CategoryController(ICategoryService categoryService, IMapper mapper)
         {
             _categoryService = categoryService;
+            _mapper = mapper;
         }
         [HttpGet("GetAllCategoryList")]
         public IActionResult GetAllCategoryList()
         {
-            ResponseModel responseModel = new ResponseModel();
             try
             {
-                responseModel.Data = _categoryService.GetAllCategoryList();
-                return Ok(responseModel);
+                var categoryModel = _mapper.Map<List<CategoryModel>>(_categoryService.GetAllCategoryList());
+                return Ok(categoryModel);
             }
             catch (Exception)
             {
-                responseModel.ErrorMessage.Add("Bilinmeyen bir hata oluştu.Lütfen işlemi tekrar deneyiniz.");
-                return StatusCode(StatusCodes.Status500InternalServerError, responseModel);
+                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
             }
         }
     }

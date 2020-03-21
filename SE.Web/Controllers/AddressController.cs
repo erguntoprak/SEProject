@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SE.Business.AddressServices;
 using SE.Web.Model;
+using SE.Web.Model.Address;
 
 namespace SE.Web.Controllers
 {
@@ -16,24 +18,24 @@ namespace SE.Web.Controllers
     public class AddressController : ControllerBase
     {
         private readonly IAddressService _addressService;
+        private readonly IMapper _mapper;
 
-        public AddressController(IAddressService addressService)
+        public AddressController(IAddressService addressService, IMapper mapper)
         {
             _addressService = addressService;
+            _mapper = mapper;
         }
         [HttpGet("GetCityNameDistricts")]
         public IActionResult GetCityNameDistricts()
         {
-            ResponseModel responseModel = new ResponseModel();
             try
             {
-                responseModel.Data = _addressService.GetCityNameDistricts();
-                return Ok(responseModel);
+                var addressModel = _mapper.Map<AddressModel>(_addressService.GetCityNameDistricts());
+                return Ok(addressModel);
             }
             catch (Exception)
             {
-                responseModel.ErrorMessage.Add("Bilinmeyen bir hata oluştu.Lütfen işlemi tekrar deneyiniz.");
-                return StatusCode(StatusCodes.Status500InternalServerError, responseModel);
+                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
             }
         }
     }

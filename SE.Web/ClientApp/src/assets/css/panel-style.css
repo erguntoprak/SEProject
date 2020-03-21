@@ -129,7 +129,7 @@ Sidemenu CSS
   top: 0;
   height: 100%;
   width: 250px;
-  z-index: 9999;
+  z-index: 10;
   -webkit-transition: 0.5s;
   transition: 0.5s;
 }
@@ -9414,7 +9414,7 @@ Footer CSS
   }
 .not-valid {
   color: #FF9494;
-  display:inline-block;
+  display:block;
 }
 .attribute-checkbox{
     margin:10px 0;

@@ -79,7 +79,7 @@
                 nav: true,
                 dots: false,
                 stagePadding: 100,
-                navText: [, '<i class="ti-arrow-left"></i>'],
+                navText: [,'<i class="ti-arrow-left"></i>'],
                 responsive: {
                     0: {
                         items: 1,
@@ -1005,5 +1005,5 @@
         }
     }
     ppTestislider();
-
+  $('.body_wrapper').css('display', 'block');
 })(jQuery)

@@ -9,6 +9,8 @@ namespace SE.Core.DTO
         public EducationGeneralInformationDto GeneralInformation { get; set; }
         public int[] Attributes { get; set; }
         public string[] Images { get; set; }
+        public string UserId { get; set; }
+
         public List<EducationQuestionDto> Questions { get; set; }
         public EducationAddressDto AddressInformation { get; set; }
         public EducationContactInformationDto ContactInformation { get; set; }

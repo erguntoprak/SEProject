@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SE.Business.Helpers;
 using SE.Core.Entities;
 using SE.Data;
-using SE.Web.Infrastructure.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;

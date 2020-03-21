@@ -1,18 +1,29 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { EducationEditComponent } from './education-edit.component';
 import { NgxMaskModule, IConfig } from 'ngx-mask'
 import { AngularEditorModule } from '@kolkov/angular-editor';
-
+import { RouterModule, Routes } from '@angular/router';
+import { EducationEditComponent } from './education-edit.component';
+import { SeCheckBox } from '../../_helpers/se-checkbox.component';
 
 export let options: Partial<IConfig> | (() => Partial<IConfig>);
-
+const routes: Routes = [
+  {
+    path: '',
+    component: EducationEditComponent
+  }
+];
 @NgModule({
   declarations: [
     EducationEditComponent
   ],
-  imports: [SharedModule, FormsModule, ReactiveFormsModule, NgxMaskModule.forRoot(options), AngularEditorModule ],
+  imports: [SharedModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgxMaskModule.forRoot(options),
+    AngularEditorModule,
+    RouterModule.forChild(routes)],
   exports: [
     EducationEditComponent
   ]

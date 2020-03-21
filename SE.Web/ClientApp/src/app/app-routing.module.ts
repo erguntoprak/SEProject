@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { PanelLayoutComponent } from './layouts/panel-layout/panel-layout.component';
 import { SiteLayoutComponent } from './layouts/site-layout/site-layout.component';
+import { AuthGuard } from './_services/auth-guard.service';
 
 
 const routes: Routes = [
@@ -29,15 +30,23 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        loadChildren: () => import('./panel-pages/dashboard/dashboard.module').then(m => m.DashBoardModule)
+        loadChildren: () => import('./panel-pages/dashboard/dashboard.module').then(m => m.DashBoardModule),
+        canLoad: [AuthGuard]
       },
       {
         path: 'egitim-ekle',
-        loadChildren: () => import('./panel-pages/education-create/education-create.module').then(m => m.EducationCreateModule)
+        loadChildren: () => import('./panel-pages/education-create/education-create.module').then(m => m.EducationCreateModule),
+        canLoad: [AuthGuard]
+      },
+      {
+        path: 'egitim-duzenle/:name',
+        loadChildren: () => import('./panel-pages/education-edit/education-edit.module').then(m => m.EducationEditModule),
+        canLoad: [AuthGuard]
       },
       {
         path: 'egitimler',
-        loadChildren: () => import('./panel-pages/education-list/education-list.module').then(m => m.EducationListModule)
+        loadChildren: () => import('./panel-pages/education-list/education-list.module').then(m => m.EducationListModule),
+        canLoad: [AuthGuard]
       }
     ]
   },

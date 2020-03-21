@@ -4,6 +4,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +13,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using NETCore.MailKit.Core;
+using SE.Business.AccountServices;
+using SE.Core.DTO;
 using SE.Core.Entities;
-using SE.Web.Infrastructure.EmailSenders;
-using SE.Web.Infrastructure.Helpers;
 using SE.Web.Infrastructure.Jwt;
-using SE.Web.Model;
+using SE.Web.Model.Account;
 
 namespace SE.Web.Controllers
 {
@@ -23,19 +25,17 @@ namespace SE.Web.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly SignInManager<User> _signInManager;
-        private readonly UserManager<User> _userManager;
+
         private readonly JwtSecurityTokenSetting _jwtSecurityTokenSetting;
-        private readonly IEmailService _emailService;
+        private readonly IAccountService _accountService;
+        private readonly IMapper _mapper;
         public IConfiguration _config;
 
 
-        public AccountController(SignInManager<User> signInManager, UserManager<User> userManager, IConfiguration config, IOptions<JwtSecurityTokenSetting> jwtSecurityTokenSetting, IEmailService emailService)
+        public AccountController(IConfiguration config, IOptions<JwtSecurityTokenSetting> jwtSecurityTokenSetting, IAccountService accountService, IMapper mapper)
         {
-            _signInManager = signInManager;
-            _userManager = userManager;
-            _emailService = emailService;
-            //_emailSender = emailSender;
+            _accountService = accountService;
+            _mapper = mapper;
             _jwtSecurityTokenSetting = jwtSecurityTokenSetting.Value;
             _config = config;
         }
@@ -44,67 +44,57 @@ namespace SE.Web.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginModel loginModel)
         {
-            ResponseModel responseModel = new ResponseModel();
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    responseModel.ErrorMessage = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                    return BadRequest(responseModel);
-                }
+                var loginDto = _mapper.Map<LoginDto>(loginModel);
+                var loginResult = await _accountService.LoginAsync(loginDto);
 
-                if (loginModel != null)
+                if (loginResult)
                 {
-                    var user = await _userManager.FindByEmailAsync(loginModel.Email);
-                    if (user != null)
+                    var userDto = await _accountService.GetUserDtoByEmailAsync(loginModel.Email);
+                    var claims = new ClaimsIdentity(new Claim[]
                     {
-                        var result = await _signInManager.CheckPasswordSignInAsync(user, loginModel.Password, false);
+                                new Claim(ClaimTypes.NameIdentifier, userDto.Id.ToString())
+                    });
 
-                        if (result.Succeeded)
-                        {
-                            var claims = new ClaimsIdentity(new Claim[]
-                            {
-                                new Claim(ClaimTypes.Name, user.Id.ToString())
-                            });
+                    var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSecurityTokenSetting.Key));
+                    var creds = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    var tokenDescriptor = new SecurityTokenDescriptor()
+                    {
+                        Subject = claims,
+                        Expires = DateTime.UtcNow.AddDays(7),
+                        SigningCredentials = creds,
+                        Issuer = _jwtSecurityTokenSetting.Issuer,
+                        Audience = _jwtSecurityTokenSetting.Audience
 
-                            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSecurityTokenSetting.Key));
-                            var creds = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-                            var tokenHandler = new JwtSecurityTokenHandler();
-                            var tokenDescriptor = new SecurityTokenDescriptor()
-                            {
-                                Subject = claims,
-                                Expires = DateTime.UtcNow.AddDays(7),
-                                SigningCredentials = creds,
-                                Issuer = _jwtSecurityTokenSetting.Issuer,
-                                Audience = _jwtSecurityTokenSetting.Audience
+                    };
 
-                            };
-                              
-                            var token = tokenHandler.CreateToken(tokenDescriptor);
-                            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+                    var token = tokenHandler.CreateToken(tokenDescriptor);
+                    var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
 
-                            UserModel userModel = new UserModel()
-                            {
-                                Id = user.Id,
-                                Name = user.FirsName,
-                                Surname = user.LastName,
-                                Email = user.Email,
-                                UserName = user.UserName,
-                                Token = tokenString
-                            };
-                            responseModel.Data = userModel;
-                            return Ok(responseModel);
-                        }
-                    }
+                    UserModel userModel = new UserModel()
+                    {
+                        Id = userDto.Id,
+                        Name = userDto.Name,
+                        Surname = userDto.Surname,
+                        Token = tokenString
+                    };
+                    return Ok(userModel);
                 }
-                responseModel.ErrorMessage.Add("Email veya password yanlış");
-                return NotFound(responseModel);
+                else
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest, "Email veya şifre yanlış, lütfen kontrol edip tekrar deneyiniz.");
+                }
+            }
+            catch (ValidationException ex)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, ex.Errors.Select(d => d.ErrorMessage));
             }
             catch (Exception ex)
             {
-                responseModel.ErrorMessage.Add("Bilinmeyen bir hata oluştu.Lütfen işlemi tekrar deneyiniz.");
-                return StatusCode(StatusCodes.Status500InternalServerError, responseModel);
+                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu.Lütfen işlemi daha sonra tekrar deneyiniz.");
             }
 
         }
@@ -112,47 +102,23 @@ namespace SE.Web.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel registerModel)
         {
-            ResponseModel responseModel = new ResponseModel();
             try
             {
-                if (registerModel != null)
+                var registerDto = _mapper.Map<RegisterDto>(registerModel);
+                var registerResult = await _accountService.RegisterAsync(registerDto);
+                if(registerResult != false)
                 {
-                    if (!ModelState.IsValid)
-                    {
-                        responseModel.ErrorMessage = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                        return BadRequest(responseModel);
-                    }
-                    if (_userManager.Users.Any(d => d.Email == registerModel.Email))
-                    {
-                        responseModel.ErrorMessage.Add("E-posta daha önce kullanılmıştır.");
-                        return BadRequest(responseModel);
-                    }
-                  
-                    User user = new User
-                    {
-                        UserName = "egitimkurumu",
-                        Email = registerModel.Email,
-                        PhoneNumber = registerModel.Phone
-                    };
-                    var result = await _userManager.CreateAsync(user, registerModel.Password);
-
-                    if (result.Succeeded)
-                    {
-                        var savedUser = await _userManager.FindByEmailAsync(registerModel.Email);
-                        var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(savedUser);
-                        var confirmationLink = $"{HelperMethods.GetBaseUrl(HttpContext)}/e-posta-onay?userId={savedUser.Id}&confirmation-token={confirmationToken}";
-                        await _emailService.SendAsync(savedUser.Email, "E-posta adresinizi onaylayın!", EmailMessages.GetEmailConfirmationHtml(savedUser.UserName, confirmationLink));
-                        return Ok(responseModel);
-
-                    }
+                    return Ok();
                 }
-                responseModel.ErrorMessage.Add("Tüm bilgileri eksiksiz giriniz.");
-                return NotFound(responseModel);
+                return StatusCode(StatusCodes.Status400BadRequest, "Bilinmeyen bir hata oluştu.Lütfen işlemi daha sonra tekrar deneyiniz.");
+            }
+            catch (ValidationException ex)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, ex.Errors.Select(d => d.ErrorMessage));
             }
             catch (Exception ex)
             {
-                responseModel.ErrorMessage.Add("Bilinmeyen bir hata oluştu.Lütfen işlemi tekrar deneyiniz.");
-                return StatusCode(StatusCodes.Status500InternalServerError, responseModel);
+                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu.Lütfen işlemi daha sonra tekrar deneyiniz.");
             }
         }
     }

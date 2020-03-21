@@ -29,6 +29,8 @@ export class SiteLayoutComponent implements OnInit {
       "assets/vendors/owl-carousel/assets/owl.carousel.min.css", "assets/vendors/nice-select/nice-select.css", "assets/vendors/magnify-pop/magnific-popup.css",
       "assets/vendors/scroll/jquery.mCustomScrollbar.min.css", "assets/css/style.css", "assets/css/responsive.css"];
     this.lazyLoadService.loadScripts(scripts);
-    this.lazyLoadService.loadCss(cssFiles); 
+    this.lazyLoadService.loadCss(cssFiles);
+
+
   }
 }

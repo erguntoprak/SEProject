@@ -8,6 +8,7 @@ import { PanelLayoutModule } from './layouts/panel-layout/panel-layout.module';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { SiteLayoutModule } from './layouts/site-layout/site-layout.module';
 import { AuthInterceptorService } from './_services/auth-interceptor.service';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { AuthInterceptorService } from './_services/auth-interceptor.service';
     PanelLayoutModule,
     SiteLayoutModule,
     NgxSpinnerModule,
-    HttpClientModule
+    HttpClientModule,
+    ToastrModule.forRoot()
   ],
   providers: [
     {

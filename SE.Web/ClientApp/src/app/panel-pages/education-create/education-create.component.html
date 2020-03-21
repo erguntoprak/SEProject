@@ -19,6 +19,11 @@
     <div class="card-body">
       <form [formGroup]="educationForm" (ngSubmit)="onSubmit()">
         <div formGroupName="generalInformation" [style.display]="nextStepOneControl ? 'block': 'none'">
+          <div class="form-row" *ngIf="errorList">
+            <span class="not-valid" *ngFor="let error of errorList">
+              {{error}}
+            </span>
+          </div>
           <div class="form-row">
             <div class="form-group col-md-6">
               <label>Eğitim Adı</label>
@@ -46,7 +51,7 @@
               <div class="row">
                 <div class="col-md-2" style="padding:10px;" *ngFor='let url of urlImages'>
                   <div class="single-place">
-                    <span class="remove-button" (click)="removeImage(url.key)"><i class="bx bxs-no-entry"></i></span>
+                    <span class="remove-button" (click)="removeImage(url.key,url.value)"><i class="bx bxs-no-entry"></i></span>
                     <img [id]="url.key" class="single-place-image" [src]="url.value">
                   </div>
                 </div>
@@ -74,7 +79,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="form-group">
-                    <div *ngFor="let attribute of attribute.attributeDtoList" class="attribute-checkbox">
+                    <div *ngFor="let attribute of attribute.attributeListModel" class="attribute-checkbox">
                       <se-checkbox (change)="onChange(attribute.id, $event.target.checked)" [text]="attribute.name"></se-checkbox>
                     </div>
                   </div>
@@ -95,7 +100,7 @@
                 <label>İl</label>
                 <select formControlName="cityId" class="form-control">
                   <option value="0" selected>Seçiniz</option>
-                  <option [ngValue]="city.id" *ngFor="let city of cityList">{{city.name}}</option>
+                  <option *ngIf="city" [ngValue]="city.id">{{city.name}}</option>
                 </select>
                 <span class="not-valid" *ngIf="nextStepThreeValidation && educationForm.get('addressInformation').get('cityId').errors != null ? educationForm.get('addressInformation').get('cityId').errors.min:false">
                   Lütfen il seçiniz.
@@ -217,261 +222,3 @@
     </div>
   </div>
 
-<!--<div class="dash-content">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12">
-        <form [formGroup]="educationForm" (ngSubmit)="onSubmit()">
-          <div formGroupName="generalInformation" [style.display]="nextStepOneControl ? 'block': 'none'">
-            <div class="db-add-list-wrap">
-              <div class="act-title">
-                <h5><i class="ion-ios-information"></i> Genel Bilgiler</h5>
-              </div>
-              <div class="db-add-listing">
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label>Eğitim Adı</label>
-                      <se-textbox formControlName="educationName" [cssClass]="(nextStepOneValidation && educationForm.controls.generalInformation.controls.educationName.errors!=null ? educationForm.controls.generalInformation.controls.educationName.errors.required:false)?'is-invalid':''" placeholder="Eğitim Adı"></se-textbox>
-                      <div class="not-valid" *ngIf="nextStepOneValidation && educationForm.controls.generalInformation.controls.educationName.errors!=null ? educationForm.controls.generalInformation.controls.educationName.errors.required:false">
-                        Lütfen eğitim adı giriniz.
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label>Eğitim Türü</label>
-                      <se-dropdown formControlName="educationType" [cssClass]="(nextStepOneValidation && educationForm.controls.generalInformation.controls.educationType.errors!=null ? educationForm.controls.generalInformation.controls.educationType.errors.min:false)?'is-invalid':''" (change)="educationTypeOnChange($event)" title="Eğitim Tipi" [dataList]="category">
-                      </se-dropdown>
-                      <div class="not-valid" *ngIf="nextStepOneValidation && educationForm.controls.generalInformation.controls.educationType.errors!=null ? educationForm.controls.generalInformation.controls.educationType.errors.min:false">
-                        Lütfen eğitim türü seçiniz.
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <label for="list_info">Eğitim Hakkında</label>
-                      <angular-editor formControlName="description" [config]="editorConfig"></angular-editor>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="db-add-list-wrap">
-              <div class="act-title">
-                <h5><i class="ion-image"></i> Görseller</h5>
-              </div>
-              <div class="row" style="padding:30px;">
-                <div class="col-md-2" style="padding:10px;" *ngFor='let url of urlImages'>
-                  <div class="single-place">
-                    <span class="remove-button" (click)="removeImage(url.key)"><i class="ion-android-close"></i></span>
-                    <img [id]="url.key" class="single-place-image" [src]="url.value">
-                  </div>
-                </div>
-              </div>
-              <div class="db-add-listing">
-                <div class="form-group">
-                  <div class="form-group">
-                    <div class="add-listing__input-file-box">
-                      <input class="add-listing__input-file" type="file" accept="image/*" multiple (change)="onSelectFile($event)">
-                      <div class="add-listing__input-file-wrap">
-                        <i class="ion-ios-cloud-upload"></i>
-                        <p>Görselleri eklemek için tıklayınız.</p>
-                      </div>
-                    </div>
-                    <div class="not-valid" *ngFor="let imageName of imageMaxSizeMessages">
-                      {{imageName}} adlı görsel 200 kb büyüklüğünden fazladır.
-                    </div>
-                    <div class="not-valid" *ngIf="nextStepOneValidation && urlImages.length==0">
-                      Lütfen görsel seçiniz.
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-            <div class="next-step">
-              <div class="form-group">
-                <button class="btn v3  mar-right-5" (click)="nextStepOneClick()" type="button">Devam Et</button>
-              </div>
-            </div>
-          </div>
-          <div [style.display]="nextStepTwoControl ? 'block': 'none'">
-            <div *ngFor="let attribute of attributeList" class="db-add-list-wrap">
-              <div class="act-title">
-                <h5><i class="ion-ios-home"></i>{{ attribute.categoryName }}</h5>
-              </div>
-              <div class="db-add-listing">
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <div *ngFor="let attribute of attribute.attributeDtoList" class="filter-checkbox">
-                        <se-checkbox (change)="onChange(attribute.id, $event.target.checked)" [text]="attribute.name"></se-checkbox>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="next-step">
-              <div class="form-group">
-                <button class="btn v3  mar-right-5" (click)="previousStepTwoClick()" type="button">Geri</button>
-                <button class="btn v3  mar-right-5" (click)="nextStepTwoClick()" type="button">Devam Et</button>
-              </div>
-            </div>
-          </div>
-          <div [style.display]="nextStepThreeControl ? 'block': 'none'">
-            <div class="db-add-list-wrap">
-              <div class="act-title">
-                <h5><i class="ion-image"></i> Adres Bilgileri</h5>
-              </div>
-              <div formGroupName="addressInformation" class="db-add-listing">
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label>İl</label>
-                      <se-dropdown formControlName="cityId" [cssClass]="(nextStepThreeValidation && educationForm.controls.addressInformation.controls.cityId.errors!=null ? educationForm.controls.addressInformation.controls.cityId.errors.min:false)?'is-invalid':''" title="İl" [dataList]="cityList">
-                      </se-dropdown>
-                      <div class="not-valid" *ngIf="nextStepThreeValidation && educationForm.controls.addressInformation.controls.cityId.errors!=null ? educationForm.controls.addressInformation.controls.cityId.errors.min:false">
-                        Lütfen il seçiniz.
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label>İlçe</label>
-                      <se-dropdown formControlName="districtId" [cssClass]="(nextStepThreeValidation && educationForm.controls.addressInformation.controls.districtId.errors!=null ? educationForm.controls.addressInformation.controls.districtId.errors.min:false)?'is-invalid':''" title="İlçe" [dataList]="districtList">
-                      </se-dropdown>
-                      <div class="not-valid" *ngIf="nextStepThreeValidation && educationForm.controls.addressInformation.controls.districtId.errors!=null ? educationForm.controls.addressInformation.controls.districtId.errors.min:false">
-                        Lütfen ilçe seçiniz.
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <label>Adres</label>
-                      <se-textbox formControlName="address" [cssClass]="(nextStepThreeValidation && educationForm.controls.addressInformation.controls.address.errors!=null ? educationForm.controls.addressInformation.controls.address.errors.required:false)?'is-invalid':''" placeholder="Adres"></se-textbox>
-                      <div class="not-valid" *ngIf="nextStepThreeValidation && educationForm.controls.addressInformation.controls.address.errors!=null ? educationForm.controls.addressInformation.controls.address.errors.required:false">
-                        Lütfen adres giriniz.
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="db-add-list-wrap">
-              <div class="act-title">
-                <h5><i class="ion-image"></i> İletişim Bilgileri</h5>
-              </div>
-              <div formGroupName="contactInformation" class="db-add-listing">
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label>Yetkili Adı</label>
-                      <se-textbox formControlName="authorizedName" [cssClass]="(nextStepThreeValidation && educationForm.controls.contactInformation.controls.authorizedName.errors!=null ? educationForm.controls.contactInformation.controls.authorizedName.errors.required:false)?'is-invalid':''" placeholder="Yetkili Adı"></se-textbox>
-                      <div class="not-valid" *ngIf="nextStepThreeValidation && educationForm.controls.contactInformation.controls.authorizedName.errors!=null ? educationForm.controls.contactInformation.controls.authorizedName.errors.required:false">
-                        Lütfen yetkili adı giriniz.
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label>Yetkili Email</label>
-                      <se-textbox formControlName="authorizedEmail" [cssClass]="(nextStepThreeValidation && educationForm.controls.contactInformation.controls.authorizedEmail.errors!=null ? educationForm.controls.contactInformation.controls.authorizedEmail.errors.required:false)?'is-invalid':''" placeholder="Yetkili Email"></se-textbox>
-                      <div class="not-valid" *ngIf="nextStepThreeValidation && educationForm.controls.contactInformation.controls.authorizedEmail.errors!=null ? educationForm.controls.contactInformation.controls.authorizedEmail.errors.required:false">
-                        Lütfen yetkili Email giriniz.
-                      </div>
-                      <div class="not-valid" *ngIf="nextStepThreeValidation && educationForm.controls.contactInformation.controls.authorizedEmail.errors!=null ? educationForm.controls.contactInformation.controls.authorizedEmail.errors.email:false">
-                        Lütfen geçerli Email giriniz.
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label>Telefon</label>
-                      <input type="text" formControlName="phoneOne" [validation]="true" mask="(000) 000 00 00" class="form-control filter-input" [ngClass]="{ 'is-invalid':(nextStepThreeValidation && educationForm.controls.contactInformation.controls.phoneOne.errors!=null ? educationForm.controls.contactInformation.controls.phoneOne.errors.required:false)}" placeholder="Telefon">
-                      <div class="not-valid" *ngIf="nextStepThreeValidation && educationForm.controls.contactInformation.controls.phoneOne.errors!=null ? educationForm.controls.contactInformation.controls.phoneOne.errors.required:false">
-                        Lütfen telefon giriniz.
-                      </div>
-                      <div class="not-valid" *ngIf="nextStepThreeValidation && educationForm.controls.contactInformation.controls.phoneOne.errors!=null ? educationForm.controls.contactInformation.controls.phoneOne.errors['Mask error']:false">
-                        Lütfen geçerli bir telefon giriniz.
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label>Telefon 2</label>
-                      <input type="text" formControlName="phoneTwo" [validation]="true" mask="(000) 000 00 00" class="form-control filter-input" [ngClass]="{ 'is-invalid':(nextStepThreeValidation && educationForm.controls.contactInformation.controls.phoneTwo.errors!=null ? educationForm.controls.contactInformation.controls.phoneTwo.errors.required:false)}" placeholder="Telefon">
-                      <div class="not-valid" *ngIf="nextStepThreeValidation && educationForm.controls.contactInformation.controls.phoneTwo.errors!=null ? educationForm.controls.contactInformation.controls.phoneTwo.errors.required:false">
-                        Lütfen telefon giriniz.
-                      </div>
-                      <div class="not-valid" *ngIf="nextStepThreeValidation && educationForm.controls.contactInformation.controls.phoneTwo.errors!=null ? educationForm.controls.contactInformation.controls.phoneTwo.errors['Mask error']:false">
-                        Lütfen geçerli bir telefon giriniz.
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label>Kurum Email</label>
-                      <se-textbox formControlName="educationEmail" [cssClass]="(nextStepThreeValidation && educationForm.controls.contactInformation.controls.educationEmail.errors!=null ? educationForm.controls.contactInformation.controls.educationEmail.errors.required:false)?'is-invalid':''" placeholder="Kurum Email"></se-textbox>
-                      <div class="not-valid" *ngIf="nextStepThreeValidation && educationForm.controls.contactInformation.controls.educationEmail.errors!=null ? educationForm.controls.contactInformation.controls.educationEmail.errors.required:false">
-                        Lütfen Email giriniz.
-                      </div>
-                      <div class="not-valid" *ngIf="nextStepThreeValidation && educationForm.controls.contactInformation.controls.educationEmail.errors!=null ? educationForm.controls.contactInformation.controls.educationEmail.errors.email:false">
-                        Lütfen geçerli Email giriniz.
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label>Kurum Website</label>
-                      <se-textbox formControlName="educationWebsite" [cssClass]="(nextStepThreeValidation && educationForm.controls.contactInformation.controls.educationWebsite.errors!=null ? educationForm.controls.contactInformation.controls.educationWebsite.errors.required:false)?'is-invalid':''" placeholder="Kurum Website"></se-textbox>
-                      <div class="not-valid" *ngIf="nextStepThreeValidation && educationForm.controls.contactInformation.controls.educationWebsite.errors!=null ? educationForm.controls.contactInformation.controls.educationWebsite.errors.required:false">
-                        Lütfen kurum website giriniz.
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-            <div class="db-add-list-wrap">
-              <div class="act-title">
-                <h5><i class="ion-image"></i> En Çok Sorulan Soru ve Cevap</h5>
-              </div>
-              <div style="padding:0px 30px;">
-                <strong>Cevap bölümünde cevaplarınızı satır satır göstermek için sonuna noktalı virgül koymanız gerekiyor.(';')</strong>
-              </div>
-              <div class="db-add-listing" formArrayName="questions">
-                <div class="row" [formGroupName]="i" *ngFor="let item of educationForm.get('questions').controls; let i = index;">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <textarea class="form-control" formControlName="question" placeholder="Sorunuz"></textarea>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <textarea class="form-control" formControlName="answer" placeholder="Cevabınız"></textarea>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="db-add-listing">
-                <button class="btn v3  mar-right-5" (click)="addQuestionItem()" type="button">Soru Ekle</button>
-              </div>
-
-
-            </div>
-
-            <div class="next-step">
-              <div class="form-group">
-                <button class="btn v3  mar-right-5" (click)="previousStepThreeClick()" type="button">Geri</button>
-                <button class="btn v3  mar-right-5" type="submit">Kaydet</button>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>-->

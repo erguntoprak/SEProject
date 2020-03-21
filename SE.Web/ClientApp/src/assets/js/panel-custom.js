@@ -301,8 +301,10 @@
             $(this).toggleClass('active');
 		});
 		
-		// World Map JS
 		
+    $('#panel-aside').css('display', 'block');
+   
+    $('#panel-main-content').css('display', 'block');
 
 	});
 }(jQuery));

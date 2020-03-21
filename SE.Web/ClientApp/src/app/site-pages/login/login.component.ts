@@ -5,35 +5,41 @@ import { FormBuilder, FormGroup, NgForm, Validators, FormControl, FormGroupDirec
 import { BaseService } from '../../shared/base.service';
 import { NgxSpinnerService } from "ngx-spinner";
 import { LoginModel, RegisterModel } from '../../shared/models';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 @Component({
-    selector: 'se-login',
-    templateUrl: './login.component.html'
+  selector: 'se-login',
+  templateUrl: './login.component.html'
 })
 export class LoginComponent implements OnInit {
 
-    loginForm: FormGroup;
-    errorList = [];
-    loginModel: LoginModel;
-    constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) { }
+  loginForm: FormGroup;
+  errorList = [];
+  loginModel: LoginModel;
+  submitted = false;
+  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) { }
 
-    ngOnInit() {
-        this.loginForm = this.formBuilder.group({
-            email: ['', [Validators.required, Validators.email]],
-            password: ['', Validators.required],
-        });
-    }
-    onLoginSubmit() {
-        if (this.loginForm.invalid) {
-            return;
-        }
-        this.loginModel = {
-            email: this.loginForm.value.email,
-            password: this.loginForm.value.password
-        };
-        this.authService.login(this.loginModel).subscribe(data => {
-            this.router.navigate(['/panel']);
-        });
-    }
+  ngOnInit() {
+    this.loginForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required],
+    });
+  }
+  onLoginSubmit() {
+    this.submitted = true;
+
+    this.loginModel = {
+      email: this.loginForm.value.email,
+      password: this.loginForm.value.password
+    };
+    this.authService.login(this.loginModel).subscribe(
+      data => {
+        this.router.navigate(['/panel']);
+      },
+      (error : HttpErrorResponse) => {
+        console.log(error);
+      }
+    );
+  }
 }

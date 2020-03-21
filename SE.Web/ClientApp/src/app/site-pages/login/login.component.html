@@ -12,15 +12,18 @@
           <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()" class="login-form mt_60">
             <div class="form-group text_box">
               <label class="f_p text_c f_400">Email</label>
-              <input type="text" id="email" formControlName="email" [ngClass]="{ 'is-invalid':loginForm.controls['email'].errors && (loginForm.controls['email'].dirty || loginForm.controls['email'].touched)}" placeholder="Email Adresiniz">
-              <span class="not-valid" *ngIf="(loginForm.controls['email'].dirty || loginForm.controls['email'].touched) && loginForm.controls.email.errors!=null ? loginForm.controls.email.errors.required:false">
+              <input type="text" id="email" formControlName="email" [ngClass]="{ 'is-invalid':loginForm.get('email').errors && (loginForm.get('email').dirty || loginForm.get('email').touched)}" placeholder="Email Adresiniz">
+              <span class="not-valid" *ngIf="(loginForm.get('email').dirty || loginForm.get('email').touched || submitted ) && loginForm.get('email').errors!=null ? loginForm.get('email').errors.required:false">
                 Lütfen email adresi giriniz.
+              </span>
+              <span class="not-valid" *ngIf="(loginForm.get('email').dirty || loginForm.get('email').touched || submitted ) && loginForm.get('email').errors!=null ? loginForm.get('email').errors.email:false">
+                Lütfen geçerli email adresi giriniz.
               </span>
             </div>
             <div class="form-group text_box">
               <label class="f_p text_c f_400">Şifre</label>
               <input type="password" id="password" formControlName="password" [ngClass]="{ 'is-invalid':loginForm.controls['password'].errors && (loginForm.controls['password'].dirty || loginForm.controls['password'].touched)}" placeholder="*******">
-              <div class="not-valid" *ngIf="(loginForm.controls['password'].dirty || loginForm.controls['password'].touched) && loginForm.controls.password.errors!=null ? loginForm.controls.password.errors.required:false">
+              <div class="not-valid" *ngIf="(loginForm.get('password').dirty || loginForm.get('password').touched || submitted) && loginForm.get('password').errors!=null ? loginForm.get('password').errors.required:false">
                 Lütfen şifrenizi giriniz.
               </div>
             </div>

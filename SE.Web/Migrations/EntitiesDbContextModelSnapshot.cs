@@ -398,7 +398,7 @@ namespace SE.Web.Migrations
                     b.Property<int>("EducationId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ImageBase64")
+                    b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")

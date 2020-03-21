@@ -6,6 +6,7 @@ namespace SE.Core.DTO
 {
     public class EducationListDto
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string CategoryName { get; set; }
         public string CategorySeoUrl { get; set; }

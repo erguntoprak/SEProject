@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Castle.Core" Version="4.4.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="8.6.1" />
@@ -44,6 +45,10 @@
     <ProjectReference Include="..\SE.Business\SE.Business.csproj" />
     <ProjectReference Include="..\SE.Core\SE.Core.csproj" />
     <ProjectReference Include="..\SE.Data\SE.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

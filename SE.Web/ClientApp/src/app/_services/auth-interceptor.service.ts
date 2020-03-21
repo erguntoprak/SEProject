@@ -4,19 +4,22 @@ import {
   HttpRequest,
   HttpHandler,
   HttpParams,
-  HttpHeaders
+  HttpHeaders,
+  HttpErrorResponse
 } from '@angular/common/http';
-import { take, exhaustMap } from 'rxjs/operators';
+import { take, exhaustMap, catchError } from 'rxjs/operators';
 
 import { AuthService } from './auth.service';
+import { throwError } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {
-    return this.authService.user.pipe(
+    return this.authService.currentUserSubject.pipe(
       take(1),
       exhaustMap(user => {
         let headers = new HttpHeaders();
@@ -33,7 +36,18 @@ export class AuthInterceptorService implements HttpInterceptor {
           url: `https://localhost:44362/api/${req.url}`,
           headers: headers
         });
-        return next.handle(modifiedReq);
+        return next.handle(modifiedReq).pipe(
+          catchError((error: HttpErrorResponse) => {
+            switch (error.status) {
+              case 404:      //login
+                this.router.navigateByUrl("/giris");
+                break;
+              case 403:     //forbidden
+                this.router.navigateByUrl("/unauthorized");
+                break;
+            }
+            return throwError(error);
+          }));
       })
     );
   }

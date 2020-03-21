@@ -7,7 +7,6 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 import { RouterModule, Routes } from '@angular/router';
 import { SeCheckBox } from '../../_helpers/se-checkbox.component';
 
-
 export let options: Partial<IConfig> | (() => Partial<IConfig>);
 const routes: Routes = [
   {
@@ -17,9 +16,14 @@ const routes: Routes = [
 ];
 @NgModule({
   declarations: [
-    EducationCreateComponent, SeCheckBox
+    EducationCreateComponent
   ],
-  imports: [SharedModule, FormsModule, ReactiveFormsModule, NgxMaskModule.forRoot(options), AngularEditorModule, RouterModule.forChild(routes)],
+  imports: [SharedModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgxMaskModule.forRoot(options),
+    AngularEditorModule,
+    RouterModule.forChild(routes)],
   exports: [
     EducationCreateComponent
   ]

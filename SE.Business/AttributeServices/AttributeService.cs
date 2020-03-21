@@ -1,4 +1,4 @@
-﻿    using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,11 +17,11 @@ namespace SE.Business.AttributeServices
             _unitOfWork = unitOfWork;
         }
 
-        public List<AttributeListDto> GetAllAttributeByEducationCategoryId(int categoryId)
+        public List<CategoryAttributeListDto> GetAllAttributeByEducationCategoryId(int categoryId)
         {
             try
             {
-                var attributeCategoryList = _unitOfWork.CategoryAttributeCategoryRepository.Table.Where(d => d.CategoryId == categoryId).Select(d=>d.AttributeCategoryId).ToList();
+                var attributeCategoryList = _unitOfWork.CategoryAttributeCategoryRepository.Table.Where(d => d.CategoryId == categoryId).Select(d => d.AttributeCategoryId).ToList();
 
                 var educationAttributeList = (from r in _unitOfWork.AttributeRepository.Table
                                               join s in _unitOfWork.AttributeCategoryRepository.Table
@@ -29,22 +29,23 @@ namespace SE.Business.AttributeServices
                                               where attributeCategoryList.Contains(s.Id)
                                               select r);
 
-                var educationAttributeGroupList = educationAttributeList.AsEnumerable().GroupBy(d => d.AttributeCategoryId).Select(d=> new AttributeListDto {
-                CategoryName = _unitOfWork.AttributeCategoryRepository.Table.Where(x=>x.Id==d.Key).FirstOrDefault().Name,
-                AttributeDtoList = d.Select(x=> new AttributeDto
+                var educationAttributeGroupList = educationAttributeList.AsEnumerable().GroupBy(d => d.AttributeCategoryId).Select(d => new CategoryAttributeListDto
                 {
-                    Id = x.Id,
-                    Name = x.Name
-                }).ToList()
+                    CategoryName = _unitOfWork.AttributeCategoryRepository.Table.Where(x => x.Id == d.Key).FirstOrDefault().Name,
+                    AttributeListDto = d.Select(x => new AttributeDto
+                    {
+                        Id = x.Id,
+                        Name = x.Name
+                    }).ToList()
                 }).ToList();
 
 
 
                 return educationAttributeGroupList;
             }
-            catch 
+            catch
             {
-                throw; 
+                throw;
             }
         }
     }
