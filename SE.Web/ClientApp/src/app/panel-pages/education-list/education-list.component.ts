@@ -4,6 +4,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { EducationListModel } from '../../shared/models';
 import Swal from 'sweetalert2';
 import { HttpErrorResponse } from '@angular/common/http';
+import * as _ from 'lodash';
+import { AcdcLoadingService } from 'acdc-loading';
 
 @Component({
   selector: 'se-education-list',
@@ -14,12 +16,14 @@ export class EducationListComponent implements OnInit {
   educationList : EducationListModel[];
   errorList = [];
 
-  constructor(private baseService: BaseService, private spinner: NgxSpinnerService) {
+  constructor(private baseService: BaseService, private acdcLoadingService: AcdcLoadingService) {
 
   }
   ngOnInit(): void {
-    this.baseService.getAll<EducationListModel[]>("Education/GetAllEducationList").subscribe(educationList => {
+    this.acdcLoadingService.showLoading();
+    this.baseService.getAll<EducationListModel[]>("Education/GetAllEducationListByUserId").subscribe(educationList => {
       this.educationList = educationList;
+      this.acdcLoadingService.hideLoading();
     });
   }
   deleteEducation(educationId: number) {
@@ -39,7 +43,10 @@ export class EducationListComponent implements OnInit {
             'Silindi!',
             '',
             'success'
-          )
+          );
+          _.remove(this.educationList,(education) => {
+            return education.id == educationId;
+          });
         }, (error: HttpErrorResponse) => {this.errorList.push(error.error)}
         )
        

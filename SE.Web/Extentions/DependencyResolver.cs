@@ -32,6 +32,7 @@ namespace SE.Web.Extentions
             serviceProvider.AddScoped<IEducationService, EducationService>();
             serviceProvider.AddScoped<IAccountService, AccountService>();
             serviceProvider.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();
+            serviceProvider.AddScoped<IValidator<RegisterDto>, RegisterDtoValidator>();
             serviceProvider.AddScoped<IValidator<EducationInsertDto>, EducationInsertDtoValidator>();
             serviceProvider.AddScoped<IValidator<EducationInsertDto>, EducationInsertDtoValidator>();
             serviceProvider.AddScoped<IValidator<EducationUpdateDto>, EducationUpdateDtoValidator>();

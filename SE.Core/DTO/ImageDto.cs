@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SE.Core.Entities
+namespace SE.Core.DTO
 {
-    public class Image:BaseEntity
+    public class ImageDto
     {
-        public string ImageUrl{ get; set; }
+        public int Id { get; set; }
+        public string ImageUrl { get; set; }
         public string Title { get; set; }
         public bool FirstVisible { get; set; }
         public int EducationId { get; set; }
-        public Education Education { get; set; }
     }
 }

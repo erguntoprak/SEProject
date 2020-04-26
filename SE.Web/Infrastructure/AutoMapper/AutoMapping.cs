@@ -6,6 +6,7 @@ using SE.Web.Model.Address;
 using SE.Web.Model.Attribute;
 using SE.Web.Model.Category;
 using SE.Web.Model.Education;
+using SE.Web.Model.Image;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,9 +33,9 @@ namespace SE.Web.Infrastructure.AutoMapper
             CreateMap<AddressDto, AddressModel>().ForMember(dest => dest.DistrictListModel, opt => opt.MapFrom(src => src.DistrictListDto)).ForMember(dest => dest.CityModel, opt => opt.MapFrom(src => src.CityDto));
             CreateMap<RegisterModel, RegisterDto>();
             CreateMap<EducationUpdateDto, EducationUpdateModel>().ReverseMap();
-
-
-
+            CreateMap<EducationDetailDto, EducationDetailModel>();
+            CreateMap<ImageDto, ImageModel>().ReverseMap();
+            CreateMap<EducationAddressDetailDto, EducationAddressDetailModel>();
         }
     }
 }

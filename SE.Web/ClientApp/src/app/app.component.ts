@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Router, NavigationStart, NavigationEnd } from '@angular/router';
+import { AcdcLoadingService } from 'acdc-loading';
 
 @Component({
   selector: 'app-root',
@@ -8,16 +9,16 @@ import { Router, NavigationStart, NavigationEnd } from '@angular/router';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  constructor(private spinner: NgxSpinnerService, private _router: Router) {
+  constructor(private _router: Router, private acdcLoadingService: AcdcLoadingService) {
 
   }
   ngOnInit() {
     this._router.events.subscribe((route) => {
       if (route instanceof NavigationStart) {
-        this.spinner.show();
+        this.acdcLoadingService.showLoading();
       }
       if (route instanceof NavigationEnd) {
-        this.spinner.hide();
+        this.acdcLoadingService.hideLoading();
       }
     });
   }

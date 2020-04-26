@@ -12,7 +12,7 @@ namespace SE.Core.DTO
         public string CategorySeoUrl { get; set; }
         public string DistrictName { get; set; }
         public string Address { get; set; }
-        public string Base64Image { get; set; }
+        public string ImageUrl { get; set; }
         public string SeoUrl { get; set; }
 
 

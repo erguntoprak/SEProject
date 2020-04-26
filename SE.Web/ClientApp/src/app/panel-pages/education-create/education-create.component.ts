@@ -2,12 +2,13 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { v4 as uuid } from 'uuid';
 import { BaseService } from '../../shared/base.service';
-import { KeyValueModel, CategoryAttributeListModel, CategoryModel, AddressModel, CityModel, DistrictModel } from '../../shared/models';
+import { KeyValueModel, CategoryAttributeListModel, CategoryModel, AddressModel, CityModel, DistrictModel, ImageModel } from '../../shared/models';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { AcdcLoadingService } from 'acdc-loading';
 
 @Component({
   selector: 'se-education-create',
@@ -18,21 +19,26 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
   educationForm: FormGroup;
   errorList = [];
   imageMaxSizeMessages = [];
+  selectedImageModel: ImageModel = {id:0,firstVisible:false,imageUrl:"",title:"",educationId:0};
+  isSelectFirstVisibleImage: boolean = false;
   categories: CategoryModel[];
   attributeList: CategoryAttributeListModel[];
   city: CityModel;
   districtList: DistrictModel[];
   urlImages: KeyValueModel[] = [];
+  savedImageList: ImageModel[];
   questionItems: FormArray;
   nextStepOneControl: boolean = true;
   nextStepTwoControl: boolean = false;
   nextStepThreeControl: boolean = false;
   nextStepOneValidation: boolean = false;
   nextStepThreeValidation: boolean = false;
+  nextStepFourValidation: boolean = false;
 
 
 
-  constructor(private formBuilder: FormBuilder, private baseService: BaseService, private router: Router, private toastr: ToastrService,private spinner: NgxSpinnerService) { }
+
+  constructor(private formBuilder: FormBuilder, private baseService: BaseService, private router: Router, private toastr: ToastrService, private acdcLoadingService: AcdcLoadingService) { }
 
   ngOnInit() {
     this.educationForm = this.formBuilder.group({
@@ -60,7 +66,7 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
           phoneOne: ['', Validators.required],
           phoneTwo: ['', Validators.required],
           educationEmail: ['', [Validators.required, Validators.email]],
-          educationWebsite: ['',Validators.required]
+          educationWebsite: ['', Validators.required]
         }
       ),
       questions: this.formBuilder.array([this.createQuestionItem()])
@@ -71,25 +77,40 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit() {
-    this.spinner.show();
+    this.acdcLoadingService.showLoading();
     if (this.educationForm.invalid) {
       this.nextStepThreeValidation = true;
+      this.acdcLoadingService.hideLoading();
       return;
     }
-    
-    this.baseService.post("Education/AddEducation", this.educationForm.value).subscribe(response => {
-      this.router.navigate(['/panel/egitimler']);
-      this.spinner.hide();
-      this.toastr.success('Kayıt işlemi gerçekleşti.', 'Başarılı!');
-      },
+
+    this.baseService.post("Education/AddEducation", this.educationForm.value).subscribe(educationId => {
+      this.baseService.getById<ImageModel[]>("Education/GetEducationImagesByEducationId?educationId=", educationId).subscribe(imageModel => {
+        this.savedImageList = imageModel;
+        this.nextStepThreeControl = false;
+        this.nextStepFourValidation = true;
+        this.acdcLoadingService.hideLoading();
+      });
+    },
       (error: HttpErrorResponse) => {
-        debugger;
         this.errorList = this.errorList.concat(error.error);
         window.scroll(0, 0);
         this.nextStepThreeControl = false;
         this.nextStepOneControl = true;
-        this.spinner.hide();
+        this.acdcLoadingService.hideLoading();
       });
+  }
+  saveSelectedFirsImage() {
+    if (this.selectedImageModel.id === 0) {
+      this.isSelectFirstVisibleImage = true;
+      return;
+    }
+    this.acdcLoadingService.showLoading();
+    this.baseService.post("Education/InsertFirstVisibleImage", this.selectedImageModel).subscribe(data => {
+       this.router.navigate(['/panel/egitimler']);
+      this.toastr.success('Kayıt işlemi gerçekleşti.', 'Başarılı!');
+      this.acdcLoadingService.hideLoading();
+    });
   }
   getQuestionControl() {
     let questionItems = this.educationForm.get('questions') as FormArray;
@@ -98,7 +119,7 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
   createQuestionItem() {
     return this.formBuilder.group({
       question: '',
-      answer :''
+      answer: ''
     });
   }
   addQuestionItem(): void {
@@ -142,6 +163,9 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
     let index = images.controls.findIndex(x => x.value == value)
     images.removeAt(index);
   }
+  selectFirstVisibleImage(imageModel: ImageModel) {
+    this.selectedImageModel = imageModel;
+  }
   //select image
   onSelectFile(event) {
     const images = <FormArray>this.educationForm.controls.images;
@@ -150,17 +174,11 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
       var filesAmount = event.target.files.length;
       for (let i = 0; i < filesAmount; i++) {
         var reader = new FileReader();
-        if (event.target.files[i].size < 211111) {
-          reader.onload = (event: any) => {
-            this.urlImages.push({ key: uuid(), value: event.target.result });
-            images.push(new FormControl(event.target.result));
-          }
-          reader.readAsDataURL(event.target.files[i]);
+        reader.onload = (event: any) => {
+          this.urlImages.push({ key: uuid(), value: event.target.result });
+          images.push(new FormControl(event.target.result));
         }
-        else {
-          this.imageMaxSizeMessages.push(event.target.files[i].name);
-        }
-
+        reader.readAsDataURL(event.target.files[i]);
       }
     }
   }
@@ -207,7 +225,7 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
     defaultFontName: '',
     defaultFontSize: '',
     fonts: [
-      
+
     ],
     customClasses: [
       {
@@ -228,8 +246,19 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
     sanitize: true,
     toolbarPosition: 'top',
     toolbarHiddenButtons: [
-      ['bold', 'italic'],
-      ['fontSize']
+      [
+        'subscript',
+        'superscript',
+        'justifyFull',
+        'heading',
+        'fontName'],
+      [
+        'customClasses',
+        'insertImage',
+        'insertVideo',
+        'insertHorizontalRule',
+        'toggleEditorMode'
+      ]
     ]
   };
 }

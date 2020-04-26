@@ -1,0 +1,119 @@
+<section class="breadcrumb_area" style="background-image: url('assets/img/education-green-bay-primary-2000x800-yq882y.jpg');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  ">
+  <img class="breadcrumb_shap" src="img\breadcrumb\banner_bg.png" alt="">
+  <div class="container">
+    <div class="breadcrumb_content text-center">
+      <h1 class="f_p f_700 f_size_50 w_color l_height50 mb_20">YAŞAR ÜNİVERSİTESİ</h1>
+      <p class="f_400 w_color f_size_20 l_height26">Bizi ilgilendiren konu yalnız barışı kurmanın ve korumanın teknik çareleri değil, aynı zamanda kafaları eğitmenin, aydınlatmanın yoludur.</p>
+    </div>
+  </div>
+</section>
+
+<div class="event_schedule_area" id="education-scroll-bar">
+  <div class="container">
+    <div class="event_schedule_inner">
+      <ul class="nav nav-tabs event_tab">
+        <li class="nav-item">
+          <a pageScroll [pageScrollOffset]="180" [pageScrollDuration]="700" class="nav-link" href="#images"><h5>Görseller</h5></a>
+        </li>
+        <li class="nav-item">
+          <a pageScroll [pageScrollOffset]="180" [pageScrollDuration]="700" class="nav-link" href="#education-about"><h5>Eğitim Hakkında</h5> </a>
+        </li>
+        <li class="nav-item">
+          <a pageScroll [pageScrollOffset]="100" [pageScrollDuration]="700" class="nav-link" href="#education-facilities"> <h5>Eğitim İmkanları</h5> </a>
+        </li>
+        <li class="nav-item">
+          <a pageScroll [pageScrollOffset]="100" [pageScrollDuration]="700" class="nav-link" href="#frequently-asked-questions"> <h5>Sıkça Sorulan Sorular</h5> </a>
+        </li>
+        <li class="nav-item">
+          <a pageScroll [pageScrollOffset]="100" [pageScrollDuration]="700" class="nav-link" href="#contact-information"> <h5>İletişim Bilgileri</h5> </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<section class="education_details_area">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12" id="images">
+        <ng-image-slider *ngIf="imageObject.length>0" [imageSize]="{width: '400px', height: '240px'}" [images]="imageObject"></ng-image-slider>
+      </div>
+      <div class="col-lg-12">
+        
+      </div>
+      <div class="col-lg-8">
+        <div class="details_content" id="education-about">
+          <div class="sec_title mb_20">
+            <h3 class="f_p f_size_22 f_500 t_color3 mb_20">{{educationDetailModel.generalInformation.educationName}}</h3>
+            <p class="f_400 f_size_15" [innerHTML]="educationDetailModel.generalInformation.description"></p>
+          </div>
+        </div>
+        <div class="details_content" id="education-facilities">
+          <div class="sec_title mb_20" *ngFor="let attribute of educationDetailModel.categoryAttributeList">
+            <h3 class="f_p f_size_22 f_500 t_color3 mb_20">{{attribute.categoryName}}</h3>
+            <ul class="list-unstyled mb-0">
+              <li *ngFor="let attribute of attribute.attributeListModel"><i class="ti-check"></i><b>{{attribute.name}}</b></li>
+            </ul>
+          </div>
+        </div>
+        <div class="details_content" id="frequently-asked-questions">
+          <div class="sec_title mb_20">
+            <div class="stratup_service_info">
+              <div class="startup_service_item" *ngFor="let questionModel of educationDetailModel.questions">
+                <div class="icon icon_two"><i class="icon-question"></i></div>
+                <h3>{{questionModel.question}}</h3>
+                <p>{{questionModel.answer}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="details_content" id="contact-information">
+          <div class="sec_title mb_70">
+            <h3 class="f_p f_size_22 f_500 t_color3 mb_20">Job Requirements</h3>
+            <p class="f_400 f_size_15">Why I say old chap that is spiffing pukka, bamboozled wind up bugger buggered zonked hanky panky a blinding shot the little rotter, bubble and squeak vagabond cheeky bugger at public school pardon you bloke the BBC. Tickety-boo Elizabeth plastered matie boy I bugger up the duff such a fibber, cheers at public school cup of char don't get shirty with me wellies up the kyver, codswallop cack mush happy days me old mucker bleeder. Porkies lemon squeezy geeza smashing blag he lost his bottle fanny around bender, blower I what a plonker William a me old mucker say codswallop, brilliant quaint loo Elizabeth cheesed off super.!</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="job_info">
+          <div class="info_head">
+            <i class="ti-receipt"></i>
+            <h6 class="f_p f_600 f_size_18 t_color3">Eğitim Bilgileri</h6>
+          </div>
+          <div class="info_item">
+            <i class="ti-location-pin"></i>
+            <h6>İl / İlçe</h6>
+            <p>{{educationDetailModel.addressInformation.cityName}} / {{educationDetailModel.addressInformation.districtName}}</p>
+          </div>
+          <div class="info_item">
+            <i class="ti-home"></i>
+            <h6>Adres</h6>
+            <p>{{educationDetailModel.addressInformation.address}}</p>
+          </div>
+          <div class="info_item">
+            <i class="icon-call-end"></i>
+            <h6>Telefon</h6>
+            <p>0 {{educationDetailModel.contactInformation.phoneOne | mask: '000 000 00 00'}}</p>
+            <p>0 {{educationDetailModel.contactInformation.phoneTwo | mask: '000 000 00 00'}}</p>
+          </div>
+          <div class="info_item">
+            <i class="ti-email"></i>
+            <h6>Email</h6>
+            <p>{{educationDetailModel.contactInformation.educationEmail}}</p>
+          </div>
+          <div class="info_item">
+            <i class="icon-globe"></i>
+            <h6>Kurumsal Web Sitesi</h6>
+            <p>
+              <button (click)="blankLinkClick(educationDetailModel.contactInformation.educationWebsite)">{{educationDetailModel.contactInformation.educationWebsite}}</button>
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

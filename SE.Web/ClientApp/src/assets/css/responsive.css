@@ -412,9 +412,15 @@
 }
 
 @media (max-width:1199px){
-    .s_service_item{
-        padding: 50px 22px 40px;
-    }
+  .event_schedule_inner .event_tab .nav-item + .nav-item{
+      margin-left:5px;
+  }
+  .event_schedule_inner .event_tab .nav-item .nav-link {
+    padding: 6px 20px 8px 20px;
+  }
+  .s_service_item {
+    padding: 50px 22px 40px;
+  }
     .saas_home_area{
         height: 920px;
     }
@@ -734,7 +740,6 @@
     }
     .stratup_service_info{
         margin-left: 0;
-        padding-top: 55px;
     }
     .testimonial_slider_four {
         padding: 0px 25px;
@@ -3549,9 +3554,12 @@
 }
 
 @media (max-width:650px){
-    .about_img .about_img_slider .about_item.w45,.about_img .about_img_slider .about_item.w55{
-        width: 100%;
-    }
+  #education-scroll-bar{
+      display:none;
+  }
+  .about_img .about_img_slider .about_item.w45, .about_img .about_img_slider .about_item.w55 {
+    width: 100%;
+  }
     .about_img .pluse_icon{
         display: none;
     }

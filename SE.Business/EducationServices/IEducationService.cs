@@ -8,10 +8,16 @@ namespace SE.Business.EducationServices
 {
     public interface IEducationService
     {
-        void InsertEducation(EducationInsertDto educationInsertDto);
+        int InsertEducation(EducationInsertDto educationInsertDto);
         List<EducationListDto> GetAllEducationListByUserId(string userId);
-        EducationUpdateDto GetEducationUpdateDtoEditDtoBySeoUrl(string seoUrl, string userId);
-        void UpdateEducation(EducationUpdateDto educationUpdateDto);
+        List<EducationListDto> GetAllEducationListByCategoryId(int categoryId);
+        EducationUpdateDto GetEducationUpdateDtoBySeoUrl(string seoUrl, string userId);
+        int UpdateEducation(EducationUpdateDto educationUpdateDto);
         void DeleteEducation(int educationId,string userId);
+        EducationDetailDto GetEducationDetailDtoBySeoUrl(string seoUrl);
+        List<ImageDto> GetAllEducationImageDtoByEducationId(int educationId);
+        void InsertFirstVisibleImage(ImageDto imageDto);
+        void UpdateFirstVisibleImage(ImageDto imageDto);
+
     }
 }

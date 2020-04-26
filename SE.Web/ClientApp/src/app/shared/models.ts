@@ -18,6 +18,7 @@ export interface KeyValueModel {
     value: any;
 }
 export interface EducationListModel {
+  id: number;
   name: string;
   categoryName: string;
   categorySeoUrl: string;
@@ -50,4 +51,11 @@ export interface CityModel {
 export interface DistrictModel {
   id: string;
   name: string;
+}
+export interface ImageModel {
+  id: number;
+  imageUrl: string;
+  title: string;
+  firstVisible: boolean;
+  educationId: number;
 }

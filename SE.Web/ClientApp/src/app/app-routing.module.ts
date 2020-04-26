@@ -1,10 +1,14 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, ExtraOptions } from '@angular/router';
 import { PanelLayoutComponent } from './layouts/panel-layout/panel-layout.component';
 import { SiteLayoutComponent } from './layouts/site-layout/site-layout.component';
 import { AuthGuard } from './_services/auth-guard.service';
 
-
+const routerOptions: ExtraOptions = {
+  scrollPositionRestoration: 'enabled',
+  anchorScrolling: 'enabled',
+  scrollOffset: [0, 64],
+};
 const routes: Routes = [
   {
     path: '',
@@ -21,6 +25,10 @@ const routes: Routes = [
       {
         path: 'kayit-ol',
         loadChildren: () => import('./site-pages/register/register.module').then(m => m.RegisterModule)
+      },
+      {
+        path: 'egitim-kurumu/:district/:category/:name',
+        loadChildren: () => import('./site-pages/education-detail/education-detail.module').then(m => m.EducationDetailModule)
       }
     ]
   },
@@ -58,7 +66,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, routerOptions)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

@@ -14,9 +14,6 @@ const routes: Routes = [
   declarations: [
     HomeComponent
   ],
-  imports: [SharedModule, ReactiveFormsModule, RouterModule.forChild(routes)],
-  exports: [
-    HomeComponent
-  ]
+  imports: [SharedModule, ReactiveFormsModule, RouterModule.forChild(routes)]
 })
 export class HomeModule { }

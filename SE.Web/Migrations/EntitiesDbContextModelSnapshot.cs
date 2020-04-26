@@ -318,8 +318,7 @@ namespace SE.Web.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
@@ -336,6 +335,7 @@ namespace SE.Web.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SeoUrl")
+                        .IsRequired()
                         .HasColumnType("nvarchar(120)")
                         .HasMaxLength(120);
 
@@ -397,6 +397,9 @@ namespace SE.Web.Migrations
 
                     b.Property<int>("EducationId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("FirstVisible")
+                        .HasColumnType("bit");
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");

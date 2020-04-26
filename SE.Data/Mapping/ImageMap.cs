@@ -13,8 +13,6 @@ namespace SE.Data.Mapping
         {
             builder.ToTable("Image");
             builder.HasKey(x => x.Id);
-            builder.Property(d => d.Title).HasMaxLength(100).IsRequired();
-
         }
     }
 }

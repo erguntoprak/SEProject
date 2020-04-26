@@ -52,7 +52,7 @@
               <div class="col-md-2" style="padding:10px;" *ngFor='let url of urlImages'>
                 <div class="single-place">
                   <span class="remove-button" (click)="removeImage(url.key,url.value)"><i class="bx bxs-no-entry"></i></span>
-                  <img [id]="url.key" class="single-place-image" [src]="url.value">
+                  <img [id]="url.key" class="single-place-image" src="https://localhost:44362/images/{{url.value}}_1000x600.jpg">
                 </div>
               </div>
             </div>
@@ -60,9 +60,6 @@
               <input type="file" class="custom-file-input" accept="image/*" multiple (change)="onSelectFile($event)">
               <label class="custom-file-label">Görsel Seç</label>
             </div>
-            <span class="not-valid" *ngFor="let imageName of imageMaxSizeMessages">
-              {{imageName}} adlı görsel 200 kb büyüklüğünden fazladır.
-            </span>
             <span class="not-valid" *ngIf="nextStepOneValidation && urlImages.length==0">
               Lütfen görsel seçiniz.
             </span>
@@ -219,6 +216,24 @@
         <button class="btn btn-primary previous-button float-right" (click)="previousStepThreeClick()" type="button">Geri</button>
       </div>
     </form>
+    <div [style.display]="nextStepFourValidation ? 'block': 'none'">
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <h6>Sayfalarda gösterilecek ilk görselini seçiniz.</h6>
+          <span class="not-valid" *ngIf="isSelectFirstVisibleImage">
+            Aşağıdaki görsellerden birini seçmeniz gerekiyor.
+          </span>
+          <div class="row">
+            <div class="col-md-2" style="padding:10px;" *ngFor='let image of savedImageList'>
+              <div class="single-place">
+                <img [id]="image.id" (click)="selectFirstVisibleImage(image)" class="single-place-image" [ngClass]="{'active': selectedImageModel.id === image.id}" src="https://localhost:44362/images/{{image.imageUrl}}_1000x600.jpg">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button type="button" (click)="saveSelectedFirsImage()" class="btn btn-primary float-right">Kaydet</button>
+    </div>
   </div>
 </div>
 

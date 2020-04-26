@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace SE.Core.Entities
+namespace SE.Web.Model.Image
 {
-    public class Image:BaseEntity
+    public class ImageModel
     {
-        public string ImageUrl{ get; set; }
+        public int Id { get; set; }
+        public string ImageUrl { get; set; }
         public string Title { get; set; }
         public bool FirstVisible { get; set; }
         public int EducationId { get; set; }
-        public Education Education { get; set; }
     }
 }

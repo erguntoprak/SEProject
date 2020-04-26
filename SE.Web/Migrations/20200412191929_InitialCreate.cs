@@ -249,7 +249,7 @@ namespace SE.Web.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(maxLength: 100, nullable: false),
-                    Description = table.Column<string>(maxLength: 100, nullable: true),
+                    Description = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: false),
                     CategoryId = table.Column<int>(nullable: false),
                     AuthorizedName = table.Column<string>(nullable: true),
@@ -258,7 +258,7 @@ namespace SE.Web.Migrations
                     PhoneTwo = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
                     Website = table.Column<string>(nullable: true),
-                    SeoUrl = table.Column<string>(maxLength: 120, nullable: true)
+                    SeoUrl = table.Column<string>(maxLength: 120, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -331,6 +331,7 @@ namespace SE.Web.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ImageUrl = table.Column<string>(nullable: true),
                     Title = table.Column<string>(maxLength: 100, nullable: false),
+                    FirstVisible = table.Column<bool>(nullable: false),
                     EducationId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>

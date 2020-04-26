@@ -13,7 +13,7 @@ export class SiteLayoutComponent implements OnInit {
   }
   ngOnInit(): void {
     let scripts = ["assets/js/jquery-3.2.1.min.js", "assets/js/propper.js",
-    "assets/js/bootstrap.min.js", "assets/vendors/bootstrap-selector/js/bootstrap-select.min.js",
+      "assets/js/bootstrap.min.js", "assets/js/jquery.nicescroll.js", "assets/vendors/bootstrap-selector/js/bootstrap-select.min.js",
     "assets/vendors/wow/wow.min.js", "assets/vendors/sckroller/jquery.parallax-scroll.js",
     "assets/vendors/owl-carousel/owl.carousel.min.js", "assets/vendors/nice-select/jquery.nice-select.min.js",
     "assets/vendors/imagesloaded/imagesloaded.pkgd.min.js", "assets/vendors/isotope/isotope-min.js",
@@ -24,7 +24,7 @@ export class SiteLayoutComponent implements OnInit {
     "assets/vendors/multiscroll/multiscroll.responsiveExpand.limited.min.js", "assets/vendors/multiscroll/jquery.multiscroll.extensions.min.js","assets/js/main.js"];
 
 
-    let cssFiles = ["assets/css/bootstrap.min.css", "assets/vendors/bootstrap-selector/css/bootstrap-select.min.css", "assets/vendors/themify-icon/themify-icons.css",
+    let cssFiles = ["assets/css/bootstrap.min.css", "assets/vendors/bootstrap-selector/css/bootstrap-select.min.css", "assets/vendors/themify-icon/themify-icons.css", "assets/vendors/simple-line-icon/simple-line-icons.css",
       "assets/vendors/elagent/style.css", "assets/vendors/flaticon/flaticon.css", "assets/vendors/animation/animate.css",
       "assets/vendors/owl-carousel/assets/owl.carousel.min.css", "assets/vendors/nice-select/nice-select.css", "assets/vendors/magnify-pop/magnific-popup.css",
       "assets/vendors/scroll/jquery.mCustomScrollbar.min.css", "assets/css/style.css", "assets/css/responsive.css"];
@@ -32,5 +32,8 @@ export class SiteLayoutComponent implements OnInit {
     this.lazyLoadService.loadCss(cssFiles);
 
 
+  }
+  onActivate(event) {
+    window.scroll(0, 0);
   }
 }

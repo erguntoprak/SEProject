@@ -9434,6 +9434,11 @@ Footer CSS
 .previous-button{
     margin-right:10px;
 }
-
+.single-place .active {
+  border: 5px solid #71bf45;
+  box-shadow: 0 0 5px #71bf45;
+  border-radius: 4px;
+  padding: 2px;
+}
 
 /*# sourceMappingURL=style.css.map */

@@ -6,22 +6,121 @@
     <div class="bubble b_four"></div>
     <div class="bubble b_five"></div>
     <div class="bubble b_six"></div>
-    <div class="triangle b_seven" data-parallax='{"x": 20, "y": 150}'><img src="img\seo\triangle_one.png" alt=""></div>
-    <div class="triangle b_eight" data-parallax='{"x": 120, "y": -10}'><img src="img\seo\triangle_two.png" alt=""></div>
-    <div class="triangle b_nine"><img src="img\seo\triangle_three.png" alt=""></div>
+    <div class="triangle b_seven" data-parallax='{"x": 20, "y": 150}'><img src="assets/img/seo/triangle_one.png" alt=""></div>
+    <div class="triangle b_eight" data-parallax='{"x": 120, "y": -10}'><img src="assets/img/seo/triangle_two.png" alt=""></div>
+    <div class="triangle b_nine"><img src="assets/img/seo/triangle_three.png" alt=""></div>
   </div>
   <div class="banner_top">
     <div class="container">
-      <div class="row">
-        <div class="col-md-12 text-center seo_banner_content">
-          <h2 class="wow fadeInUp" data-wow-delay="0.3s">Drive More Customers<br> Through Digital</h2>
-          <p class="wow fadeInUp" data-wow-delay="0.5s">Chap fantastic skive off chancer knees up starkers easy peasy up the<br> kyver David, bleeding the BBC tomfoolery chimney.!</p>
-          <a href="#" class="seo_btn seo_btn_one btn_hover">Get Started</a>
-          <a href="#" class="seo_btn seo_btn_two btn_hover">Learn More</a>
+      <div class="domain_box_info">
+        <h3 class="wow fadeInUp" data-wow-delay="0.3s">Looking for domain name?</h3>
+        <div class="domain_form_inner">
+          <input type="text" id="a" class="form-control" placeholder="Aradığın eğitimi burada bulabilirsin">
+          <div class="domain_select">
+            <select *ngIf="categories" class="form-control selectpickers">
+              <option [ngValue]="category.id" *ngFor="let category of categories">{{category.name}}</option>
+            </select>
+          </div>
+          <button type="submit" class="hosting_btn">Ara</button>
         </div>
       </div>
-      <div class="saas_home_img wow fadeInUp" data-wow-delay="0.8s">
-        <img src="img\seo\image.png" alt="">
+    </div>
+  </div>
+</section>
+<section class="support_integration_area">
+  <div class="container">
+    <div class="sec_title text-center mb_70 wow fadeInUp" data-wow-delay="0.3s">
+      <h2 class="f_p f_size_30 l_height50 f_600 t_color3">Software Integrations</h2>
+      <p class="f_400 f_size_16 mb-0">Why I say old chap that is spiffing lavatory chip shop gosh off his nut, smashing boot<br> are you taking the piss posh loo brilliant matie boy.!</p>
+    </div>
+    <div class="row flex-row-reverse">
+      <div class="col-lg-9 col-md-10 col-sm-12">
+        <div class="row">
+          <div class="col-lg-3 col-md-3 col-sm-6">
+            <a href="#" class="s_integration_item">
+              <img src="assets/img/new-home/kissmetrics.png" alt="">
+              <h5>KISSmetrics</h5>
+            </a>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-6">
+            <a href="#" class="s_integration_item">
+              <img src="assets/img/new-home/metorik.png" alt="">
+              <h5>Metorik</h5>
+            </a>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-6">
+            <a href="#" class="s_integration_item">
+              <img src="assets/img/new-home/nicereply-1.png" alt="">
+              <h5>Nicereply</h5>
+            </a>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-6">
+            <a href="#" class="s_integration_item">
+              <img src="assets/img/new-home/campfire.png" alt="">
+              <h5>Campfire</h5>
+            </a>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-6">
+            <a href="#" class="s_integration_item">
+              <img src="assets/img/new-home/webhooks.png" alt="">
+              <h5>Webhooks</h5>
+            </a>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-6">
+            <a href="#" class="s_integration_item">
+              <img src="assets/img/new-home/briteverify.png" alt="">
+              <h5>BriteVerify</h5>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-2 col-sm-12">
+        <img class="integration_img" src="assets/img/new-home/tree.png" alt="">
+      </div>
+    </div>
+  </div>
+</section>
+<section class="blog_area_two sec_pad">
+  <div class="container">
+    <div class="row select-box-homepage">
+      <div class="col-md-6">
+        <p class="f_400 f_size_20 mb-0">Öne Çıkan Eğitim Kurumları</p>
+      </div>
+      <div class="col-md-6">
+        <div class="row">
+          <div class="district_dropdown">
+              <select class="form-control selectpickers" *ngIf="districtList" >
+                <option value="0" selected>İlçe Seçiniz</option>
+                <option [ngValue]="district.id" *ngFor="let district of districtList">{{district.name}}</option>
+              </select>
+          </div>
+          <div class="category_dropdown">
+            <select *ngIf="categories" class="form-control selectpickers">
+              <option value="0" selected>Eğitim Türü Seçiniz</option>
+              <option [ngValue]="category.id" *ngFor="let category of categories">{{category.name}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 blog_grid_info">
+        <div class="row">
+          <div class="col-lg-3" *ngFor='let education of educationList'>
+            <div class="blog_list_item blog_list_item_two">
+              <a routerLink="/{{education.categorySeoUrl}}" class="post_date">
+                <span>{{education.categoryName}}</span>
+              </a>
+              <a routerLink="/{{education.categorySeoUrl}}/{{education.seoUrl}}"><img class="img-fluid" src="https://localhost:44362/images/{{education.imageUrl}}_300x180.jpg" alt="{{education.name}}"></a>
+              <div class="blog_content">
+                <a [routerLink]="['/egitim-kurumu/',education.districtSeoUrl,education.categorySeoUrl,education.seoUrl]">
+                  <h5 class="blog_title">{{education.name}}</h5>
+                </a>
+                <p>{{education.districtName}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -12,11 +12,12 @@ import { take, exhaustMap, catchError } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { throwError } from 'rxjs';
 import { Router } from '@angular/router';
+import { AcdcLoadingService } from 'acdc-loading';
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router, private acdcLoadingService: AcdcLoadingService) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     return this.authService.currentUserSubject.pipe(
@@ -41,9 +42,15 @@ export class AuthInterceptorService implements HttpInterceptor {
             switch (error.status) {
               case 404:      //login
                 this.router.navigateByUrl("/giris");
+                this.acdcLoadingService.hideLoading();
+                break;
+              case 401:      //login
+                this.router.navigateByUrl("/giris");
+                this.acdcLoadingService.hideLoading();
                 break;
               case 403:     //forbidden
                 this.router.navigateByUrl("/unauthorized");
+                this.acdcLoadingService.hideLoading();
                 break;
             }
             return throwError(error);
