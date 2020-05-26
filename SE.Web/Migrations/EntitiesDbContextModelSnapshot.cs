@@ -219,6 +219,66 @@ namespace SE.Web.Migrations
                     b.ToTable("AttributeEducation");
                 });
 
+            modelBuilder.Entity("SE.Core.Entities.Blog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FirstVisibleImageName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SeoUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.Property<DateTime>("UpdateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Blog");
+                });
+
+            modelBuilder.Entity("SE.Core.Entities.BlogItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("BlogId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BlogId");
+
+                    b.ToTable("BlogItem");
+                });
+
             modelBuilder.Entity("SE.Core.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -388,6 +448,41 @@ namespace SE.Web.Migrations
                     b.ToTable("EducationAddress");
                 });
 
+            modelBuilder.Entity("SE.Core.Entities.EducationContactForm", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreateDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EducationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("NameSurname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(15)")
+                        .HasMaxLength(15);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EducationId");
+
+                    b.ToTable("EducationContactForm");
+                });
+
             modelBuilder.Entity("SE.Core.Entities.Image", b =>
                 {
                     b.Property<int>("Id")
@@ -405,9 +500,7 @@ namespace SE.Web.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -587,6 +680,24 @@ namespace SE.Web.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SE.Core.Entities.Blog", b =>
+                {
+                    b.HasOne("SE.Core.Entities.User", "User")
+                        .WithMany("Blogs")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SE.Core.Entities.BlogItem", b =>
+                {
+                    b.HasOne("SE.Core.Entities.Blog", "Blog")
+                        .WithMany("BlogItems")
+                        .HasForeignKey("BlogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("SE.Core.Entities.CategoryAttributeCategory", b =>
                 {
                     b.HasOne("SE.Core.Entities.AttributeCategory", "AttributeCategory")
@@ -643,6 +754,15 @@ namespace SE.Web.Migrations
                     b.HasOne("SE.Core.Entities.Education", "Education")
                         .WithOne("EducationAddress")
                         .HasForeignKey("SE.Core.Entities.EducationAddress", "EducationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SE.Core.Entities.EducationContactForm", b =>
+                {
+                    b.HasOne("SE.Core.Entities.Education", "Education")
+                        .WithMany("EducationContactForms")
+                        .HasForeignKey("EducationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

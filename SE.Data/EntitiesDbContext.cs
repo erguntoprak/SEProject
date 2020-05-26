@@ -26,7 +26,9 @@ namespace SE.Data
             modelBuilder.ApplyConfiguration(new EducationAddressMap());
             modelBuilder.ApplyConfiguration(new ImageMap());
             modelBuilder.ApplyConfiguration(new QuestionMap());
-
+            modelBuilder.ApplyConfiguration(new EducationContactFormMap());
+            modelBuilder.ApplyConfiguration(new BlogMap());
+            modelBuilder.ApplyConfiguration(new BlogItemMap());
         }
         public DbSet<Education> Education { get; set; }
         public DbSet<Attribute> Attribute { get; set; }
@@ -39,10 +41,9 @@ namespace SE.Data
         public DbSet<EducationAddress> EducationAddress { get; set; }
         public DbSet<Image> Image { get; set; }
         public DbSet<Question> Question { get; set; }
-
-
-
-
+        public DbSet<EducationContactForm> EducationContactForm { get; set; }
+        public DbSet<Blog> Blog { get; set; }
+        public DbSet<BlogItem> BlogItem { get; set; }
 
 
     }

@@ -3,7 +3,6 @@ import { SharedModule } from '../../shared/shared.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 import { EducationDetailComponent } from './education-detail.component';
-import { NgxPageScrollModule } from 'ngx-page-scroll';
 import { NgImageSliderModule } from 'ng-image-slider';
 import { NgxMaskModule, IConfig } from 'ngx-mask'
 
@@ -20,7 +19,6 @@ const routes: Routes = [
   ],
   imports: [SharedModule,
     ReactiveFormsModule,
-    NgxPageScrollModule,
     NgImageSliderModule,
     NgxMaskModule.forRoot(options),
     RouterModule.forChild(routes)]

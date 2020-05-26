@@ -18,6 +18,8 @@ namespace SE.Business.EducationServices
         List<ImageDto> GetAllEducationImageDtoByEducationId(int educationId);
         void InsertFirstVisibleImage(ImageDto imageDto);
         void UpdateFirstVisibleImage(ImageDto imageDto);
+        void InsertEducationContactForm(EducationContactFormInsertDto educationContactFormDto);
+        List<EducationContactFormListDto> GetEducationContactFormListDtoBySeoUrl(string seoUrl, string userId);
 
     }
 }

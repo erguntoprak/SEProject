@@ -54,7 +54,8 @@ namespace SE.Web.Controllers
                     var userDto = await _accountService.GetUserDtoByEmailAsync(loginModel.Email);
                     var claims = new ClaimsIdentity(new Claim[]
                     {
-                                new Claim(ClaimTypes.NameIdentifier, userDto.Id.ToString())
+                                new Claim(ClaimTypes.NameIdentifier, userDto.Id.ToString()),
+                                new Claim(ClaimTypes.Name, $"{userDto.Name} {userDto.Surname}")
                     });
 
                     var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSecurityTokenSetting.Key));
@@ -106,7 +107,7 @@ namespace SE.Web.Controllers
             {
                 var registerDto = _mapper.Map<RegisterDto>(registerModel);
                 var registerResult = await _accountService.RegisterAsync(registerDto);
-                if(registerResult != false)
+                if (registerResult != false)
                 {
                     return Ok();
                 }

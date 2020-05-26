@@ -1009,19 +1009,6 @@
   ppTestislider();
   setTimeout(function () {
     $('.body_wrapper').css('display', 'block');
-    $("body").niceScroll();
   }, 200);
-  window.onscroll = function () { scrollBarFixed() };
 
-  
-  function scrollBarFixed() {
-    var header = $("#education-scroll-bar");
-    var sticky = header[0].offsetTop;
-
-    if (window.pageYOffset > sticky) {
-      header.addClass("sticky");
-    } else {
-      header.removeClass("sticky");
-    }
-  }
 })(jQuery)

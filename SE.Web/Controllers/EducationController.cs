@@ -85,6 +85,7 @@ namespace SE.Web.Controllers
             {
                 string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var educationListModel = _mapper.Map<List<EducationListModel>>(_educationService.GetAllEducationListByUserId(userId));
+                educationListModel.ForEach(d => d.DistrictSeoUrl = UrlHelper.FriendlyUrl(d.DistrictName));
                 return Ok(educationListModel);
             }
             catch (Exception ex)
@@ -333,6 +334,47 @@ namespace SE.Web.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
             }
+        }
+
+        [HttpPost("InsertContactForm")]
+        public IActionResult InsertContactForm([FromBody]EducationContactFormInsertModel educationContactFormInsertModel)
+        {
+            try
+            {
+                educationContactFormInsertModel.CreateDateTime = DateTime.Now;
+                var educationContactFormDto = _mapper.Map<EducationContactFormInsertDto>(educationContactFormInsertModel);
+                _educationService.InsertEducationContactForm(educationContactFormDto);
+                return Ok();
+            }
+            catch (ArgumentNullException ex)
+            {
+                return StatusCode(StatusCodes.Status404NotFound);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
+            }
+        }
+
+        [Authorize]
+        [HttpGet("GetEducationContactFormListModelBySeoUrl")]
+        public IActionResult GetEducationContactFormListModelBySeoUrl(string seoUrl)
+        {
+            try
+            {
+                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var educationUpdateModel = _mapper.Map<List<EducationContactFormListModel>>(_educationService.GetEducationContactFormListDtoBySeoUrl(seoUrl, userId));
+                return Ok(educationUpdateModel);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return StatusCode(StatusCodes.Status404NotFound);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
+            }
+
         }
     }
 }

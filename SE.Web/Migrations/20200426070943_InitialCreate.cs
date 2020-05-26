@@ -324,13 +324,36 @@ namespace SE.Web.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ContactForm",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NameSurname = table.Column<string>(maxLength: 50, nullable: false),
+                    Email = table.Column<string>(maxLength: 50, nullable: false),
+                    PhoneNumber = table.Column<string>(maxLength: 15, nullable: false),
+                    CreateDateTime = table.Column<DateTime>(nullable: false),
+                    EducationId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ContactForm", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ContactForm_Education_EducationId",
+                        column: x => x.EducationId,
+                        principalTable: "Education",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Image",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ImageUrl = table.Column<string>(nullable: true),
-                    Title = table.Column<string>(maxLength: 100, nullable: false),
+                    Title = table.Column<string>(nullable: true),
                     FirstVisible = table.Column<bool>(nullable: false),
                     EducationId = table.Column<int>(nullable: false)
                 },
@@ -465,6 +488,11 @@ namespace SE.Web.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ContactForm_EducationId",
+                table: "ContactForm",
+                column: "EducationId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_District_CityId",
                 table: "District",
                 column: "CityId");
@@ -528,6 +556,9 @@ namespace SE.Web.Migrations
 
             migrationBuilder.DropTable(
                 name: "CategoryAttributeCategory");
+
+            migrationBuilder.DropTable(
+                name: "ContactForm");
 
             migrationBuilder.DropTable(
                 name: "EducationAddress");

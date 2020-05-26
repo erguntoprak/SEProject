@@ -16,6 +16,8 @@ namespace SE.Data.Mapping
 
             builder.HasMany(x => x.Educations).WithOne(y => y.User).HasForeignKey(b => b.UserId).IsRequired()
                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(x => x.Blogs).WithOne(y => y.User).HasForeignKey(b => b.UserId).IsRequired()
+               .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

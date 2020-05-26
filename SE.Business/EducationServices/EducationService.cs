@@ -102,24 +102,31 @@ namespace SE.Business.EducationServices
         }
         public List<EducationListDto> GetAllEducationListByUserId(string userId)
         {
-            var educationListDto = (from e in _unitOfWork.EducationRepository.Table
-                                    join c in _unitOfWork.CategoryRepository.Table on e.CategoryId equals c.Id
-                                    join a in _unitOfWork.AddressRepository.Table on e.EducationAddress.Id equals a.Id
-                                    join d in _unitOfWork.DistrictRepository.Table on a.DistrictId equals d.Id
-                                    let image = (from i in _unitOfWork.ImageRepository.Table where (i.EducationId == e.Id && i.FirstVisible == true) select i.ImageUrl).FirstOrDefault()
-                                    where e.UserId == userId
-                                    select new EducationListDto
-                                    {
-                                        Id = e.Id,
-                                        Name = e.Name,
-                                        CategoryName = c.Name,
-                                        CategorySeoUrl = c.SeoUrl,
-                                        DistrictName = d.Name,
-                                        Address = a.AddressOne,
-                                        ImageUrl = image,
-                                        SeoUrl = e.SeoUrl
-                                    }).AsNoTracking().ToList();
-            return educationListDto;
+            try
+            {
+                var educationListDto = (from e in _unitOfWork.EducationRepository.Table
+                                        join c in _unitOfWork.CategoryRepository.Table on e.CategoryId equals c.Id
+                                        join a in _unitOfWork.AddressRepository.Table on e.EducationAddress.Id equals a.Id
+                                        join d in _unitOfWork.DistrictRepository.Table on a.DistrictId equals d.Id
+                                        let image = (from i in _unitOfWork.ImageRepository.Table where (i.EducationId == e.Id && i.FirstVisible == true) select i.ImageUrl).FirstOrDefault()
+                                        where e.UserId == userId
+                                        select new EducationListDto
+                                        {
+                                            Id = e.Id,
+                                            Name = e.Name,
+                                            CategoryName = c.Name,
+                                            CategorySeoUrl = c.SeoUrl,
+                                            DistrictName = d.Name,
+                                            Address = a.AddressOne,
+                                            ImageUrl = image,
+                                            SeoUrl = e.SeoUrl
+                                        }).AsNoTracking().ToList();
+                return educationListDto;
+            }
+            catch
+            {
+                throw;
+            }
 
         }
         public EducationUpdateDto GetEducationUpdateDtoBySeoUrl(string seoUrl, string userId)
@@ -171,29 +178,42 @@ namespace SE.Business.EducationServices
         {
             try
             {
-                var education = _unitOfWork.EducationRepository.Include(a => a.AttributeEducations, e => e.EducationAddress, i => i.Images, q => q.Questions, c =>c.EducationAddress.City, d=>d.EducationAddress.District).Where(d => d.SeoUrl == seoUrl).AsNoTracking().FirstOrDefault();
+                var education = _unitOfWork.EducationRepository.Include(a => a.AttributeEducations, e => e.EducationAddress, i => i.Images, q => q.Questions, c => c.EducationAddress.City, d => d.EducationAddress.District).Where(d => d.SeoUrl == seoUrl).AsNoTracking().FirstOrDefault();
+               
                 if (education != null)
                 {
-                    var educationUpdateDto = new EducationDetailDto();
-                    educationUpdateDto.GeneralInformation.Id = education.Id;
-                    educationUpdateDto.GeneralInformation.SeoUrl = education.SeoUrl;
-                    educationUpdateDto.UserId = education.UserId;
-                    educationUpdateDto.GeneralInformation.Description = education.Description;
-                    educationUpdateDto.GeneralInformation.EducationName = education.Name;
-                    educationUpdateDto.GeneralInformation.EducationType = education.CategoryId;
-                    educationUpdateDto.AddressInformation.Address = education.EducationAddress.AddressOne;
-                    educationUpdateDto.AddressInformation.CityName = education.EducationAddress.City.Name;
-                    educationUpdateDto.AddressInformation.DistrictName = education.EducationAddress.District.Name;
-                    educationUpdateDto.ContactInformation.AuthorizedEmail = education.AuthorizedEmail;
-                    educationUpdateDto.ContactInformation.AuthorizedName = education.AuthorizedName;
-                    educationUpdateDto.ContactInformation.EducationEmail = education.Email;
-                    educationUpdateDto.ContactInformation.EducationWebsite = education.Website;
-                    educationUpdateDto.ContactInformation.PhoneOne = education.PhoneOne;
-                    educationUpdateDto.ContactInformation.PhoneTwo = education.PhoneTwo;
+                    var educationDetailDto = new EducationDetailDto();
+                    var blogList = _unitOfWork.BlogRepository.Include(d=>d.User).Where(d => d.UserId == education.UserId).OrderByDescending(d=>d.UpdateTime).Take(3).AsNoTracking().Select(d => new BlogListDto
+                    {
+                        Id = d.Id,
+                        CreateTime = d.CreateTime,
+                        Username = d.User.UserName,
+                        FirstVisibleImageName = d.FirstVisibleImageName,
+                        Title = d.Title,
+                        SeoUrl = d.SeoUrl
+                    }).ToList();
+
+                    educationDetailDto.BlogList = blogList;
+
+                    educationDetailDto.GeneralInformation.Id = education.Id;
+                    educationDetailDto.GeneralInformation.SeoUrl = education.SeoUrl;
+                    educationDetailDto.UserId = education.UserId;
+                    educationDetailDto.GeneralInformation.Description = education.Description;
+                    educationDetailDto.GeneralInformation.EducationName = education.Name;
+                    educationDetailDto.GeneralInformation.EducationType = education.CategoryId;
+                    educationDetailDto.AddressInformation.Address = education.EducationAddress.AddressOne;
+                    educationDetailDto.AddressInformation.CityName = education.EducationAddress.City.Name;
+                    educationDetailDto.AddressInformation.DistrictName = education.EducationAddress.District.Name;
+                    educationDetailDto.ContactInformation.AuthorizedEmail = education.AuthorizedEmail;
+                    educationDetailDto.ContactInformation.AuthorizedName = education.AuthorizedName;
+                    educationDetailDto.ContactInformation.EducationEmail = education.Email;
+                    educationDetailDto.ContactInformation.EducationWebsite = education.Website;
+                    educationDetailDto.ContactInformation.PhoneOne = education.PhoneOne;
+                    educationDetailDto.ContactInformation.PhoneTwo = education.PhoneTwo;
                     var selectedAttributeIds = education.AttributeEducations.Select(d => d.AttributeId).ToArray();
                     var attributeList = _unitOfWork.AttributeRepository.Table.Where(d => selectedAttributeIds.Contains(d.Id));
 
-                    educationUpdateDto.CategoryAttributeList = attributeList.AsEnumerable().GroupBy(d => d.AttributeCategoryId).Select(d => new CategoryAttributeListDto
+                    educationDetailDto.CategoryAttributeList = attributeList.AsEnumerable().GroupBy(d => d.AttributeCategoryId).Select(d => new CategoryAttributeListDto
                     {
                         CategoryName = _unitOfWork.AttributeCategoryRepository.Table.Where(x => x.Id == d.Key).FirstOrDefault().Name,
                         AttributeListDto = d.Select(x => new AttributeDto
@@ -202,14 +222,14 @@ namespace SE.Business.EducationServices
                             Name = x.Name
                         }).ToList()
                     }).ToList();
-                    educationUpdateDto.Images = education.Images.Select(d => d.ImageUrl).ToArray();
-                    educationUpdateDto.Questions = education.Questions.Select(d => new EducationQuestionDto
+                    educationDetailDto.Images = education.Images.Select(d => d.ImageUrl).ToArray();
+                    educationDetailDto.Questions = education.Questions.Select(d => new EducationQuestionDto
                     {
                         Question = d.Title,
                         Answer = d.Answer
                     }).ToList();
 
-                    return educationUpdateDto;
+                    return educationDetailDto;
                 }
                 else
                 {
@@ -339,7 +359,7 @@ namespace SE.Business.EducationServices
                                     join c in _unitOfWork.CategoryRepository.Table on e.CategoryId equals c.Id
                                     join a in _unitOfWork.AddressRepository.Table on e.EducationAddress.Id equals a.Id
                                     join d in _unitOfWork.DistrictRepository.Table on a.DistrictId equals d.Id
-                                    let image = (from i in _unitOfWork.ImageRepository.Table where (i.EducationId == e.Id && i.FirstVisible==true) select i.ImageUrl).FirstOrDefault()
+                                    let image = (from i in _unitOfWork.ImageRepository.Table where (i.EducationId == e.Id && i.FirstVisible == true) select i.ImageUrl).FirstOrDefault()
                                     where c.Id == categoryId
                                     select new EducationListDto
                                     {
@@ -380,7 +400,7 @@ namespace SE.Business.EducationServices
         {
             try
             {
-                var image = _unitOfWork.ImageRepository.Table.Where(d => d.Id == imageDto.Id && d.EducationId==imageDto.EducationId).FirstOrDefault();
+                var image = _unitOfWork.ImageRepository.Table.Where(d => d.Id == imageDto.Id && d.EducationId == imageDto.EducationId).FirstOrDefault();
                 image.FirstVisible = true;
                 _unitOfWork.SaveChanges();
             }
@@ -405,6 +425,59 @@ namespace SE.Business.EducationServices
                     image.FirstVisible = false;
                 }
                 _unitOfWork.SaveChanges();
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public void InsertEducationContactForm(EducationContactFormInsertDto educationContactFormDto)
+        {
+            try
+            {
+                _unitOfWork.EducationContactFormRepository.Insert(new EducationContactForm
+                {
+                    NameSurname = educationContactFormDto.NameSurname,
+                    Email = educationContactFormDto.Email,
+                    PhoneNumber = educationContactFormDto.PhoneNumber,
+                    EducationId = educationContactFormDto.EducationId,
+                    CreateDateTime = educationContactFormDto.CreateDateTime
+                });
+                _unitOfWork.SaveChanges();
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public List<EducationContactFormListDto> GetEducationContactFormListDtoBySeoUrl(string seoUrl, string userId)
+        {
+            try
+            {
+                var education = _unitOfWork.EducationRepository.Include(f => f.EducationContactForms).Where(d => d.SeoUrl == seoUrl && d.UserId == userId).AsNoTracking().FirstOrDefault();
+                if (education != null)
+                {
+                    List<EducationContactFormListDto> educationContactFormListDto = new List<EducationContactFormListDto>();
+                    if (education.EducationContactForms != null)
+                    {
+                        educationContactFormListDto = education.EducationContactForms.Select(d => new EducationContactFormListDto
+                        {
+                            NameSurname = d.NameSurname,
+                            Email = d.Email,
+                            PhoneNumber = d.PhoneNumber,
+                            CreateDateTime = d.CreateDateTime
+                        }).ToList();
+                    }
+
+                    return educationContactFormListDto;
+                }
+                else
+                {
+                    throw new ArgumentNullException();
+                }
+
             }
             catch
             {

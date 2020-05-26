@@ -29,6 +29,10 @@ const routes: Routes = [
       {
         path: 'egitim-kurumu/:district/:category/:name',
         loadChildren: () => import('./site-pages/education-detail/education-detail.module').then(m => m.EducationDetailModule)
+      },
+      {
+        path: 'blog/:name',
+        loadChildren: () => import('./site-pages/blog-detail/blog-detail.module').then(m => m.BlogDetailModule)
       }
     ]
   },
@@ -55,7 +59,27 @@ const routes: Routes = [
         path: 'egitimler',
         loadChildren: () => import('./panel-pages/education-list/education-list.module').then(m => m.EducationListModule),
         canLoad: [AuthGuard]
-      }
+      },
+      {
+        path: 'egitim-iletisim-formlari/:name',
+        loadChildren: () => import('./panel-pages/education-contact-from-list/education-contact-from-list.module').then(m => m.EducationContactFormListModule),
+        canLoad: [AuthGuard]
+      },
+      {
+        path: 'blog-ekle',
+        loadChildren: () => import('./panel-pages/blog-create/blog-create.module').then(m => m.BlogCreateModule),
+        canLoad: [AuthGuard]
+      },
+      {
+        path: 'blog-listesi',
+        loadChildren: () => import('./panel-pages/blog-list/blog-list.module').then(m => m.BlogListModule),
+        canLoad: [AuthGuard]
+      },
+      {
+        path: 'blog-duzenle/:name',
+        loadChildren: () => import('./panel-pages/blog-edit/blog-edit.module').then(m => m.BlogEditModule),
+        canLoad: [AuthGuard]
+      },
     ]
   },
   {

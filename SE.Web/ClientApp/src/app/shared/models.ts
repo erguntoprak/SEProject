@@ -59,3 +59,42 @@ export interface ImageModel {
   firstVisible: boolean;
   educationId: number;
 }
+export interface EducationContactFormInsertModel {
+  nameSurname: string;
+  email: string;
+  phoneNumber: string;
+  educationId: number;
+  createDateTime: Date;
+}
+export interface EducationContactFormListModel {
+  nameSurname: string;
+  email: string;
+  phoneNumber: string;
+  createDateTime: string;
+}
+export interface BlogListModel {
+  id: number;
+  title: string;
+  author: string;
+  seoUrl: string;
+  firstVisibleImageName: string;
+  createTime: string;
+}
+export interface BlogDetailModel {
+  id: number;
+  title: string;
+  author: string;
+  firstVisibleImageName: string;
+  createTime: string;
+  blogItems: BlogItemModel[];
+}
+export interface BlogItemModel {
+  imageName: string;
+  description: string;
+}
+export interface BlogUpdateModel {
+  id: number;
+  title: string;
+  firstVisibleImageName: string;
+  blogItems: BlogItemModel[];
+}

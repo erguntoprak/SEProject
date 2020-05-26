@@ -11,51 +11,28 @@
     </div>
   </div>
 </section>
-
-<div class="event_schedule_area" id="education-scroll-bar">
-  <div class="container">
-    <div class="event_schedule_inner">
-      <ul class="nav nav-tabs event_tab">
-        <li class="nav-item">
-          <a pageScroll [pageScrollOffset]="180" [pageScrollDuration]="700" class="nav-link" href="#images"><h5>Görseller</h5></a>
-        </li>
-        <li class="nav-item">
-          <a pageScroll [pageScrollOffset]="180" [pageScrollDuration]="700" class="nav-link" href="#education-about"><h5>Eğitim Hakkında</h5> </a>
-        </li>
-        <li class="nav-item">
-          <a pageScroll [pageScrollOffset]="100" [pageScrollDuration]="700" class="nav-link" href="#education-facilities"> <h5>Eğitim İmkanları</h5> </a>
-        </li>
-        <li class="nav-item">
-          <a pageScroll [pageScrollOffset]="100" [pageScrollDuration]="700" class="nav-link" href="#frequently-asked-questions"> <h5>Sıkça Sorulan Sorular</h5> </a>
-        </li>
-        <li class="nav-item">
-          <a pageScroll [pageScrollOffset]="100" [pageScrollDuration]="700" class="nav-link" href="#contact-information"> <h5>İletişim Bilgileri</h5> </a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</div>
-<section class="education_details_area">
+<section class="education_details_area" *ngIf="educationDetailModel">
   <div class="container">
     <div class="row">
       <div class="col-lg-12" id="images">
-        <ng-image-slider *ngIf="imageObject.length>0" [imageSize]="{width: '400px', height: '240px'}" [images]="imageObject"></ng-image-slider>
+        <ng-image-slider *ngIf="imageObject.length>0" [imageSize]="{width: '300px', height: '180px'}" [images]="imageObject"></ng-image-slider>
       </div>
       <div class="col-lg-12">
         
       </div>
-      <div class="col-lg-8">
+      <div class="col-lg-8 lg-pr">
         <div class="details_content" id="education-about">
           <div class="sec_title mb_20">
             <h3 class="f_p f_size_22 f_500 t_color3 mb_20">{{educationDetailModel.generalInformation.educationName}}</h3>
-            <p class="f_400 f_size_15" [innerHTML]="educationDetailModel.generalInformation.description"></p>
+            <hr />
+            <p class="f_400 l_height32" [innerHTML]="educationDetailModel.generalInformation.description"></p>
           </div>
         </div>
         <div class="details_content" id="education-facilities">
           <div class="sec_title mb_20" *ngFor="let attribute of educationDetailModel.categoryAttributeList">
             <h3 class="f_p f_size_22 f_500 t_color3 mb_20">{{attribute.categoryName}}</h3>
             <ul class="list-unstyled mb-0">
-              <li *ngFor="let attribute of attribute.attributeListModel"><i class="ti-check"></i><b>{{attribute.name}}</b></li>
+              <li *ngFor="let attribute of attribute.attributeListModel"><i class="ti-check"></i>{{attribute.name}}</li>
             </ul>
           </div>
         </div>
@@ -71,9 +48,26 @@
           </div>
         </div>
         <div class="details_content" id="contact-information">
-          <div class="sec_title mb_70">
-            <h3 class="f_p f_size_22 f_500 t_color3 mb_20">Job Requirements</h3>
-            <p class="f_400 f_size_15">Why I say old chap that is spiffing pukka, bamboozled wind up bugger buggered zonked hanky panky a blinding shot the little rotter, bubble and squeak vagabond cheeky bugger at public school pardon you bloke the BBC. Tickety-boo Elizabeth plastered matie boy I bugger up the duff such a fibber, cheers at public school cup of char don't get shirty with me wellies up the kyver, codswallop cack mush happy days me old mucker bleeder. Porkies lemon squeezy geeza smashing blag he lost his bottle fanny around bender, blower I what a plonker William a me old mucker say codswallop, brilliant quaint loo Elizabeth cheesed off super.!</p>
+          <div class="sec_title">
+            <h3 class="f_p f_size_22 f_500 t_color3 mb_20">Bloglar</h3>
+            <div class="row">
+              <div class="col-lg-4 col-sm-6" *ngFor="let blog of educationDetailModel.blogList">
+                <div class="blog_grid_item mb-30">
+                  <div class="blog_img">
+                  <a routerLink="/blog/{{blog.seoUrl}}"><img [src]="blog.firstVisibleImageName" alt="blog.title"></a>
+                  </div>
+                  <div class="blog_content">
+                    <div class="entry_post_info">
+                      <a href="#">{{blog.username}}</a>
+                      <span>{{blog.createTime}}</span>
+                    </div>
+                    <a routerLink="/blog/{{blog.seoUrl}}">
+                      <h5 class="f_p f_size_16 f_500 t_color mb_20">{{blog.title}}</h5>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -108,8 +102,58 @@
             <i class="icon-globe"></i>
             <h6>Kurumsal Web Sitesi</h6>
             <p>
-              <button (click)="blankLinkClick(educationDetailModel.contactInformation.educationWebsite)">{{educationDetailModel.contactInformation.educationWebsite}}</button>
+              <a target="_blank" href="//{{educationDetailModel.contactInformation.educationWebsite}}">Siteye Git</a>
             </p>
+          </div>
+        </div>
+        <div class="contact-form">
+          <h6>Hemen Sizi Arıyalım</h6>
+          <p>Fiyat bilgileri, erken kayıt avantajları, randevu talepleri ve sorularınız için formu ücretsiz doldurun. Eğitim kurumu sizi hemen arasın.</p>
+          <div class="contact-form-input" *ngIf="contactFormDiv">
+            <form [formGroup]="contactForm" (ngSubmit)="onContactFormSubmit()">
+              <div class="form-group text_box">
+                <label for="nameSurname">Ad Soyad</label>
+                <input type="text" formControlName="nameSurname" />
+                <span class="not-valid" *ngIf="submitted && contactForm.get('nameSurname').errors != null ? contactForm.get('nameSurname').errors.required:false">
+                  Lütfen Ad Soyad giriniz.
+                </span>
+              </div>
+              <div class="form-group text_box">
+                <label for="exampleInputEmail1">Email</label>
+                <input type="text" formControlName="email" />
+                <span class="not-valid" *ngIf="submitted && contactForm.get('email').errors != null ? contactForm.get('email').errors.required:false">
+                  Lütfen Email adresi giriniz.
+                </span>
+                <span class="not-valid" *ngIf="submitted && contactForm.get('email').errors != null ? contactForm.get('email').errors.email:false">
+                  Lütfen geçerli Email adresi giriniz.
+                </span>
+              </div>
+              <div class="form-group text_box">
+                <label for="exampleInputEmail1">Telefon</label>
+                <input type="text" formControlName="phoneNumber" mask="(000) 000 00 00" [validation]="true"/>
+                <span class="not-valid" *ngIf="submitted && contactForm.get('phoneNumber').errors != null ? contactForm.get('phoneNumber').errors.required:false">
+                  Lütfen Telefon numarası giriniz.
+                </span>
+                <span class="not-valid" *ngIf="submitted && contactForm.get('phoneNumber').errors != null ? contactForm.get('phoneNumber').errors['Mask error']:false">
+                  Lütfen geçerli bir Telefon numarası giriniz. 
+                </span>
+              </div>
+              <div class="form-group">
+                <button type="submit" class="btn_hover agency_banner_btn pay_btn pay_btn_two cus_mb-10">İletişime Geç</button>
+              </div>
+            </form>
+          </div>
+          <div class="contact-from-success" *ngIf="contactFormSuccessMessage">
+            <div class="box_alert media box_success">
+              <div class="icon"><i class="icon-check"></i></div>
+              <div class="media-body">
+                <h5>Bilgileriniz Gönderildi.</h5>
+                <p>En yakın zamanda dönüş yapılacaktır. Teşekkürler</p>
+              </div>
+              <div>
+              </div>
+            </div>
+             
           </div>
         </div>
       </div>

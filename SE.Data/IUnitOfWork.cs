@@ -18,6 +18,9 @@ namespace SE.Data
         IRepository<Image> ImageRepository { get; }
         IRepository<Question> QuestionRepository { get; }
         IRepository<AttributeEducation> AttributeEducationRepository { get; }
+        IRepository<EducationContactForm> EducationContactFormRepository { get; }
+        IRepository<Blog> BlogRepository { get; }
+
 
 
         void SaveChanges();

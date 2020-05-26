@@ -52,7 +52,7 @@
               <div class="col-md-2" style="padding:10px;" *ngFor='let url of urlImages'>
                 <div class="single-place">
                   <span class="remove-button" (click)="removeImage(url.key,url.value)"><i class="bx bxs-no-entry"></i></span>
-                  <img [id]="url.key" class="single-place-image" src="https://localhost:44362/images/{{url.value}}_1000x600.jpg">
+                  <img [id]="url.key" class="single-place-image" [src]="url.value">
                 </div>
               </div>
             </div>

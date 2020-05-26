@@ -30,7 +30,6 @@ namespace SE.Core.Entities
         public EducationAddress EducationAddress { get; set; }
         public ICollection<Image> Images { get; set; }
         public ICollection<Question> Questions { get; set; }
-
-
+        public ICollection<EducationContactForm> EducationContactForms { get; set; }
     }
 }

@@ -10,5 +10,7 @@ namespace SE.Core.Entities
         public string FirsName { get; set; }
         public string LastName { get; set; }
         public ICollection<Education> Educations { get; set; }
+        public ICollection<Blog> Blogs { get; set; }
+
     }
 }

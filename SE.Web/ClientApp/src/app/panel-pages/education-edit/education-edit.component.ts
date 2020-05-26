@@ -85,7 +85,8 @@ export class EducationEditComponent implements OnInit, AfterViewInit {
         });
         const images = <FormArray>this.educationForm.controls.images;
         educationUpdateModel.images.forEach(image => {
-          this.urlImages.push({ key: uuid(), value: image});
+          this.urlImages.push({
+            key: uuid(), value: `https://localhost:44362/images/${image}_1000x600.jpg`});
           images.push(new FormControl(image));
         });
         this.existingAttributeIds = educationUpdateModel.attributes;
@@ -188,12 +189,11 @@ export class EducationEditComponent implements OnInit, AfterViewInit {
 
   //remove selected image
   removeImage(id, value) {
-    debugger;
     const images = <FormArray>this.educationForm.controls.images;
     this.urlImages = this.urlImages.filter(el => el.key !== id);
     var deleteImage = document.getElementById(id);
     deleteImage.remove();
-    let index = images.controls.findIndex(x => x.value == value)
+    let index = images.controls.findIndex(x => x.value == value);
     images.removeAt(index);
   }
   selectFirstVisibleImage(imageModel: ImageModel) {

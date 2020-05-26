@@ -1,4 +1,5 @@
-﻿using SE.Web.Model.Category;
+﻿using SE.Web.Model.Blog;
+using SE.Web.Model.Category;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,5 +24,7 @@ namespace SE.Web.Model.Education
         public List<EducationQuestionModel> Questions { get; set; }
         public EducationAddressDetailModel AddressInformation { get; set; }
         public EducationContactInformationModel ContactInformation { get; set; }
+        public List<BlogListModel> BlogList { get; set; }
+
     }
 }

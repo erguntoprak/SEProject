@@ -1292,6 +1292,9 @@
 
 
 @media (max-width:991px){
+  .lg-pr {
+    padding-right: 15px;
+  }
     .menu_scroll .alter_nav{
         position: relative;
         right: 0;

@@ -20,7 +20,8 @@ namespace SE.Data
         private Repository<Image> _imageRepo;
         private Repository<Question> _questionRepo;
         private Repository<AttributeEducation> _attributeEducationRepo;
-
+        private Repository<EducationContactForm> _educationContactFormRepo;
+        private Repository<Blog> _blogRepo;
 
 
         public UnitOfWork(DbContext dbContext)
@@ -127,8 +128,25 @@ namespace SE.Data
                 return _attributeEducationRepo;
             }
         }
+        public IRepository<EducationContactForm> EducationContactFormRepository
+        {
+            get
+            {
+                if (_educationContactFormRepo == null)
+                    _educationContactFormRepo = new Repository<EducationContactForm>(_dbContext);
+                return _educationContactFormRepo;
+            }
+        }
 
-
+        public IRepository<Blog> BlogRepository
+        {
+            get
+            {
+                if (_blogRepo == null)
+                    _blogRepo = new Repository<Blog>(_dbContext);
+                return _blogRepo;
+            }
+        }
 
         public void SaveChanges()
         {

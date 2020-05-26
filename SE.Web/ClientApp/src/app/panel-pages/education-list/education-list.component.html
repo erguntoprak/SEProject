@@ -9,52 +9,47 @@
     <li class="item">Forms</li>
   </ol>
 </div>
-<div class="card mb-30">
+<div class="card mb-30" *ngFor='let education of educationList'>
   <div class="card-header d-flex justify-content-between align-items-center">
-    <h3>Eğitim Kurumları</h3>
+    <div class="dropdown action-area">
+      <button class="dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class='bx bx-dots-horizontal-rounded'></i>
+      </button>
+      <div class="dropdown-menu">
+        <a class="dropdown-item d-flex align-items-center" [routerLink]="['/panel/egitim-duzenle/',education.seoUrl]">
+          <i class='bx bx-edit-alt'></i> Düzenle
+        </a>
+        <a class="dropdown-item d-flex align-items-center" (click)="deleteEducation(education.id)">
+          <i class='bx bx-trash'></i> Sil
+        </a>
+        <a class="dropdown-item d-flex align-items-center" [routerLink]="['/panel/egitim-iletisim-formlari/',education.seoUrl]">
+          <i class=' bx bx-envelope'></i> İletişim Formları
+        </a>
+        <a class="dropdown-item d-flex align-items-center" href="#">
+          <i class='bx bx-download'></i> Download
+        </a>
+      </div>
+    </div>
   </div>
-
   <div class="card-body">
-
-    <div *ngFor='let education of educationList' style="margin-bottom:20px">
+    <div style="margin-bottom:20px">
       <div class="row">
-        <div class="col-md-2">
+        <div class="col-md-3">
           <div class="most-viewed-img">
             <a routerLink="/{{education.seoUrl}}"><img src="https://localhost:44362/images/{{education.imageUrl}}_300x180.jpg" alt="{{education.name}}"></a>
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-9">
           <div class="most-viewed-detail">
-            <a class="category list-group-item" routerLink="/{{education.categorySeoUrl}}"><span class="list-bg red"><i class="icofont-education"></i></span>{{education.categoryName}}</a>
-            <h3><a routerLink="/{{education.seoUrl}}">{{education.name}}</a></h3>
-            <p class="list-address list-group-item"><i class="icofont-google-map"></i>{{education.districtName}}</p>
-            <div class="list-group-item" >Görüntülenme : <span>280</span></div>
+            <a class="category" routerLink="/{{education.categorySeoUrl}}"><i class="bx bxs-label"></i> {{education.categoryName}}</a>
+            <h3><a [routerLink]="['/egitim-kurumu/',education.districtSeoUrl,education.categorySeoUrl,education.seoUrl]">{{education.name}}</a></h3>
+            <p><i class="bx bx-current-location"></i> {{education.districtName}}</p>
           </div>
         </div>
-        <div class="col-md-4">
-          <div class="listing-button">
-            <a [routerLink]="['/panel/egitim-duzenle/',education.seoUrl]" class="btn v2"><i class="ion-edit"></i> Düzenle</a>
-            <a (click)="deleteEducation(education.id)" class="btn v5"><i class="ion-android-delete"></i> Sil</a>
-          </div>
-        </div>
-                
       </div>
     </div>
 
   </div>
-</div>
 
-<div class="dash-content">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="recent-activity my-listing">
-          <div class="act-title">
-            <h5><i class="ion-social-buffer-outline"></i>Eğitimler</h5>
-          </div>
-          
-        </div>
-      </div>
-    </div>
-  </div>
+
 </div>

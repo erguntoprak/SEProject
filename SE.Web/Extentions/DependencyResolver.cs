@@ -5,6 +5,7 @@ using NETCore.MailKit.Core;
 using SE.Business.AccountServices;
 using SE.Business.AddressServices;
 using SE.Business.AttributeServices;
+using SE.Business.BlogServices;
 using SE.Business.CategoryServices;
 using SE.Business.EducationServices;
 using SE.Business.EmailSenders;
@@ -31,11 +32,16 @@ namespace SE.Web.Extentions
             serviceProvider.AddScoped<IAddressService, AddressService>();
             serviceProvider.AddScoped<IEducationService, EducationService>();
             serviceProvider.AddScoped<IAccountService, AccountService>();
+            serviceProvider.AddScoped<IBlogService, BlogService>();
             serviceProvider.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();
             serviceProvider.AddScoped<IValidator<RegisterDto>, RegisterDtoValidator>();
             serviceProvider.AddScoped<IValidator<EducationInsertDto>, EducationInsertDtoValidator>();
             serviceProvider.AddScoped<IValidator<EducationInsertDto>, EducationInsertDtoValidator>();
             serviceProvider.AddScoped<IValidator<EducationUpdateDto>, EducationUpdateDtoValidator>();
+            serviceProvider.AddScoped<IValidator<BlogInsertDto>, BlogInsertDtoValidator>();
+            serviceProvider.AddScoped<IValidator<BlogUpdateDto>, BlogUpdateDtoValidator>();
+
+
 
 
 

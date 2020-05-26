@@ -169,7 +169,6 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
   //select image
   onSelectFile(event) {
     const images = <FormArray>this.educationForm.controls.images;
-    this.imageMaxSizeMessages = [];
     if (event.target.files && event.target.files[0]) {
       var filesAmount = event.target.files.length;
       for (let i = 0; i < filesAmount; i++) {

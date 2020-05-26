@@ -18,6 +18,6 @@ const routes: Routes = [
   exports: [
     EducationListComponent
   ],
-  providers: [BaseService, HttpClient]
+  providers: [BaseService]
 })
 export class EducationListModule { }

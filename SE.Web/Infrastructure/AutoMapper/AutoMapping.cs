@@ -4,11 +4,13 @@ using SE.Web.Model;
 using SE.Web.Model.Account;
 using SE.Web.Model.Address;
 using SE.Web.Model.Attribute;
+using SE.Web.Model.Blog;
 using SE.Web.Model.Category;
 using SE.Web.Model.Education;
 using SE.Web.Model.Image;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,6 +18,7 @@ namespace SE.Web.Infrastructure.AutoMapper
 {
     public class AutoMapping:Profile
     {
+        DateTimeFormatInfo fmt = (new CultureInfo("tr-TR")).DateTimeFormat;
         public AutoMapping()
         {
             CreateMap<EducationInsertModel, EducationInsertDto>();
@@ -36,6 +39,13 @@ namespace SE.Web.Infrastructure.AutoMapper
             CreateMap<EducationDetailDto, EducationDetailModel>();
             CreateMap<ImageDto, ImageModel>().ReverseMap();
             CreateMap<EducationAddressDetailDto, EducationAddressDetailModel>();
+            CreateMap<EducationContactFormInsertModel, EducationContactFormInsertDto>();
+            CreateMap<EducationContactFormListDto, EducationContactFormListModel>().ForMember(dest => dest.CreateDateTime, opt => opt.MapFrom(src => src.CreateDateTime.ToString("d", fmt)));
+            CreateMap<BlogInsertModel, BlogInsertDto>();
+            CreateMap<BlogItemModel, BlogItemDto>().ReverseMap();
+            CreateMap<BlogListDto, BlogListModel>().ForMember(dest => dest.CreateTime, opt => opt.MapFrom(src => src.CreateTime.ToString("D", fmt)));
+            CreateMap<BlogDetailDto, BlogDetailModel>().ForMember(dest => dest.CreateTime, opt => opt.MapFrom(src => src.CreateTime.ToString("D", fmt)));
+            CreateMap<BlogUpdateModel, BlogUpdateDto>().ReverseMap();
         }
     }
 }

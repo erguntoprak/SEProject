@@ -21,5 +21,6 @@ namespace SE.Core.DTO
         public List<EducationQuestionDto> Questions { get; set; }
         public EducationAddressDetailDto AddressInformation { get; set; }
         public EducationContactInformationDto ContactInformation { get; set; }
+        public List<BlogListDto> BlogList { get; set; }
     }
 }

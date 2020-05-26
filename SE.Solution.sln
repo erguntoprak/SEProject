@@ -1,15 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.106
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SE.Web", "SE.Web\SE.Web.csproj", "{00E68F4E-CE65-426B-845D-D68919D28587}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SE.Core", "SE.Core\SE.Core.csproj", "{72FE697B-9E70-49F1-A6F2-EBEFA344B14B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SE.Core", "SE.Core\SE.Core.csproj", "{72FE697B-9E70-49F1-A6F2-EBEFA344B14B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SE.Data", "SE.Data\SE.Data.csproj", "{2D76B8B7-21AB-4998-9684-E4A244BAE0CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SE.Data", "SE.Data\SE.Data.csproj", "{2D76B8B7-21AB-4998-9684-E4A244BAE0CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SE.Business", "SE.Business\SE.Business.csproj", "{DEFB164D-40B5-4D5A-9AEB-80F17A3CACB9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SE.Business", "SE.Business\SE.Business.csproj", "{DEFB164D-40B5-4D5A-9AEB-80F17A3CACB9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

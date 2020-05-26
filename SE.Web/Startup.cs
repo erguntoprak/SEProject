@@ -4,6 +4,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
@@ -18,6 +19,7 @@ using SE.Business.Infrastructure.Autofac;
 using SE.Core.Entities;
 using SE.Data;
 using SE.Web.Extentions;
+using SE.Web.Infrastructure;
 using SE.Web.Infrastructure.Jwt;
 using System.IO;
 using System.Text;
@@ -44,7 +46,6 @@ namespace SE.Web
                 cfg.Password.RequireNonAlphanumeric = false;
                 cfg.SignIn.RequireConfirmedEmail = true;
             }).AddEntityFrameworkStores<EntitiesDbContext>().AddDefaultTokenProviders();
-
 
             services.AddAuthentication(x =>
             {
