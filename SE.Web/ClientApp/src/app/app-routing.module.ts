@@ -11,34 +11,9 @@ const routerOptions: ExtraOptions = {
 };
 const routes: Routes = [
   {
-    path: '',
-    component: SiteLayoutComponent,
-    children: [
-      {
-        path: '',
-        loadChildren: () => import('./site-pages/home/home.module').then(m => m.HomeModule)
-      },
-      {
-        path: 'giris',
-        loadChildren: () => import('./site-pages/login/login.module').then(m => m.LoginModule)
-      },
-      {
-        path: 'kayit-ol',
-        loadChildren: () => import('./site-pages/register/register.module').then(m => m.RegisterModule)
-      },
-      {
-        path: 'egitim-kurumu/:district/:category/:name',
-        loadChildren: () => import('./site-pages/education-detail/education-detail.module').then(m => m.EducationDetailModule)
-      },
-      {
-        path: 'blog/:name',
-        loadChildren: () => import('./site-pages/blog-detail/blog-detail.module').then(m => m.BlogDetailModule)
-      }
-    ]
-  },
-  {
     path: 'panel',
     component: PanelLayoutComponent,
+    canLoad: [AuthGuard],
     children: [
       {
         path: '',
@@ -81,6 +56,49 @@ const routes: Routes = [
         canLoad: [AuthGuard]
       },
     ]
+  },
+  {
+    path: '',
+    component: SiteLayoutComponent,
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('./site-pages/home/home.module').then(m => m.HomeModule)
+      },
+      {
+        path: 'giris',
+        loadChildren: () => import('./site-pages/login/login.module').then(m => m.LoginModule)
+      },
+      {
+        path: 'kayit-ol',
+        loadChildren: () => import('./site-pages/register/register.module').then(m => m.RegisterModule)
+      },
+      {
+        path: 'egitim-kurumu/:district/:category/:name',
+        loadChildren: () => import('./site-pages/education-detail/education-detail.module').then(m => m.EducationDetailModule)
+      },
+      {
+        path: 'blog/:name',
+        loadChildren: () => import('./site-pages/blog-detail/blog-detail.module').then(m => m.BlogDetailModule)
+      },
+      {
+        path: 'bloglar/:userName',
+        loadChildren: () => import('./site-pages/blog-view-list/blog-view-list.module').then(m => m.BlogViewListModule)
+      },
+      {
+        path: 'egitim-kurumlari/:district/:category',
+        loadChildren: () => import('./site-pages/education-view-list/education-view-list.module').then(m => m.EducationViewListModule)
+      },
+      {
+        path: 'egitim-kurumlari/:category',
+        loadChildren: () => import('./site-pages/education-view-list/education-view-list.module').then(m => m.EducationViewListModule)
+      }
+    ]
+  },
+  
+  {
+    path: "**",
+    loadChildren: () => import('./site-pages/login/login.module').then(m => m.LoginModule)
   },
   {
     path: '',

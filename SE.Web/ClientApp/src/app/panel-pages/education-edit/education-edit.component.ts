@@ -9,6 +9,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AcdcLoadingService } from 'acdc-loading';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'se-education-edit',
@@ -29,16 +30,21 @@ export class EducationEditComponent implements OnInit, AfterViewInit {
   districtList: DistrictModel[];
   urlImages: KeyValueModel[] = [];
   questionItems: FormArray;
+  youtubeVideoOneId: string = "";
+  youtubeVideoTwoId: string = "";
+  iframeMapCode: SafeHtml = "";
   nextStepOneControl: boolean = true;
+  nextStepOneValidation: boolean = false;
   nextStepTwoControl: boolean = false;
   nextStepThreeControl: boolean = false;
-  nextStepOneValidation: boolean = false;
   nextStepThreeValidation: boolean = false;
+  nextStepFourControl: boolean = false;
   nextStepFourValidation: boolean = false;
+  nextStepFiveControl: boolean = false;
 
 
 
-  constructor(private formBuilder: FormBuilder, private baseService: BaseService, private router: Router, private toastr: ToastrService, private acdcLoadingService: AcdcLoadingService, private route: ActivatedRoute) { }
+  constructor(private formBuilder: FormBuilder, private baseService: BaseService, private router: Router, private toastr: ToastrService, private acdcLoadingService: AcdcLoadingService, private route: ActivatedRoute, private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
     this.educationForm = this.formBuilder.group({
@@ -70,6 +76,16 @@ export class EducationEditComponent implements OnInit, AfterViewInit {
           educationWebsite: ['', Validators.required]
         }
       ),
+      socialInformation: this.formBuilder.group(
+        {
+          youtubeVideoOne: [''],
+          youtubeVideoTwo: [''],
+          facebookAccountUrl: [''],
+          instagramAccountUrl: [''],
+          twitterAccountUrl: [''],
+          youtubeAccountUrl: [''],
+          mapCode: ['']
+        }),
       questions: this.formBuilder.array([])
     });
     this.getAllCallMethod();
@@ -81,8 +97,21 @@ export class EducationEditComponent implements OnInit, AfterViewInit {
           generalInformation: educationUpdateModel.generalInformation,
           addressInformation: educationUpdateModel.addressInformation,
           contactInformation: educationUpdateModel.contactInformation,
+          socialInformation: educationUpdateModel.socialInformation,
           userId:educationUpdateModel.userId
         });
+        if (educationUpdateModel.socialInformation.mapCode != "") {
+          this.iframeMapCode = this.sanitizer.bypassSecurityTrustHtml(educationUpdateModel.socialInformation.mapCode);
+        }
+        this.youtubeVideoOneId = educationUpdateModel.socialInformation.youtubeVideoOne.split("watch?v=")[1];
+        this.youtubeVideoTwoId = educationUpdateModel.socialInformation.youtubeVideoTwo.split("watch?v=")[1];
+
+        if (this.youtubeVideoOneId == undefined) {
+          this.youtubeVideoOneId = '';
+        }
+        if (this.youtubeVideoTwoId == undefined) {
+          this.youtubeVideoTwoId = '';
+        }
         const images = <FormArray>this.educationForm.controls.images;
         educationUpdateModel.images.forEach(image => {
           this.urlImages.push({
@@ -102,12 +131,40 @@ export class EducationEditComponent implements OnInit, AfterViewInit {
     });
   }
   ngAfterViewInit() {
+
+    this.educationForm.get("socialInformation").get("youtubeVideoOne").valueChanges.subscribe(value => {
+      if (value == "") {
+        this.youtubeVideoOneId = "";
+      }
+      else {
+        this.youtubeVideoOneId = value.split("watch?v=")[1];
+      }
+    });
+    this.educationForm.get("socialInformation").get("youtubeVideoTwo").valueChanges.subscribe(value => {
+      if (value == "") {
+        this.youtubeVideoTwoId = "";
+      }
+      else {
+        this.youtubeVideoTwoId = value.split("watch?v=")[1];
+      }
+    });
+    this.educationForm.get("socialInformation").get("mapCode").valueChanges.subscribe(value => {
+      if (value.startsWith("<iframe") && value.endsWith("</iframe>")) {
+        this.iframeMapCode = this.sanitizer.bypassSecurityTrustHtml(value);
+      }
+      else if (value == "") {
+        this.iframeMapCode = "";
+      }
+      else {
+        this.iframeMapCode = null;
+      }
+    });
   }
 
   onSubmit() {
     this.acdcLoadingService.showLoading();
     if (this.educationForm.invalid) {
-      this.nextStepThreeValidation = true;
+      this.nextStepFourValidation = true;
       this.acdcLoadingService.hideLoading();
       return;
     }
@@ -118,8 +175,8 @@ export class EducationEditComponent implements OnInit, AfterViewInit {
         if (imageModel.filter(d => d.firstVisible == true)[0] !== undefined) {
           this.selectedImageModel = imageModel.filter(d => d.firstVisible == true)[0];
         }
-        this.nextStepThreeControl = false;
-        this.nextStepFourValidation = true;
+        this.nextStepFourControl = false;
+        this.nextStepFiveControl = true;
         this.acdcLoadingService.hideLoading();
       });
     },
@@ -181,10 +238,24 @@ export class EducationEditComponent implements OnInit, AfterViewInit {
     this.nextStepOneControl = true;
     this.nextStepTwoControl = false;
   }
+  nextStepThreeClick() {
+    if (this.iframeMapCode == null || this.youtubeVideoOneId == undefined || this.youtubeVideoTwoId == undefined) {
+      this.nextStepThreeValidation = true;
+      return;
+    }
+    window.scroll(0, 0);
+    this.nextStepThreeControl = false;
+    this.nextStepFourControl = true;
+  }
   previousStepThreeClick() {
     window.scroll(0, 0);
     this.nextStepTwoControl = true;
     this.nextStepThreeControl = false;
+  }
+  previousStepFourClick() {
+    window.scroll(0, 0);
+    this.nextStepThreeControl = true;
+    this.nextStepFourControl = false;
   }
 
   //remove selected image

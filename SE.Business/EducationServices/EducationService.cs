@@ -44,7 +44,15 @@ namespace SE.Business.EducationServices
                     Email = educationInsertDto.ContactInformation.EducationEmail,
                     PhoneOne = educationInsertDto.ContactInformation.PhoneOne,
                     PhoneTwo = educationInsertDto.ContactInformation.PhoneTwo,
-                    Website = educationInsertDto.ContactInformation.EducationWebsite
+                    Website = educationInsertDto.ContactInformation.EducationWebsite,
+                    YoutubeVideoOne = educationInsertDto.SocialInformation.YoutubeVideoOne,
+                    YoutubeVideoTwo = educationInsertDto.SocialInformation.YoutubeVideoTwo,
+                    YoutubeAccountUrl = educationInsertDto.SocialInformation.YoutubeAccountUrl,
+                    TwitterAccountUrl = educationInsertDto.SocialInformation.TwitterAccountUrl,
+                    InstagramAccountUrl = educationInsertDto.SocialInformation.InstagramAccountUrl,
+                    FacebookAccountUrl = educationInsertDto.SocialInformation.FacebookAccountUrl,
+                    MapCode = educationInsertDto.SocialInformation.MapCode,
+
                 };
                 educationInsertDto.GeneralInformation.SeoUrl = UrlHelper.FriendlyUrl(educationInsertDto.GeneralInformation.EducationName);
                 string seoUrl = _unitOfWork.EducationRepository.Table.Where(d => d.SeoUrl == educationInsertDto.GeneralInformation.SeoUrl).Select(d => d.SeoUrl).AsNoTracking().FirstOrDefault();
@@ -114,9 +122,12 @@ namespace SE.Business.EducationServices
                                         {
                                             Id = e.Id,
                                             Name = e.Name,
+                                            CategoryId = e.CategoryId,
                                             CategoryName = c.Name,
                                             CategorySeoUrl = c.SeoUrl,
                                             DistrictName = d.Name,
+                                            DistrictSeoUrl = d.SeoUrl,
+                                            DistrictId = d.Id,
                                             Address = a.AddressOne,
                                             ImageUrl = image,
                                             SeoUrl = e.SeoUrl
@@ -160,6 +171,14 @@ namespace SE.Business.EducationServices
                         Answer = d.Answer
                     }).ToList();
 
+                    educationUpdateDto.SocialInformation.InstagramAccountUrl = education.InstagramAccountUrl;
+                    educationUpdateDto.SocialInformation.MapCode = education.MapCode;
+                    educationUpdateDto.SocialInformation.TwitterAccountUrl = education.TwitterAccountUrl;
+                    educationUpdateDto.SocialInformation.YoutubeAccountUrl = education.YoutubeAccountUrl;
+                    educationUpdateDto.SocialInformation.YoutubeVideoOne = education.YoutubeVideoOne;
+                    educationUpdateDto.SocialInformation.YoutubeVideoTwo = education.YoutubeVideoTwo;
+                    educationUpdateDto.SocialInformation.FacebookAccountUrl = education.FacebookAccountUrl;
+
                     return educationUpdateDto;
                 }
                 else
@@ -179,15 +198,16 @@ namespace SE.Business.EducationServices
             try
             {
                 var education = _unitOfWork.EducationRepository.Include(a => a.AttributeEducations, e => e.EducationAddress, i => i.Images, q => q.Questions, c => c.EducationAddress.City, d => d.EducationAddress.District).Where(d => d.SeoUrl == seoUrl).AsNoTracking().FirstOrDefault();
-               
+
                 if (education != null)
                 {
                     var educationDetailDto = new EducationDetailDto();
-                    var blogList = _unitOfWork.BlogRepository.Include(d=>d.User).Where(d => d.UserId == education.UserId).OrderByDescending(d=>d.UpdateTime).Take(3).AsNoTracking().Select(d => new BlogListDto
+                    var blogList = _unitOfWork.BlogRepository.Include(d => d.User).Where(d => d.UserId == education.UserId).OrderByDescending(d => d.UpdateTime).Take(3).AsNoTracking().Select(d => new BlogListDto
                     {
                         Id = d.Id,
                         CreateTime = d.CreateTime,
-                        Username = d.User.UserName,
+                        UserSeoUrl = UrlHelper.FriendlyUrl(d.User.UserName),
+                        UserName = d.User.UserName,
                         FirstVisibleImageName = d.FirstVisibleImageName,
                         Title = d.Title,
                         SeoUrl = d.SeoUrl
@@ -229,6 +249,14 @@ namespace SE.Business.EducationServices
                         Answer = d.Answer
                     }).ToList();
 
+                    educationDetailDto.SocialInformation.InstagramAccountUrl = education.InstagramAccountUrl;
+                    educationDetailDto.SocialInformation.MapCode = education.MapCode;
+                    educationDetailDto.SocialInformation.TwitterAccountUrl = education.TwitterAccountUrl;
+                    educationDetailDto.SocialInformation.YoutubeAccountUrl = education.YoutubeAccountUrl;
+                    educationDetailDto.SocialInformation.YoutubeVideoOne = education.YoutubeVideoOne;
+                    educationDetailDto.SocialInformation.YoutubeVideoTwo = education.YoutubeVideoTwo;
+                    educationDetailDto.SocialInformation.FacebookAccountUrl = education.FacebookAccountUrl;
+
                     return educationDetailDto;
                 }
                 else
@@ -266,7 +294,7 @@ namespace SE.Business.EducationServices
 
                         if (savedSeoUrl != null)
                         {
-                            education.SeoUrl = seoUrl + "-2";
+                            education.SeoUrl = seoUrl + Guid.NewGuid();
                         }
                         else
                         {
@@ -285,6 +313,14 @@ namespace SE.Business.EducationServices
                     education.EducationAddress.AddressOne = educationUpdateDto.AddressInformation.Address;
                     education.EducationAddress.CityId = educationUpdateDto.AddressInformation.CityId;
                     education.EducationAddress.DistrictId = educationUpdateDto.AddressInformation.DistrictId;
+
+                    education.YoutubeAccountUrl = educationUpdateDto.SocialInformation.YoutubeAccountUrl;
+                    education.FacebookAccountUrl = educationUpdateDto.SocialInformation.FacebookAccountUrl;
+                    education.TwitterAccountUrl = educationUpdateDto.SocialInformation.TwitterAccountUrl;
+                    education.InstagramAccountUrl = educationUpdateDto.SocialInformation.InstagramAccountUrl;
+                    education.YoutubeVideoOne = educationUpdateDto.SocialInformation.YoutubeVideoOne;
+                    education.YoutubeVideoTwo = educationUpdateDto.SocialInformation.YoutubeVideoTwo;
+                    education.MapCode = educationUpdateDto.SocialInformation.MapCode;
 
                     foreach (var imageUrl in educationUpdateDto.Images)
                     {
@@ -353,25 +389,28 @@ namespace SE.Business.EducationServices
 
         }
 
-        public List<EducationListDto> GetAllEducationListByCategoryId(int categoryId)
+        public List<EducationListDto> GetAllEducationListByCategoryIdAndDistrictId(int categoryId, int districtId)
         {
             var educationListDto = (from e in _unitOfWork.EducationRepository.Table
                                     join c in _unitOfWork.CategoryRepository.Table on e.CategoryId equals c.Id
                                     join a in _unitOfWork.AddressRepository.Table on e.EducationAddress.Id equals a.Id
                                     join d in _unitOfWork.DistrictRepository.Table on a.DistrictId equals d.Id
                                     let image = (from i in _unitOfWork.ImageRepository.Table where (i.EducationId == e.Id && i.FirstVisible == true) select i.ImageUrl).FirstOrDefault()
-                                    where c.Id == categoryId
+                                    where (categoryId == 0 ? true : (c.Id == categoryId)) && (districtId == 0 ? true : (d.Id == districtId))
                                     select new EducationListDto
                                     {
                                         Id = e.Id,
                                         Name = e.Name,
+                                        CategoryId = e.CategoryId,
                                         CategoryName = c.Name,
                                         CategorySeoUrl = c.SeoUrl,
                                         DistrictName = d.Name,
+                                        DistrictSeoUrl = d.SeoUrl,
+                                        DistrictId = d.Id,
                                         Address = a.AddressOne,
                                         ImageUrl = image,
                                         SeoUrl = e.SeoUrl
-                                    }).AsNoTracking().ToList();
+                                    }).AsNoTracking().ToArray().RandomList(12);
             return educationListDto;
         }
 
@@ -483,6 +522,41 @@ namespace SE.Business.EducationServices
             {
                 throw;
             }
+        }
+
+        public SearchEducationDto[] GetAllSearchEducationList()
+        {
+            SearchEducationDto[] searchEducationList = (from e in _unitOfWork.EducationRepository.Table
+                                                        join c in _unitOfWork.CategoryRepository.Table on e.CategoryId equals c.Id
+                                                        join a in _unitOfWork.AddressRepository.Table on e.EducationAddress.Id equals a.Id
+                                                        join d in _unitOfWork.DistrictRepository.Table on a.DistrictId equals d.Id
+                                                        select new SearchEducationDto
+                                                        {
+                                                            Name = e.Name,
+                                                            SeoUrl = UrlHelper.FriendlyUrl(d.Name) + "/" + c.SeoUrl + '/' + e.SeoUrl
+                                                        }).ToArray();
+
+            return searchEducationList;
+        }
+
+        public List<EducationFilterListDto> GetAllEducationListByFilter(FilterDto filterDto)
+        {
+            var educationListDto = _unitOfWork.EducationRepository.Include(c => c.Category, ea => ea.EducationAddress, eat => eat.AttributeEducations, i => i.Images, d => d.EducationAddress.District).Where(d => d.Category.Id == filterDto.CategoryId).Select(d => new EducationFilterListDto
+            {
+                Id = d.Id,
+                Name = d.Name,
+                CategoryId = d.Category.Id,
+                CategoryName = d.Category.Name,
+                CategorySeoUrl = d.Category.SeoUrl,
+                DistrictName = d.EducationAddress.District.Name,
+                DistrictSeoUrl = d.EducationAddress.District.SeoUrl,
+                DistrictId = d.EducationAddress.District.Id,
+                Address = d.EducationAddress.AddressOne,
+                ImageUrl = d.Images.Where(i=>i.FirstVisible).FirstOrDefault().ImageUrl,
+                SeoUrl = d.SeoUrl,
+                AttributeIds = d.AttributeEducations.Select(at=>at.AttributeId).ToArray()
+            }).AsNoTracking().ToArray().RandomList(12);
+            return educationListDto;
         }
     }
 }

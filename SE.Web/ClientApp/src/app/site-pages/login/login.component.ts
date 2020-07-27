@@ -6,6 +6,7 @@ import { BaseService } from '../../shared/base.service';
 import { NgxSpinnerService } from "ngx-spinner";
 import { LoginModel, RegisterModel } from '../../shared/models';
 import { HttpErrorResponse } from '@angular/common/http';
+import { AcdcLoadingService } from 'acdc-loading';
 
 
 @Component({
@@ -18,9 +19,10 @@ export class LoginComponent implements OnInit {
   errorList = [];
   loginModel: LoginModel;
   submitted = false;
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) { }
+  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router, private acdcLoadingService: AcdcLoadingService) { }
 
   ngOnInit() {
+    this.acdcLoadingService.hideLoading();
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],

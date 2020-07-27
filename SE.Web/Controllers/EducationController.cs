@@ -85,7 +85,6 @@ namespace SE.Web.Controllers
             {
                 string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var educationListModel = _mapper.Map<List<EducationListModel>>(_educationService.GetAllEducationListByUserId(userId));
-                educationListModel.ForEach(d => d.DistrictSeoUrl = UrlHelper.FriendlyUrl(d.DistrictName));
                 return Ok(educationListModel);
             }
             catch (Exception ex)
@@ -190,7 +189,7 @@ namespace SE.Web.Controllers
                 }
 
                 var educationUpdateDto = _mapper.Map<EducationUpdateDto>(educationUpdateModel);
-                int educationId =_educationService.UpdateEducation(educationUpdateDto);
+                int educationId = _educationService.UpdateEducation(educationUpdateDto);
                 return Ok(educationId);
 
             }
@@ -253,8 +252,43 @@ namespace SE.Web.Controllers
                 var categoryIds = _categoryService.GetAllCategoryList().Select(d => d.Id).ToArray();
                 Random random = new Random();
                 int randomCategoryId = 1; //categoryIds[random.Next(categoryIds.Length)];
-                var educationListModel = _mapper.Map<List<EducationListModel>>(_educationService.GetAllEducationListByCategoryId(randomCategoryId));
-                educationListModel.ForEach(d => d.DistrictSeoUrl = UrlHelper.FriendlyUrl(d.DistrictName));
+                var educationListModel = _mapper.Map<List<EducationListModel>>(_educationService.GetAllEducationListByCategoryIdAndDistrictId(randomCategoryId,0));
+                return Ok(educationListModel);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return StatusCode(StatusCodes.Status404NotFound);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
+            }
+        }
+        [HttpGet("GetAllEducationListByCategoryIdAndDistrictId")]
+        public IActionResult GetAllEducationListByCategoryIdAndDistrictId(int categoryId, int districtId)
+        {
+            try
+            {
+                var educationListModel = _mapper.Map<List<EducationListModel>>(_educationService.GetAllEducationListByCategoryIdAndDistrictId(categoryId, districtId));
+                return Ok(educationListModel);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return StatusCode(StatusCodes.Status404NotFound);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
+            }
+        }
+        [HttpGet("GetAllEducationListByFilter")]
+        public IActionResult GetAllEducationListByFilter([FromQuery]FilterModel filterModel)
+        {
+            try
+            {
+                var filterDto = _mapper.Map<FilterDto>(filterModel);
+
+                var educationListModel = _mapper.Map<List<EducationFilterListModel>>(_educationService.GetAllEducationListByFilter(filterDto));
                 return Ok(educationListModel);
             }
             catch (ArgumentNullException ex)
@@ -315,10 +349,20 @@ namespace SE.Web.Controllers
                 string filedir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
                 string bigFile = Path.Combine(filedir, imageModel.ImageUrl + "_1000x600.jpg");
                 string smallFile = Path.Combine(filedir, imageModel.ImageUrl + "_300x180.jpg");
-                if (System.IO.File.Exists(smallFile))
+
+                var educationImages = _mapper.Map<List<ImageModel>>(_educationService.GetAllEducationImageDtoByEducationId(imageModel.EducationId));
+
+                foreach (var image in educationImages)
                 {
-                    return Ok();
+                    string existingSmallFile = Path.Combine(filedir, image.ImageUrl + "_300x180.jpg");
+                    if (System.IO.File.Exists(existingSmallFile))
+                    {
+                        System.IO.File.Delete(existingSmallFile);
+                        System.GC.Collect();
+                        System.GC.WaitForPendingFinalizers();
+                    }
                 }
+
                 var imageDto = _mapper.Map<ImageDto>(imageModel);
                 _educationService.UpdateFirstVisibleImage(imageDto);
                 var bigImage = Image.FromFile(bigFile);
@@ -365,6 +409,25 @@ namespace SE.Web.Controllers
                 string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var educationUpdateModel = _mapper.Map<List<EducationContactFormListModel>>(_educationService.GetEducationContactFormListDtoBySeoUrl(seoUrl, userId));
                 return Ok(educationUpdateModel);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return StatusCode(StatusCodes.Status404NotFound);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
+            }
+
+        }
+
+        [HttpGet("GetAllSearchEducationList")]
+        public IActionResult GetAllSearchEducationList()
+        {
+            try
+            {
+                var searchEducationModel = _mapper.Map<SearchEducationModel[]>(_educationService.GetAllSearchEducationList());
+                return Ok(searchEducationModel);
             }
             catch (ArgumentNullException ex)
             {

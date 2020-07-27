@@ -10,7 +10,7 @@ namespace SE.Business.EducationServices
     {
         int InsertEducation(EducationInsertDto educationInsertDto);
         List<EducationListDto> GetAllEducationListByUserId(string userId);
-        List<EducationListDto> GetAllEducationListByCategoryId(int categoryId);
+        List<EducationListDto> GetAllEducationListByCategoryIdAndDistrictId(int categoryId, int districtId);
         EducationUpdateDto GetEducationUpdateDtoBySeoUrl(string seoUrl, string userId);
         int UpdateEducation(EducationUpdateDto educationUpdateDto);
         void DeleteEducation(int educationId,string userId);
@@ -20,6 +20,9 @@ namespace SE.Business.EducationServices
         void UpdateFirstVisibleImage(ImageDto imageDto);
         void InsertEducationContactForm(EducationContactFormInsertDto educationContactFormDto);
         List<EducationContactFormListDto> GetEducationContactFormListDtoBySeoUrl(string seoUrl, string userId);
+        SearchEducationDto[] GetAllSearchEducationList();
+        List<EducationFilterListDto> GetAllEducationListByFilter(FilterDto filterDto);
+
 
     }
 }

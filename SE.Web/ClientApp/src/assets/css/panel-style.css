@@ -77,6 +77,9 @@ p {
 .mt-20 {
   margin-top: 20px;
 }
+.mt-10 {
+  margin-top: 10px;
+}
 
 button, input {
   outline: 0 !important;
@@ -116,7 +119,7 @@ button, input {
 }
 
 .form-control:focus {
-  border-color: #5e2ced;
+  border-color: #000;
   box-shadow: 0 0 0 0.2rem rgba(94,44,237,.25);
 }
 
@@ -9447,4 +9450,18 @@ Footer CSS
   right: 0px;
   left: 288px;
 }
+.action-list {
+  margin-top: 45px;
+}
+
+.action-item {
+  color: #2a2a2a;
+  font-size: 18px;
+  margin-left:5px;
+  margin-bottom:10px;
+  cursor: pointer;
+}
+  .action-item:hover {
+    color: #fff!important;
+  }
 /*# sourceMappingURL=style.css.map */

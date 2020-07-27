@@ -16,7 +16,7 @@
         <i class='bx bx-dots-horizontal-rounded'></i>
       </button>
       <div class="dropdown-menu">
-        <a class="dropdown-item d-flex align-items-center" [routerLink]="['/panel/blog-duzenle/',blog.seoUrl]">
+        <a class="dropdown-item d-flex align-items-center">
           <i class='bx bx-edit-alt'></i> Düzenle
         </a>
         <a class="dropdown-item d-flex align-items-center" (click)="deleteBlog(blog.id)">
@@ -37,6 +37,14 @@
           <div class="most-viewed-detail">
             <h3><a routerLink="/blog/{{blog.seoUrl}}">{{blog.title}}</a></h3>
             <p><i class="bx bx-current-location"></i> {{blog.createTime}}</p>
+          </div>
+          <div class="action-list">
+            <a class="btn btn-outline-primary action-item" [routerLink]="['/panel/blog-duzenle/',blog.seoUrl]">
+              <i class='bx bx-edit-alt'></i> Düzenle
+            </a>
+            <a class="btn btn-outline-primary action-item" (click)="deleteBlog(blog.id)">
+              <i class='bx bx-trash'></i> Sil
+            </a>
           </div>
         </div>
       </div>

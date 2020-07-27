@@ -83,7 +83,7 @@ namespace SE.Business.AccountServices
             }
             User user = new User
             {
-                UserName = "egitimkurumu",
+                UserName = Guid.NewGuid().ToString(),
                 Email = registerDto.Email,
                 PhoneNumber = registerDto.Phone
             };

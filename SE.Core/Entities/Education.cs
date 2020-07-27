@@ -23,6 +23,13 @@ namespace SE.Core.Entities
         public string PhoneTwo { get; set; }
         public string Email { get; set; }
         public string Website { get; set; }
+        public string YoutubeVideoOne { get; set; }
+        public string YoutubeVideoTwo { get; set; }
+        public string FacebookAccountUrl { get; set; }
+        public string InstagramAccountUrl { get; set; }
+        public string TwitterAccountUrl { get; set; }
+        public string YoutubeAccountUrl { get; set; }
+        public string MapCode { get; set; }
         public string SeoUrl { get; set; }
         public User User { get; set; }
         public Category Category { get; set; }

@@ -11,6 +11,7 @@ namespace SE.Business.BlogServices
         int UpdateBlog(BlogUpdateDto blogUpdateDto);
         void DeleteBlog(int blogId, string userId);
         List<BlogListDto> GetAllBlogListByUserId(string userId);
+        List<BlogListDto> GetAllBlogListByUserName(string userName);
         BlogDetailDto GetBlogDetailBySeoUrl(string seoUrl);
         BlogUpdateDto GetBlogUpdateBySeoUrl(string seoUrl, string userId);
         BlogDetailDto GetBlogDetailById(int Id);

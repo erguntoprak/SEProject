@@ -22,35 +22,66 @@ export interface EducationListModel {
   name: string;
   categoryName: string;
   categorySeoUrl: string;
+  categoryId: number;
   districtName: string;
+  districtId: number;
   address: string;
   base64Image: string;
   seoUrl: string;
 }
+
+export interface EducationFilterListModel {
+  id: number;
+  name: string;
+  categoryName: string;
+  categorySeoUrl: string;
+  categoryId: number;
+  districtName: string;
+  districtId: number;
+  address: string;
+  base64Image: string;
+  seoUrl: string;
+  attributeIds: number[];
+}
+
 export interface CategoryAttributeListModel {
   categoryName: string;
   attributeListModel: AttributeModel[];
 }
 
 export interface AttributeModel {
-  id: string;
+  id: number;
   name: string;
 }
+export interface FilterModel {
+  categoryId: number;
+  educationName?: string;
+}
 export interface CategoryModel {
-  id: string;
+  id: number;
   name: string;
+  seoUrl: string;
+}
+export interface SearchResult {
+  text: string;
+  url: string;
+}
+export interface EducationSearchResult {
+  name: string;
+  seoUrl: string;
 }
 export interface AddressModel {
   cityModel: CityModel;
   districtListModel: DistrictModel[];
 }
 export interface CityModel {
-  id: string;
+  id: number;
   name: string;
 }
 export interface DistrictModel {
-  id: string;
+  id: number;
   name: string;
+  seoUrl: string;
 }
 export interface ImageModel {
   id: number;
@@ -75,8 +106,9 @@ export interface EducationContactFormListModel {
 export interface BlogListModel {
   id: number;
   title: string;
-  author: string;
+  userSeoUrl: string;
   seoUrl: string;
+  userName: string;
   firstVisibleImageName: string;
   createTime: string;
 }

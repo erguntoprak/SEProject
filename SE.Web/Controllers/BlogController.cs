@@ -212,6 +212,20 @@ namespace SE.Web.Controllers
             }
         }
 
+        [HttpGet("GetAllBlogListByUserName")]
+        public IActionResult GetAllBlogListByUserName(string userName)
+        {
+            try
+            {
+                var blogListModel = _mapper.Map<List<BlogListModel>>(_blogService.GetAllBlogListByUserName(userName));
+                return Ok(blogListModel);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
+            }
+        }
+
         [HttpGet("GetBlogDetailBySeoUrl")]
         public IActionResult GetBlogDetailBySeoUrl(string seoUrl)
         {

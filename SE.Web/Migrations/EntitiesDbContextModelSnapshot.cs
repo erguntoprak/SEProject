@@ -354,6 +354,9 @@ namespace SE.Web.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
+                    b.Property<string>("SeoUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CityId");
@@ -383,6 +386,15 @@ namespace SE.Web.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FacebookAccountUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("InstagramAccountUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MapCode")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)")
@@ -399,11 +411,23 @@ namespace SE.Web.Migrations
                         .HasColumnType("nvarchar(120)")
                         .HasMaxLength(120);
 
+                    b.Property<string>("TwitterAccountUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Website")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("YoutubeAccountUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("YoutubeVideoOne")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("YoutubeVideoTwo")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

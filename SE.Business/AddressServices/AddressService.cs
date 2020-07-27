@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using SE.Business.Helpers;
 using SE.Core.DTO;
 using SE.Core.Entities;
 using SE.Data;
@@ -26,7 +27,8 @@ namespace SE.Business.AddressServices
                     DistrictListDto = d.Districts.Select(c=> new DistrictDto
                     {
                         Id = c.Id,
-                        Name = c.Name
+                        Name = c.Name,
+                        SeoUrl = c.SeoUrl
                     }).ToList()
                 }).FirstOrDefault();
                 return addressDto;

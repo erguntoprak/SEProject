@@ -24,12 +24,25 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.css",
               "node_modules/ngx-toastr/toastr.css",
-              "node_modules/swiper/css/swiper.css"
+              "node_modules/swiper/css/swiper.css",
+              "src/assets/css/bootstrap.min.css",
+              "src/assets/vendors/themify-icon/themify-icons.css",
+              "src/assets/vendors/simple-line-icon/simple-line-icons.css",
+              "src/assets/vendors/elagent/style.css",
+              "src/assets/vendors/flaticon/flaticon.css",
+              "src/assets/vendors/animation/animate.css",
+              "src/assets/vendors/nice-select/nice-select.css",
+              "src/assets/css/style.css",
+              "src/assets/css/responsive.css"
             ],
             "scripts": [
-
+              "node_modules/jquery/dist/jquery.min.js",
+              "src/assets/vendors/nice-select/jquery.nice-select.min.js",
+              "src/assets/js/bootstrap.min.js",
+              "src/assets/js/main.js"
             ]
           },
           "configurations": {
@@ -92,6 +105,7 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.css"
             ],
             "scripts": []

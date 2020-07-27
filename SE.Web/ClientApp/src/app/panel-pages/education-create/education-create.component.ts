@@ -9,6 +9,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AcdcLoadingService } from 'acdc-loading';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'se-education-create',
@@ -19,7 +20,7 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
   educationForm: FormGroup;
   errorList = [];
   imageMaxSizeMessages = [];
-  selectedImageModel: ImageModel = {id:0,firstVisible:false,imageUrl:"",title:"",educationId:0};
+  selectedImageModel: ImageModel = { id: 0, firstVisible: false, imageUrl: "", title: "", educationId: 0 };
   isSelectFirstVisibleImage: boolean = false;
   categories: CategoryModel[];
   attributeList: CategoryAttributeListModel[];
@@ -28,17 +29,22 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
   urlImages: KeyValueModel[] = [];
   savedImageList: ImageModel[];
   questionItems: FormArray;
+  youtubeVideoOneId: string = "";
+  youtubeVideoTwoId: string = "";
+  iframeMapCode: SafeHtml = "";
   nextStepOneControl: boolean = true;
+  nextStepOneValidation: boolean = false;
   nextStepTwoControl: boolean = false;
   nextStepThreeControl: boolean = false;
-  nextStepOneValidation: boolean = false;
   nextStepThreeValidation: boolean = false;
+  nextStepFourControl: boolean = false;
   nextStepFourValidation: boolean = false;
+  nextStepFiveControl: boolean = false;
 
 
 
 
-  constructor(private formBuilder: FormBuilder, private baseService: BaseService, private router: Router, private toastr: ToastrService, private acdcLoadingService: AcdcLoadingService) { }
+  constructor(private formBuilder: FormBuilder, private baseService: BaseService, private router: Router, private toastr: ToastrService, private acdcLoadingService: AcdcLoadingService, private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
     this.educationForm = this.formBuilder.group({
@@ -69,17 +75,54 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
           educationWebsite: ['', Validators.required]
         }
       ),
+      socialInformation: this.formBuilder.group(
+        {
+          youtubeVideoOne: [''],
+          youtubeVideoTwo: [''],
+          facebookAccountUrl: [''],
+          instagramAccountUrl: [''],
+          twitterAccountUrl: [''],
+          youtubeAccountUrl: [''],
+          mapCode: ['']
+        }),
       questions: this.formBuilder.array([this.createQuestionItem()])
     });
     this.getAllCallMethod();
   }
   ngAfterViewInit() {
+    this.educationForm.get("socialInformation").get("youtubeVideoOne").valueChanges.subscribe(value => {
+      if (value == "") {
+        this.youtubeVideoOneId = "";
+      }
+      else {
+        this.youtubeVideoOneId = value.split("watch?v=")[1];
+      }
+    });
+    this.educationForm.get("socialInformation").get("youtubeVideoTwo").valueChanges.subscribe(value => {
+      if (value == "") {
+        this.youtubeVideoTwoId = "";
+      }
+      else {
+        this.youtubeVideoTwoId = value.split("watch?v=")[1];
+      }
+    });
+    this.educationForm.get("socialInformation").get("mapCode").valueChanges.subscribe(value => {
+      if (value.startsWith("<iframe") && value.endsWith("</iframe>")) {
+        this.iframeMapCode = this.sanitizer.bypassSecurityTrustHtml(value);
+      }
+      else if (value == "") {
+        this.iframeMapCode = "";
+      }
+      else {
+        this.iframeMapCode = null;
+      }
+    });
   }
 
   onSubmit() {
     this.acdcLoadingService.showLoading();
     if (this.educationForm.invalid) {
-      this.nextStepThreeValidation = true;
+      this.nextStepFourValidation = true;
       this.acdcLoadingService.hideLoading();
       return;
     }
@@ -87,15 +130,15 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
     this.baseService.post("Education/AddEducation", this.educationForm.value).subscribe(educationId => {
       this.baseService.getById<ImageModel[]>("Education/GetEducationImagesByEducationId?educationId=", educationId).subscribe(imageModel => {
         this.savedImageList = imageModel;
-        this.nextStepThreeControl = false;
-        this.nextStepFourValidation = true;
+        this.nextStepFourControl = false;
+        this.nextStepFiveControl = true;
         this.acdcLoadingService.hideLoading();
       });
     },
       (error: HttpErrorResponse) => {
         this.errorList = this.errorList.concat(error.error);
         window.scroll(0, 0);
-        this.nextStepThreeControl = false;
+        this.nextStepFourControl = false;
         this.nextStepOneControl = true;
         this.acdcLoadingService.hideLoading();
       });
@@ -107,7 +150,7 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
     }
     this.acdcLoadingService.showLoading();
     this.baseService.post("Education/InsertFirstVisibleImage", this.selectedImageModel).subscribe(data => {
-       this.router.navigate(['/panel/egitimler']);
+      this.router.navigate(['/panel/egitimler']);
       this.toastr.success('Kayıt işlemi gerçekleşti.', 'Başarılı!');
       this.acdcLoadingService.hideLoading();
     });
@@ -148,10 +191,24 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
     this.nextStepOneControl = true;
     this.nextStepTwoControl = false;
   }
+  nextStepThreeClick() {
+    if (this.iframeMapCode == null || this.youtubeVideoOneId == undefined || this.youtubeVideoTwoId == undefined) {
+      this.nextStepThreeValidation = true;
+      return;
+    }
+    window.scroll(0, 0);
+    this.nextStepThreeControl = false;
+    this.nextStepFourControl = true;
+  }
   previousStepThreeClick() {
     window.scroll(0, 0);
     this.nextStepTwoControl = true;
     this.nextStepThreeControl = false;
+  }
+  previousStepFourClick() {
+    window.scroll(0, 0);
+    this.nextStepThreeControl = true;
+    this.nextStepFourControl = false;
   }
 
   //remove selected image

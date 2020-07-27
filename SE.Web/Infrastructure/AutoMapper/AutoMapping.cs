@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace SE.Web.Infrastructure.AutoMapper
 {
-    public class AutoMapping:Profile
+    public class AutoMapping : Profile
     {
         DateTimeFormatInfo fmt = (new CultureInfo("tr-TR")).DateTimeFormat;
         public AutoMapping()
@@ -27,8 +27,8 @@ namespace SE.Web.Infrastructure.AutoMapper
             CreateMap<EducationAddressModel, EducationAddressDto>().ReverseMap();
             CreateMap<EducationContactInformationModel, EducationContactInformationDto>().ReverseMap();
             CreateMap<LoginModel, LoginDto>();
-            CreateMap<EducationListDto,EducationListModel>();
-            CreateMap<CategoryAttributeListDto, CategoryAttributeListModel>().ForMember(dest=> dest.AttributeListModel,opt=> opt.MapFrom(src=>src.AttributeListDto));
+            CreateMap<EducationListDto, EducationListModel>();
+            CreateMap<CategoryAttributeListDto, CategoryAttributeListModel>().ForMember(dest => dest.AttributeListModel, opt => opt.MapFrom(src => src.AttributeListDto));
             CreateMap<AttributeDto, AttributeModel>();
             CreateMap<CategoryDto, CategoryModel>();
             CreateMap<CityDto, CityModel>();
@@ -46,6 +46,12 @@ namespace SE.Web.Infrastructure.AutoMapper
             CreateMap<BlogListDto, BlogListModel>().ForMember(dest => dest.CreateTime, opt => opt.MapFrom(src => src.CreateTime.ToString("D", fmt)));
             CreateMap<BlogDetailDto, BlogDetailModel>().ForMember(dest => dest.CreateTime, opt => opt.MapFrom(src => src.CreateTime.ToString("D", fmt)));
             CreateMap<BlogUpdateModel, BlogUpdateDto>().ReverseMap();
+            CreateMap<SocialInformationModel, SocialInformationDto>();
+            CreateMap<SocialInformationDto, SocialInformationModel>();
+            CreateMap<SearchEducationDto, SearchEducationModel>();
+            CreateMap<FilterModel, FilterDto>();
+            CreateMap<EducationFilterListDto, EducationFilterListModel>();
+
         }
     }
 }

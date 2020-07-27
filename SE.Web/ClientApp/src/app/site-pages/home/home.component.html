@@ -13,15 +13,30 @@
   <div class="banner_top">
     <div class="container">
       <div class="domain_box_info">
-        <h3 class="wow fadeInUp" data-wow-delay="0.3s">Looking for domain name?</h3>
-        <div class="domain_form_inner">
-          <input type="text" id="a" class="form-control" placeholder="Aradığın eğitimi burada bulabilirsin">
-          <div class="domain_select">
-            <select *ngIf="categories" class="form-control selectpickers">
-              <option [ngValue]="category.id" *ngFor="let category of categories">{{category.name}}</option>
-            </select>
+        <h3 class="wow fadeInUp" data-wow-delay="0.3s">Aradığın eğitim kurumunu hemen bul!</h3>
+        <form [formGroup]="searchForm" (ngSubmit)="onSearchFormSubmit()">
+          <div class="domain_form_inner">
+            <input type="text" formControlName="searchText" (focus)="focusFunction()" (focusout)="focusOutFunction()" class="form-control" placeholder="Aradığın eğitimi burada bulabilirsin">
+            <div class="domain_select">
+              <ng-select [items]="categories"
+                         bindLabel="name"
+                         [clearable]="false"
+                         notFoundText ="Kategori bulunamadı."
+                         placeholder="Eğitim Türü Seçiniz"
+                         bindValue="id" [searchable]="false" formControlName="categoryId">
+              </ng-select>
+            </div>
+            <button type="submit" class="hosting_btn">Ara</button>
           </div>
-          <button type="submit" class="hosting_btn">Ara</button>
+        </form>
+
+        <div *ngIf="isSearchResult" class="search-result-list">
+          <ul class="search-box">
+            <li *ngFor="let result of searchResult |filter: (searchForm.get('searchText').value | lowercase)" class="search-item"><a routerLink="/{{result.url+selectedCategoryUrl}}">{{result.text}} {{selectedSearchFormCategoryName}}</a></li>
+            <ng-container *ngIf="searchForm.get('searchText').value != ''">
+              <li *ngFor="let result of educationSearchResult |filter: (searchForm.get('searchText').value | lowercase)" class="search-item"><a routerLink="egitim-kurumu/{{result.seoUrl}}">{{result.name}}</a></li>
+            </ng-container>
+          </ul>
         </div>
       </div>
     </div>
@@ -36,40 +51,10 @@
     <div class="row flex-row-reverse">
       <div class="col-lg-9 col-md-10 col-sm-12">
         <div class="row">
-          <div class="col-lg-3 col-md-3 col-sm-6">
+          <div *ngFor="let category of categories" class="col-lg-2 col-md-3 col-sm-3 col-6">
             <a href="#" class="s_integration_item">
               <img src="assets/img/new-home/kissmetrics.png" alt="">
-              <h5>KISSmetrics</h5>
-            </a>
-          </div>
-          <div class="col-lg-3 col-md-3 col-sm-6">
-            <a href="#" class="s_integration_item">
-              <img src="assets/img/new-home/metorik.png" alt="">
-              <h5>Metorik</h5>
-            </a>
-          </div>
-          <div class="col-lg-3 col-md-3 col-sm-6">
-            <a href="#" class="s_integration_item">
-              <img src="assets/img/new-home/nicereply-1.png" alt="">
-              <h5>Nicereply</h5>
-            </a>
-          </div>
-          <div class="col-lg-3 col-md-3 col-sm-6">
-            <a href="#" class="s_integration_item">
-              <img src="assets/img/new-home/campfire.png" alt="">
-              <h5>Campfire</h5>
-            </a>
-          </div>
-          <div class="col-lg-3 col-md-3 col-sm-6">
-            <a href="#" class="s_integration_item">
-              <img src="assets/img/new-home/webhooks.png" alt="">
-              <h5>Webhooks</h5>
-            </a>
-          </div>
-          <div class="col-lg-3 col-md-3 col-sm-6">
-            <a href="#" class="s_integration_item">
-              <img src="assets/img/new-home/briteverify.png" alt="">
-              <h5>BriteVerify</h5>
+              <h5>{{category.name}}</h5>
             </a>
           </div>
         </div>
@@ -89,16 +74,20 @@
       <div class="col-md-6">
         <div class="row">
           <div class="district_dropdown">
-              <select class="form-control selectpickers" *ngIf="districtList" >
-                <option value="0" selected>İlçe Seçiniz</option>
-                <option [ngValue]="district.id" *ngFor="let district of districtList">{{district.name}}</option>
-              </select>
+            <ng-select [items]="districtList"
+                       bindLabel="name"
+                       notFoundText ="İlçe bulunamadı."
+                       placeholder="İlçe Seçiniz"
+                       bindValue="id" [searchable]="true" [formControl]="district">
+            </ng-select>
           </div>
           <div class="category_dropdown">
-            <select *ngIf="categories" class="form-control selectpickers">
-              <option value="0" selected>Eğitim Türü Seçiniz</option>
-              <option [ngValue]="category.id" *ngFor="let category of categories">{{category.name}}</option>
-            </select>
+            <ng-select [items]="categories"
+                       bindLabel="name"
+                       notFoundText ="Kategori bulunamadı."
+                       placeholder="Eğitim Türü Seçiniz"
+                       bindValue="id" [searchable]="false" [formControl]="categoryHomePage">
+            </ng-select>
           </div>
         </div>
       </div>
@@ -106,17 +95,20 @@
     <div class="row">
       <div class="col-lg-12 blog_grid_info">
         <div class="row">
-          <div class="col-lg-3" *ngFor='let education of educationList'>
+          <div class="col-sm-6 col-md-6 col-lg-3 col-12" *ngFor='let education of educationList'>
             <div class="blog_list_item blog_list_item_two">
               <a routerLink="/{{education.categorySeoUrl}}" class="post_date">
                 <span>{{education.categoryName}}</span>
               </a>
-              <a routerLink="/{{education.categorySeoUrl}}/{{education.seoUrl}}"><img class="img-fluid" src="https://localhost:44362/images/{{education.imageUrl}}_300x180.jpg" alt="{{education.name}}"></a>
+              <a [routerLink]="['/egitim-kurumu/',education.districtSeoUrl,education.categorySeoUrl,education.seoUrl]"><img class="img-fluid" src="https://localhost:44362/images/{{education.imageUrl}}_300x180.jpg" alt="{{education.name}}"></a>
               <div class="blog_content">
                 <a [routerLink]="['/egitim-kurumu/',education.districtSeoUrl,education.categorySeoUrl,education.seoUrl]">
-                  <h5 class="blog_title">{{education.name}}</h5>
+                  <h5 class="blog_title">{{education.name}}<img src="assets/img/tick.png" class="tick-image" /></h5>
                 </a>
-                <p>{{education.districtName}}</p>
+                <span>{{education.districtName}}</span>
+              </div>
+              <div class="item-action">
+                <a class="btn_three sign_btn_transparent mt_c20" [routerLink]="['/egitim-kurumu/',education.districtSeoUrl,education.categorySeoUrl,education.seoUrl]">Hemen İncele <i class="ti-angle-double-right"></i> </a>
               </div>
             </div>
           </div>

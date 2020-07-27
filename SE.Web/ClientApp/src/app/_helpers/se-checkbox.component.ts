@@ -1,4 +1,4 @@
-import { Component, Input, forwardRef, OnInit } from '@angular/core';
+import { Component, Input, forwardRef, OnInit, SimpleChanges } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BaseControlValueAccessor } from './base-control-value-accessor';
 import { v4 as uuid } from 'uuid';
@@ -35,5 +35,8 @@ export class SeCheckBox extends BaseControlValueAccessor<number> implements OnIn
 
   ngOnInit(): void {
     this.checkControl = _.includes(this.existingAttributeIds, this.id);
+  }
+  ngOnChanges(changes) {
+    this.checkControl = _.includes(changes.existingAttributeIds.currentValue, this.id);
   }
 }

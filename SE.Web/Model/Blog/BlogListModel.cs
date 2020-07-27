@@ -9,8 +9,9 @@ namespace SE.Web.Model.Blog
     {
         public int Id { get; set; }
         public string Title { get; set; }
+        public string UserSeoUrl { get; set; }
         public string SeoUrl { get; set; }
-        public string Username { get; set; }
+        public string UserName { get; set; }
         public string FirstVisibleImageName { get; set; }
         public string CreateTime { get; set; }
     }

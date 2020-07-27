@@ -5,6 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { EducationDetailComponent } from './education-detail.component';
 import { NgImageSliderModule } from 'ng-image-slider';
 import { NgxMaskModule, IConfig } from 'ngx-mask'
+import { YouTubePlayerModule } from '@angular/youtube-player';
 
 export let options: Partial<IConfig> | (() => Partial<IConfig>);
 const routes: Routes = [
@@ -19,6 +20,7 @@ const routes: Routes = [
   ],
   imports: [SharedModule,
     ReactiveFormsModule,
+    YouTubePlayerModule,
     NgImageSliderModule,
     NgxMaskModule.forRoot(options),
     RouterModule.forChild(routes)]

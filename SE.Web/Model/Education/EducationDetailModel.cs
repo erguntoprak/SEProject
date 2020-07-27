@@ -23,6 +23,7 @@ namespace SE.Web.Model.Education
 
         public List<EducationQuestionModel> Questions { get; set; }
         public EducationAddressDetailModel AddressInformation { get; set; }
+        public SocialInformationModel SocialInformation { get; set; }
         public EducationContactInformationModel ContactInformation { get; set; }
         public List<BlogListModel> BlogList { get; set; }
 

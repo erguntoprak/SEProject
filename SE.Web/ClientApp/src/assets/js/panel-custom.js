@@ -13,7 +13,7 @@
     });
 
 		// Burger Menu JS
-		$('#deneme').on('click', function() {
+    $('#burger-menu').on('click', function() {
 			$(this).toggleClass('active');
 			$('.main-content').toggleClass('hide-sidemenu-area');
 			$('.sidemenu-area').toggleClass('toggle-sidemenu-area');
