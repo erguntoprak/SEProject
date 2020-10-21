@@ -32,7 +32,7 @@
 
         <div *ngIf="isSearchResult" class="search-result-list">
           <ul class="search-box">
-            <li *ngFor="let result of searchResult |filter: (searchForm.get('searchText').value | lowercase)" class="search-item"><a routerLink="/{{result.url+selectedCategoryUrl}}">{{result.text}} {{selectedSearchFormCategoryName}}</a></li>
+            <li *ngFor="let result of searchResult |filter: (searchForm.get('searchText').value | lowercase)" class="search-item"><a routerLink="/{{result.url + selectedCategoryUrl}}" [queryParams]="{ ilce: result.districtUrl }" queryParamsHandling="merge" >{{result.text}} {{selectedSearchFormCategoryName}}</a></li>
             <ng-container *ngIf="searchForm.get('searchText').value != ''">
               <li *ngFor="let result of educationSearchResult |filter: (searchForm.get('searchText').value | lowercase)" class="search-item"><a routerLink="egitim-kurumu/{{result.seoUrl}}">{{result.name}}</a></li>
             </ng-container>
@@ -51,9 +51,9 @@
     <div class="row flex-row-reverse">
       <div class="col-lg-9 col-md-10 col-sm-12">
         <div class="row">
-          <div *ngFor="let category of categories" class="col-lg-2 col-md-3 col-sm-3 col-6">
-            <a href="#" class="s_integration_item">
-              <img src="assets/img/new-home/kissmetrics.png" alt="">
+          <div *ngFor="let category of categories;let i=index" class="col-lg-2 col-md-3 col-sm-3 col-6">
+            <a routerLink="/egitim-kurumlari/{{category.seoUrl}}" class="s_integration_item">
+              <img src="assets/img/egitim-kurumu-{{i}}.png" alt="{{category.name}}">
               <h5>{{category.name}}</h5>
             </a>
           </div>

@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AcdcLoadingService } from 'acdc-loading';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import * as _ from 'lodash';
+import { ActionPermissionService } from 'src/app/_services/action-permission.service';
 
 @Component({
   selector: 'se-education-create',
@@ -19,7 +21,7 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
 
   educationForm: FormGroup;
   errorList = [];
-  imageMaxSizeMessages = [];
+  imageUploadErrorMessage = [];
   selectedImageModel: ImageModel = { id: 0, firstVisible: false, imageUrl: "", title: "", educationId: 0 };
   isSelectFirstVisibleImage: boolean = false;
   categories: CategoryModel[];
@@ -41,10 +43,7 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
   nextStepFourValidation: boolean = false;
   nextStepFiveControl: boolean = false;
 
-
-
-
-  constructor(private formBuilder: FormBuilder, private baseService: BaseService, private router: Router, private toastr: ToastrService, private acdcLoadingService: AcdcLoadingService, private sanitizer: DomSanitizer) { }
+  constructor(public actionPermissionService: ActionPermissionService, private formBuilder: FormBuilder, private baseService: BaseService, private router: Router, private toastr: ToastrService, private acdcLoadingService: AcdcLoadingService, private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
     this.educationForm = this.formBuilder.group({
@@ -225,16 +224,44 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
   }
   //select image
   onSelectFile(event) {
+    this.imageUploadErrorMessage = [];
+    const max_size = 1024000;
+
+    if (event.target.files.length > 20) {
+      this.imageUploadErrorMessage.push('En fazla 20 görsele izin verilmektedir.');
+      this.imageUploadErrorMessage = [...this.imageUploadErrorMessage];
+      return;
+    }
     const images = <FormArray>this.educationForm.controls.images;
+    const allowed_types = ['image/png', 'image/jpeg'];
+
     if (event.target.files && event.target.files[0]) {
-      var filesAmount = event.target.files.length;
-      for (let i = 0; i < filesAmount; i++) {
-        var reader = new FileReader();
-        reader.onload = (event: any) => {
-          this.urlImages.push({ key: uuid(), value: event.target.result });
-          images.push(new FormControl(event.target.result));
+      for (let i = 0; i < event.target.files.length; i++) {
+        if (!_.includes(allowed_types, event.target.files[i].type)) {
+          this.imageUploadErrorMessage.push('Sadece ( JPG | PNG ) uzantılar kabul edilmektedir.');
+          this.imageUploadErrorMessage = [...this.imageUploadErrorMessage];
         }
-        reader.readAsDataURL(event.target.files[i]);
+        else {
+          if (event.target.files[i].size >= max_size) {
+            this.imageUploadErrorMessage.push(event.target.files[i].name + ' adlı görsel 1 MB değerinden büyüktür. 1 MB değerinden küçük veya eşit olmalıdır.');
+            this.imageUploadErrorMessage = [...this.imageUploadErrorMessage];
+          }
+          else {
+            var reader = new FileReader();
+            reader.onload = (event: any) => {
+              if (this.urlImages.length > 19) {
+                this.imageUploadErrorMessage.push('En fazla 20 görsele izin verilmektedir.');
+                this.imageUploadErrorMessage = [...this.imageUploadErrorMessage];
+              }
+              else {
+                this.urlImages.push({ key: uuid(), value: event.target.result });
+                images.push(new FormControl(event.target.result));
+              }
+            }
+            reader.readAsDataURL(event.target.files[i]);
+        }
+        
+        }        
       }
     }
   }

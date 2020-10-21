@@ -19,7 +19,14 @@
     };
     navbarFixed();
 
-
+  $(window).on("load", function () {
+    if ($('.mega_menu_two .scroll').length) {
+      $(".mega_menu_two .scroll").mCustomScrollbar({
+        mouseWheelPixels: 50,
+        scrollInertia: 0,
+      });
+    }
+  });
     function offcanvasActivator() {
         if ($('.bar_menu').length) {
             $('.bar_menu').on('click', function () {

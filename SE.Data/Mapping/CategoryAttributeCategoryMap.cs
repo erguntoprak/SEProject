@@ -16,12 +16,13 @@ namespace SE.Data.Mapping
 
             builder.HasOne(mapping => mapping.Category)
                  .WithMany(discount => discount.CategoryAttributeCategories)
-                 .HasForeignKey(mapping => mapping.CategoryId)
+                 .HasForeignKey(mapping => mapping.CategoryId).OnDelete(DeleteBehavior.Restrict)
                  .IsRequired();
 
             builder.HasOne(mapping => mapping.AttributeCategory)
                 .WithMany(category => category.CategoryAttributeCategories)
                 .HasForeignKey(mapping => mapping.AttributeCategoryId)
+                .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
 
         }

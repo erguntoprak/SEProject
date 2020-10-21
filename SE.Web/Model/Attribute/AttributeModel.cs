@@ -9,5 +9,6 @@ namespace SE.Web.Model.Attribute
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public int AttributeCategoryId { get; set; }
     }
 }

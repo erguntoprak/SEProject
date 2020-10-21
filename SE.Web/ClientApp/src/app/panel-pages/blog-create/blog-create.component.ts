@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'se-blog-create',
@@ -15,6 +16,8 @@ export class BlogCreateComponent implements OnInit {
   blogInsertForm: FormGroup;
   errorList = [];
   submitted = false;
+  firstVisibleImageUploadErrorMessage = [];
+  imageUploadErrorMessage:string;
 
 
   constructor(private baseService: BaseService, private formBuilder: FormBuilder, private acdcLoadingService: AcdcLoadingService, private router: Router, private toastr: ToastrService) {
@@ -55,25 +58,57 @@ export class BlogCreateComponent implements OnInit {
   }
   //select image
   onFirstVisibleImageSelectFile(event) {
+    this.firstVisibleImageUploadErrorMessage = [];
+    const max_size = 1024000;
+    const allowed_types = ['image/png', 'image/jpeg'];
+
+
     if (event.target.files && event.target.files.length > 0) {
-      var reader = new FileReader();
       const [file] = event.target.files;
-      reader.readAsDataURL(file);
-      reader.onload = (event: any) => {
-        this.blogInsertForm.get('firstVisibleImageName').setValue(reader.result);
+      if (!_.includes(allowed_types, file.type)) {
+        this.firstVisibleImageUploadErrorMessage.push('Sadece ( JPG | PNG ) uzantılar kabul edilmektedir.');
+        this.firstVisibleImageUploadErrorMessage = [...this.firstVisibleImageUploadErrorMessage];
       }
+      else {
+        if (file.size >= max_size) {
+          this.firstVisibleImageUploadErrorMessage.push(file.name + ' adlı görsel 1 MB değerinden büyüktür. 1 MB değerinden küçük veya eşit olmalıdır.');
+          this.firstVisibleImageUploadErrorMessage = [...this.firstVisibleImageUploadErrorMessage];
+        }
+        else {
+          var reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = (event: any) => {
+            this.blogInsertForm.get('firstVisibleImageName').setValue(reader.result);
+          }
+        }
+      }
+      
     }
   }
   onSelectFile(event, i) {
+    const max_size = 1024000;
+    const allowed_types = ['image/png', 'image/jpeg'];
+    this.imageUploadErrorMessage = undefined;
     if (event.target.files && event.target.files.length > 0) {
-      var reader = new FileReader();
       const [file] = event.target.files;
-      reader.readAsDataURL(file);
-      reader.onload = (event: any) => {
-        (<FormGroup>(<FormArray>this.blogInsertForm.controls.blogItems).controls[i]).patchValue({
-          imageName: reader.result
-        });
+      if (!_.includes(allowed_types, file.type)) {
+        this.imageUploadErrorMessage = 'Sadece ( JPG | PNG ) uzantılar kabul edilmektedir.';
       }
+      else {
+        if (file.size >= max_size) {
+          this.imageUploadErrorMessage = file.name + ' adlı görsel 1 MB değerinden büyüktür. 1 MB değerinden küçük veya eşit olmalıdır.';
+        }
+        else {
+          var reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = (event: any) => {
+            (<FormGroup>(<FormArray>this.blogInsertForm.controls.blogItems).controls[i]).patchValue({
+              imageName: reader.result
+            });
+          }
+        }      
+      }
+      
     }
   }
   removeImage(i) {

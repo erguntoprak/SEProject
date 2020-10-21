@@ -20,12 +20,20 @@ export class AuthGuard implements CanLoad {
   constructor(private authService: AuthService, private router: Router) { }
 
   canLoad(route: Route, segments: UrlSegment[]): boolean | Observable<boolean> | Promise<boolean> {
+
     return this.authService.currentUserValue.pipe(
       take(1),
       map(user => {
+        let accessPermission = false;
         const isAuth = !!user;
         if (isAuth) {
-          return true;
+          const roles = user.roles;
+          roles.forEach(role => {
+            if (route.data.roles && route.data.roles.includes(role)) {
+              accessPermission = true;
+            }
+          });
+          return accessPermission;
         }
         this.router.navigate(['/giris']);
         return false;

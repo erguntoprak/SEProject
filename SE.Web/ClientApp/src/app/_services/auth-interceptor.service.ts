@@ -3,7 +3,8 @@ import {
   HttpInterceptor,
   HttpRequest,
   HttpHandler,
-  HttpParams,
+  HttpParams,
+
   HttpHeaders,
   HttpErrorResponse
 } from '@angular/common/http';
@@ -25,6 +26,8 @@ export class AuthInterceptorService implements HttpInterceptor {
       exhaustMap(user => {
         let headers = new HttpHeaders();
         headers = headers.set('Content-Type', 'application/json');
+        headers = headers.set('Access-Control-Allow-Origin', 'http://localhost:4200');
+
         if (!user) {
           const modifiedReq = req.clone({
             url: `https://localhost:44362/api/${req.url}`,
@@ -41,15 +44,15 @@ export class AuthInterceptorService implements HttpInterceptor {
           catchError((error: HttpErrorResponse) => {
             switch (error.status) {
               case 404:      //login
-                this.router.navigateByUrl("/giris");
+                this.router.navigateByUrl("/giris-yap");
                 this.acdcLoadingService.hideLoading();
                 break;
               case 401:      //login
-                this.router.navigateByUrl("/giris");
+                this.router.navigateByUrl("/giris-yap");
                 this.acdcLoadingService.hideLoading();
                 break;
               case 403:     //forbidden
-                this.router.navigateByUrl("/unauthorized");
+                this.router.navigateByUrl("/giris-yap");
                 this.acdcLoadingService.hideLoading();
                 break;
             }

@@ -17,6 +17,20 @@ namespace SE.Business.AttributeServices
             _unitOfWork = unitOfWork;
         }
 
+        public void DeleteAttribute(int attributeId)
+        {
+            try
+            {
+                var attribute = _unitOfWork.AttributeRepository.GetById(attributeId);
+                _unitOfWork.AttributeRepository.Delete(attribute);
+                _unitOfWork.SaveChanges();
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
         public List<CategoryAttributeListDto> GetAllAttributeByEducationCategoryId(int categoryId)
         {
             try
@@ -42,6 +56,78 @@ namespace SE.Business.AttributeServices
 
 
                 return educationAttributeGroupList;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public List<AttributeListDto> GetAllAttributeList()
+        {
+            try
+            {
+                var attributeListDto = _unitOfWork.AttributeRepository.Include(d=>d.AttributeCategory).Select(d => new AttributeListDto { Id = d.Id, Name = d.Name,AttributeCategoryId = d.AttributeCategoryId,AttributeCategoryName = d.AttributeCategory.Name}).OrderBy(d=>d.AttributeCategoryName).ToList();
+                return attributeListDto;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public AttributeDto GetAttributeById(int attributeId)
+        {
+            try
+            {
+                var attributeDto = _unitOfWork.AttributeRepository.Table.Where(d => d.Id == attributeId).Select(d => new AttributeDto
+                {
+                    Id = d.Id,
+                    Name = d.Name,
+                    AttributeCategoryId = d.AttributeCategoryId
+                }).FirstOrDefault();
+
+                if (attributeDto != null)
+                {
+                    return attributeDto;
+                }
+                else
+                {
+                    throw new Exception();
+                }
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public void InsertAttribute(AttributeDto attributeDto)
+        {
+            try
+            {
+                var attribute = new Core.Entities.Attribute
+                {
+                    Name = attributeDto.Name,
+                    AttributeCategoryId = attributeDto.AttributeCategoryId
+                };
+                _unitOfWork.AttributeRepository.Insert(attribute);
+                _unitOfWork.SaveChanges();
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public void UpdateAttribute(AttributeDto attributeDto)
+        {
+            try
+            {
+                var attribute = _unitOfWork.AttributeRepository.GetById(attributeDto.Id);
+                attribute.Name = attributeDto.Name;
+                attribute.AttributeCategoryId = attributeDto.AttributeCategoryId;
+                _unitOfWork.SaveChanges();
             }
             catch
             {

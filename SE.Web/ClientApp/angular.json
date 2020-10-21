@@ -35,6 +35,7 @@
               "src/assets/vendors/flaticon/flaticon.css",
               "src/assets/vendors/animation/animate.css",
               "src/assets/vendors/nice-select/nice-select.css",
+              "src/assets/vendors/scroll/jquery.mCustomScrollbar.min.css",
               "src/assets/css/style.css",
               "src/assets/css/responsive.css"
             ],
@@ -42,6 +43,7 @@
               "node_modules/jquery/dist/jquery.min.js",
               "src/assets/vendors/nice-select/jquery.nice-select.min.js",
               "src/assets/js/bootstrap.min.js",
+              "src/assets/vendors/scroll/jquery.mCustomScrollbar.concat.min.js",
               "src/assets/js/main.js"
             ]
           },

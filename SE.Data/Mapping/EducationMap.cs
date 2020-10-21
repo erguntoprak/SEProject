@@ -17,7 +17,7 @@ namespace SE.Data.Mapping
             builder.Property(x => x.Name).HasMaxLength(100).IsRequired();
             builder.Property(x => x.SeoUrl).HasMaxLength(120).IsRequired();
 
-            builder.HasOne(d => d.EducationAddress).WithOne(e => e.Education).HasForeignKey<EducationAddress>(f => f.EducationId);
+            builder.HasOne(d => d.EducationAddress).WithOne(e => e.Education).HasForeignKey<EducationAddress>(f => f.EducationId).OnDelete(DeleteBehavior.Cascade);
             builder.HasMany(d => d.Images).WithOne(d => d.Education).HasForeignKey(d => d.EducationId).IsRequired().OnDelete(DeleteBehavior.Cascade);
             builder.HasMany(d => d.Questions).WithOne(d => d.Education).HasForeignKey(d => d.EducationId).IsRequired().OnDelete(DeleteBehavior.Cascade);
             builder.HasMany(d => d.EducationContactForms).WithOne(d => d.Education).HasForeignKey(d => d.EducationId).IsRequired().OnDelete(DeleteBehavior.Cascade);

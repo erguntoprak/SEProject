@@ -7,408 +7,822 @@ namespace SE.Business.EmailSenders
 {
     public static class EmailMessages
     {
-        public static string GetEmailConfirmationHtml(string name, string confirmationLink)
+        public static string GetEmailConfirmationHtml(string confirmationLink)
         {
             var emailConfirmationHtml = @"<!doctype html>
-<html>
-  <head>
-    <meta name='viewport' content='width=device-width' />
-    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-    <title>Simple Transactional Email</title>
-    <style>
-      img {
-        border: none;
-        -ms-interpolation-mode: bicubic;
-        max-width: 100%; }
+<html xmlns='http://www.w3.org/1999/xhtml'>
 
-    body {
-        background-color: #f6f6f6;
-        font-family: sans-serif;
-        -webkit-font-smoothing: antialiased;
-        font-size: 14px;
-        line-height: 1.4;
-        margin: 0;
-        padding: 0;
-        -ms-text-size-adjust: 100%;
-        -webkit-text-size-adjust: 100%; }
-
-table {
-        border-collapse: separate;
-        mso-table-lspace: 0pt;
-        mso-table-rspace: 0pt;
-        width: 100%; }
-        table td
-{
-    font-family: sans-serif;
-    font-size: 14px;
-    vertical-align: top;
-}
-
-      .body {
-        background-color: #f6f6f6;
-        width: 100%; }
-
-      .container {
-        display: block;
-        margin: 0 auto !important;
-        /* makes it centered */
-        max-width: 580px;
-        padding: 10px;
-        width: 580px; }
-
-      .content {
-        box-sizing: border-box;
-        display: block;
-        margin: 0 auto;
-        max-width: 580px;
-        padding: 10px; }
-
-
-      .main {
-        background: #ffffff;
-        border-radius: 3px;
-        width: 100%; }
-
-      .wrapper {
-        box-sizing: border-box;
-        padding: 20px; }
-
-      .content-block {
-        padding-bottom: 10px;
-        padding-top: 10px;
+<head>
+  <meta name='viewport' content='width=device-width'>
+  <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+  <!-- Turn off iOS phone number autodetect -->
+  <meta name='format-detection' content='telephone=no'>
+  <style>
+    body, p {
+          font-family: 'Helvetica Neue', Helvetica,Arial, sans-serif;
+          -webkit-font-smoothing: antialiased;
+          -webkit-text-size-adjust: none;
       }
+      table {
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: 0;
+          padding: 0;
+      }
+      img {
+          margin: 0;
+          padding: 0;
+      }
+  
+      .content {
+          width: 600px;
+      }
+  
+      .no_text_resize {
+          -moz-text-size-adjust: none;
+          -webkit-text-size-adjust: none;
+          -ms-text-size-adjust: none;
+          text-size-adjust: none;
+      }
+  
+      /* Media Queries */
+      @media all and (max-width: 600px) {
+  
+          table[class='content'] {
+              width: 100% !important;
+          }
+  
+          tr[class='grid-no-gutter'] td[class='grid__col'] {
+              padding-left: 0 !important;
+              padding-right: 0 !important;
+          }
+  
+          td[class='grid__col'] {
+              padding-left: 18px !important;
+              padding-right: 18px !important;
+          }
+  
+          table[class='small_full_width'] {
+              width: 100% !important;
+              padding-bottom: 10px;
+          }
+  
+          a[class='header-link'] {
+              margin-right: 0 !important;
+              margin-left: 10px !important;
+          }
+  
+          a[class='btn'] {
+              width: 100%;
+              border-left-width: 0px !important;
+              border-right-width: 0px !important;
+          }
+  
+          table[class='col-layout'] {
+              width: 100% !important;
+          }
+  
+          td[class='col-container'] {
+              display: block !important;
+              width: 100% !important;
+              padding-left: 0 !important;
+              padding-right: 0 !important;
+          }
+  
+          td[class='col-nav-items'] {
+              display: inline-block !important;
+              padding-left: 0 !important;
+              padding-right: 10px !important;
+              background: none !important;
+          }
+  
+          img[class='col-img'] {
+              height: auto !important;
+              max-width: 520px !important;
+              width: 100% !important;
+          }
+  
+          td[class='col-center-sm'] {
+              text-align: center;
+          }
+  
+          tr[class='footer-attendee-cta'] > td[class='grid__col'] {
+              padding: 24px 0 0 !important;
+          }
+  
+          td[class='col-footer-cta'] {
+              padding-left: 0 !important;
+              padding-right: 0 !important;
+          }
+  
+          td[class='footer-links'] {
+              text-align: left !important;
+          }
+  
+          .hide-for-small {
+              display: none !important;
+          }
+  
+          .ribbon-mobile {
+              line-height: 1.3 !important;
+          }
+  
+          .small_full_width {
+              width: 100% !important;
+              padding-bottom: 10px;
+          }
+  
+          .table__ridge {
+              height: 7px !important;
+          }
+  
+          .table__ridge img {
+              display: none !important;
+          }
+  
+          .table__ridge--top {
+              background-size: 170% 7px;
+          }
+  
+          .table__ridge--bottom {
+              background-size: 170% 7px;
+          }
+  
+          .summary-table__total {
+              padding-right: 10px !important;
+          }
+  
+          .app-cta {
+              display: none !important;
+          }
+  
+          .app-cta__mobile {
+              width: 100% !important;
+              height: auto !important;
+              max-height: none !important;
+              overflow: visible !important;
+              float: none !important;
+              display: block !important;
+              margin-top: 12px !important;
+              visibility: visible;
+              font-size: inherit !important;
+          }
+  
+          /* List Event Cards */
+          .list-card__header {
+              width: 130px !important;
+          }
+  
+          .list-card__label {
+              width: 130px !important;
+          }
+  
+          .list-card__image-wrapper {
+              width: 130px !important;
+              height: 65px !important;
+          }
+  
+          .list-card__image {
+              max-width: 130px !important;
+              max-height: 65px !important;
+          }
+  
+          .list-card__body {
+              padding-left: 10px !important;
+          }
+  
+          .list-card__title {
+              margin-bottom: 10px !important;
+          }
+  
+          .list-card__date {
+              padding-top: 0 !important;
+          }
+      }
+  
+      @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
+          .ribbon-mobile {
+              line-height: 1.3 !important;
+          }
+  
+          .ribbon-mobile__text {
+              padding: 0 !important;
+          }
+      }
+  
+      @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
+          .ribbon-mobile {
+              line-height: 1.3 !important;
+          }
+  
+          .ribbon-mobile__text {
+              padding: 0 !important;
+          }
+      }
+  
+      @media screen and (min-device-height:480px) and (max-device-height:568px), (min-device-width : 375px) and (max-device-width : 667px) and (-webkit-min-device-pixel-ratio : 2), (min-device-width : 414px) and (max-device-width : 736px) and (-webkit-min-device-pixel-ratio : 3) {
+  
+          .hide_for_iphone {
+              display: none !important;
+          }
+  
+          .passbook {
+              width: auto !important;
+              height: auto !important;
+              line-height: auto !important;
+              visibility: visible !important;
+              display: block !important;
+              max-height: none !important;
+              overflow: visible !important;
+              float: none !important;
+              text-indent: 0 !important;
+              font-size: inherit !important;
+          }
+      }
+  </style>
+</head>
+<!-- Global container with background styles. Gmail converts BODY to DIV so we
+  lose properties like BGCOLOR. -->
 
-      .footer {
-        clear: both;
-        margin-top: 10px;
-        text-align: center;
-        width: 100%; }
-        .footer td,
-        .footer p,
-        .footer span,
-        .footer a
-{
-    color: #999999;
-          font-size: 12px;
-    text-align: center;
-}
-
-h1,
-      h2,
-      h3,
-      h4 {
-        color: #000000;
-        font-family: sans-serif;
-        font-weight: 400;
-        line-height: 1.4;
-        margin: 0;
-        margin-bottom: 30px; }
-
-      h1 {
-        font-size: 35px;
-        font-weight: 300;
-        text-align: center;
-        text-transform: capitalize; }
-
-      p,
-      ul,
-      ol {
-        font-family: sans-serif;
-        font-size: 14px;
-        font-weight: normal;
-        margin: 0;
-        margin-bottom: 15px; }
-        p li,
-        ul li,
-        ol li
-        {
-        list-style-position: inside;
-        margin-left: 5px;
-                }
-
-        a {
-        color: #3498db;
-        text-decoration: underline; }
-
-        .btn {
-        box-sizing: border-box;
-        width: 100%; }
-        .btn > tbody > tr > td {
-          padding-bottom: 15px; }
-        .btn table
-{
-    width: auto;
-}
-        .btn table td {
-          background-color: #ffffff;
-          border-radius: 5px;
-          text-align: center; }
-        .btn a
-{
-    background-color: #ffffff;
-          border: solid 1px #3498db;
-          border-radius: 5px;
-    box-sizing: border-box;
-    color: #3498db;
-          cursor: pointer;
-    display: inline-block;
-    font-size: 14px;
-    font-weight: bold;
-    margin: 0;
-    padding: 12px 25px;
-    text-decoration: none;
-    text-transform: capitalize;
-}
-
-      .btn-primary table td {
-        background-color: #3498db; }
-
-      .btn-primary a
-{
-    background-color: #3498db;
-        border-color: #3498db;
-        color: #ffffff; }
-
-      /* -------------------------------------
-          OTHER STYLES THAT MIGHT BE USEFUL
-      ------------------------------------- */
-      .last
-    {
-        margin - bottom: 0;
-    }
-
-      .first
-    {
-        margin - top: 0;
-    }
-
-      .align-center
-    {
-        text - align: center;
-    }
-
-      .align-right
-    {
-        text - align: right;
-    }
-
-      .align-left
-    {
-        text - align: left;
-    }
-
-      .clear
-    {
-    clear: both;
-    }
-
-      .mt0
-    {
-        margin - top: 0;
-    }
-
-      .mb0
-    {
-        margin - bottom: 0;
-    }
-
-      .preheader
-    {
-    color: transparent;
-    display: none;
-    height: 0;
-        max - height: 0;
-        max - width: 0;
-    opacity: 0;
-    overflow: hidden;
-        mso - hide: all;
-    visibility: hidden;
-    width: 0;
-    }
-
-      .powered-by a
-    {
-        text - decoration: none;
-    }
-
-    hr
-    {
-    border: 0;
-        border - bottom: 1px solid #f6f6f6;
-        Margin: 20px 0;
-    }
-
-    /* -------------------------------------
-        RESPONSIVE AND MOBILE FRIENDLY STYLES
-    ------------------------------------- */
-    @media only screen and (max-width: 620px) {
-        table[class=body] h1 {
-          font-size: 28px !important;
-          margin-bottom: 10px !important; }
-        table[class=body] p,
-        table[class=body] ul,
-        table[class=body] ol,
-        table[class=body] td,
-        table[class=body] span,
-        table[class=body] a {
-          font-size: 16px !important; }
-        table[class=body] .wrapper,
-        table[class=body] .article {
-          padding: 10px !important; }
-        table[class=body] .content {
-          padding: 0 !important; }
-        table[class=body] .container {
-          padding: 0 !important;
-          width: 100% !important; }
-        table[class=body] .main {
-          border-left-width: 0 !important;
-          border-radius: 0 !important;
-          border-right-width: 0 !important; }
-        table[class=body] .btn table
-{
-    width: 100% !important;
-}
-table[class=body] .btn a
-{
-    width: 100% !important;
-}
-table[class=body] .img-responsive {
-          height: auto !important;
-          max-width: 100% !important;
-          width: auto !important; }}
-
-      /* -------------------------------------
-          PRESERVE THESE STYLES IN THE HEAD
-      ------------------------------------- */
-      @media all
-{
-        .ExternalClass
-    {
-    width: 100 %;
-    }
-        .ExternalClass,
-        .ExternalClass p,
-        .ExternalClass span,
-        .ExternalClass font,
-        .ExternalClass td,
-        .ExternalClass div
-    {
-        line - height: 100 %;
-    }
-        .apple-link a
-    {
-    color: inherit!important;
-        font - family: inherit!important;
-        font - size: inherit!important;
-        font - weight: inherit!important;
-        line - height: inherit!important;
-        text - decoration: none!important;
-    }
-        .btn-primary table td:hover
-    {
-        background - color: #34495e !important; }
-        .btn - primary a: hover {
-            background - color: #34495e !important;
-          border - color: #34495e !important; } }
-
-    </ style >
-  </ head >
-  < body class=''>
-    <table border = '0' cellpadding='0' cellspacing='0' class='body'>
-      <tr>
-        <td>&nbsp;</td>
-        <td class='container'>
-          <div class='content'>
-
-            <!-- START CENTERED WHITE CONTAINER -->
-            <span class='preheader'>This is preheader text.Some clients will show this text as a preview.</span>
-            <table class='main'>
-
-              <!-- START MAIN CONTENT AREA -->
+<body border='0' cellpadding='0' cellspacing='0' height='100%' width='100%' bgcolor='#F7F7F7' style='margin: 0;'>
+  <table border='0' cellpadding='0' cellspacing='0' height='100%' width='100%' bgcolor='#F7F7F7'>
+    <tr>
+      <td style='padding-right: 10px; padding-left: 10px;'>
+        <!-- Outlook Hack (doesn't support max-width property until 2013) -->
+        <!--[if (gte mso 9)|(IE)]>
+            <table width='600' align='center' cellpadding='0' cellspacing='0' border='0' bgcolor='#F7F7F7'>
               <tr>
-                <td class='wrapper'>
-                  <table border = '0' cellpadding='0' cellspacing='0'>
-                    <tr>
-                      <td>
-                        <p>Merhaba" + name + @"</p>
-                        <p>Eğitim kurumunuzu daha kolay bulunur hale getirmenin en kolay yolu ve izmiregitimkurumlari.com ayrıcalıklarından yararlanmak için e-posta adresinizi onaylayın.</p>
-                        <table border = '0' cellpadding= '0' cellspacing= '0' class='btn btn-primary'>
-                          <tbody>
-                            <tr>
-                              <td align = 'left' >
-                                < table border='0' cellpadding='0' cellspacing='0'>
-                                  <tbody>
-                                    <tr>
-                                      <td> <a href = '" + confirmationLink + @"' target='_blank'>E-posta adresinizi onaylayın!</a> </td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                       
-                      </td>
-                    </tr>
-                  </table>
+                <td>
+                <![endif]-->
+        <table class='content' align='center' cellpadding='0' cellspacing='0' border='0' bgcolor='#F7F7F7' style='width: 600px; max-width: 600px;'>
+          <tr>
+            <td width='100%' style='text-align:left; padding:20px 0 10px 0;'>
+              <a href='https://www.izmiregitimkurumlari.com'>
+                <img src='https://i.ibb.co/Kbty44w/izmir-egitim-kurumlari.png' width='200' height='36' border='0'  style='width:200px; height:36px;' />
+              </a>
+            </td>
+            <td width='66%' valign='middle' style=' text-align: right; padding-top: 12px; vertical-align: middle;'></td>
+          </tr>
+        </table>
+        <!--[if (gte mso 9)|(IE)]>
                 </td>
               </tr>
-
-            <!-- END MAIN CONTENT AREA -->
             </table>
-
-            <!-- START FOOTER -->
-            <div class='footer'>
-              <table border = '0' cellpadding='0' cellspacing='0'>
+          <![endif]-->
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <!--[if (gte mso 9)|(IE)]>
+            <table width='600' align='center' cellpadding='0' cellspacing='0' border='0' bgcolor='#FFFFFF'>
+              <tr>
+                <td>
+                <![endif]-->
+        <table class='content' align='center' cellpadding='0' cellspacing='0' border='0' bgcolor='#F7F7F7' style='width: 600px; max-width: 600px;'>
+          <tr>
+            <td colspan='2' style='background: #fff; border-radius: 8px;'>
+              <table border='0' cellpadding='0' cellspacing='0' width='100%'>
                 <tr>
-                  <td class='content-block'>
-                    <span class='apple-link'>Company Inc, 3 Abbey Road, San Francisco CA 94102</span>
-                    <br> Copyright 2020 <a href = 'www.izmiregitimkurumlari.com' > izmiregitimkurumlari </ a >.
-                  </ td >
-                </ tr >
+                  <td style=''>
+                    <tr class=''>
+                      <td class='grid__col' style=' padding: 32px 40px; '>
 
+                        <h2 style='color: #404040; font-weight: 300; margin: 0 0 12px 0; font-size: 24px; line-height: 30px;  '>
 
-              </ table >
-            </ div >
-            < !--END FOOTER -->
+        Tebrikler,
+    
+</h2>
 
-          <!-- END CENTERED WHITE CONTAINER -->
-          </div>
+                        <p style='color: #666666; font-weight: 400; font-size: 15px; line-height: 21px;  ' class=''>E-posta adresinizi onaylayın ve hemen izmiregitimkurumlari ayrıcalıklarından yararlanın.</p>
+                        <table width='100%' border='0' cellspacing='0' cellpadding='0' style='margin-top: 12px; margin-bottom: 12px; margin: 24px 0'>
+                          <tr>
+                            <td>
+                              <table border='0' cellspacing='0' cellpadding='0' width='100%'>
+                                <tr>
+                                  <td style='-webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px;'>
+                                    <a href='"+ confirmationLink +@"' target='_blank' style='display:inline-block; color: #fff; font-weight: 400; border-left: 15px solid; border-right: 15px solid; border-top: 12px solid; border-bottom: 12px solid; font-size: 17px; text-decoration: none; text-align: center; -webkit-text-size-adjust: none; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px;  background-color: #7ad108; border-color: #7ad108;'
+                                      class='btn'> <span style='padding-left: 5px; padding-right: 5px;'>
+                                E-posta Onayla
+                            </span>
+
+                                    </a>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>
+                        <p style='color: #666666; font-weight: 400; font-size: 15px; line-height: 21px;  ' class=''>E-posta adresinizi İzmir Eğitim Kurumları ile doğrulama girişiminde bulunmadıysanız, lütfen bu e-postayı silin.</p>
+                        <p style='color: #666666; font-weight: 400; font-size: 17px; line-height: 24px;  margin-bottom: 6px; margin-top: 24px;' class=''>Teşekkürler,</p>
+                        <a href='https://www.izmiregitimkurumlari.com'>
+                          <img src='https://i.ibb.co/Kbty44w/izmir-egitim-kurumlari.png' width='200' height='36'  style='border: 0;' width='200' height='36' />
+                        </a>
+                      </td>
+                    </tr>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+        <!--[if (gte mso 9)|(IE)]>
+              </td>
+              </tr>
+    </table>
+  <![endif]-->
+        <!--[if (gte mso 9)|(IE)]>
+    <table width='600' align='center' cellpadding='0' cellspacing='0' border='0'>
+      <tr>
+        <td>
+        <![endif]-->
+        <table class='content' align='center' cellpadding='0' cellspacing='0' border='0' style='width: 600px; max-width: 600px; font-family: Helvetica, Arial, sans-serif;'>
+          <tr>
+            <td style='padding-top: 24px;'>
+              <table cellspacing='0' cellpadding='0' width='100%'>
+                <tr>
+                  <td style='background-color: #dedede;  width: 100%; font-size: 1px; height: 1px; line-height: 1px;'>&nbsp;</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr class='footer-nav'>
+            <td class='grid__col' style=' padding: 9px 0; text-align: center;'>
+              <table cellspacing='0' cellpadding='0' width='100%' style='' align='' class='col-layout'>
+                <tr>
+                  <td width='auto' height='' style='display: inline-block; padding: 9px 15px 9px 10px; line-height: 11px;' align='center'
+                    valign='middle' class='col-nav-items' colspan='1'>
+                    <table border='0' cellpadding='0' cellspacing='0' width='100%'>
+                      <a style='text-decoration: none; color: #0f90ba;  font-size: 11px; color: #666666; text-transform: uppercase;' href='https://www.izmiregitimkurumlari.com/iletisim'
+                        class=''>İletişim</a>
+                    </table>
+                  </td>
+                  <td width='auto' height='' style='display: inline-block; padding: 9px 15px 9px 10px; line-height: 11px;' align='center'
+                    valign='middle' class='col-nav-items' colspan='1'>
+                    <table border='0' cellpadding='0' cellspacing='0' width='100%'>
+                      <a style='text-decoration: none; color: #0f90ba;  font-size: 11px; color: #666666; text-transform: uppercase;' href='https://www.izmiregitimkurumlari.com/bloglar'
+                        class=''>Blog</a>
+                    </table>
+                  </td>
+                  <!-- <td width='auto' height='' style='display: inline-block; line-height: 11px; padding-left: 10px;' align='center' valign='middle' class='col-nav-items' colspan='1'>
+                    <table border='0' cellpadding='0' cellspacing='0' width='100%'>
+                      <a style='text-decoration: none; color: #0f90ba;  display: inline-block; height: 22px; vertical-align: middle; margin-left: 5px;' href='' class=''>
+                        <img src='https://cdn.evbstatic.com/s3-s3/marketing/emails/images/icons/facebook.png' title='Facebook' alt='Facebook' border='0' width='22' height='22' class='' />
+                      </a>
+                      <a style='text-decoration: none; color: #0f90ba;  display: inline-block; height: 22px; vertical-align: middle; margin-left: 5px;' href='' class=''>
+                        <img src='https://cdn.evbstatic.com/s3-s3/marketing/emails/images/icons/twitter.png' title='Twitter' alt='Twitter' border='0' width='22' height='22' class='' />
+                      </a>
+                    </table>
+                  </td> -->
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <table cellspacing='0' cellpadding='0' width='100%'>
+                <tr>
+                  <td style='background-color: #dedede;  width: 100%; font-size: 1px; height: 1px; line-height: 1px;'>&nbsp;</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr class=''>
+            <td class='grid__col' style=' padding: 24px 0; text-align: center;'>
+              <div style='color: #666666; font-weight: 400; font-size: 13px; line-height: 18px;  font-weight: 300; padding-bottom: 6px;' class=''>
+                <span class=''>
+                Bu mail 
+
+    <a style='text-decoration: none; color: #0f90ba;' href='https://www.izmiregitimkurumlari.com' class=''>www.izmiregitimkurumlari.com</a>
+    adresinden gönderilmiştir.
+            </span>
+
+              </div>
+              <div style='color: #666666; font-weight: 400; font-size: 13px; line-height: 18px;  font-weight: 300; ' class=''>Copyright &copy; 2020 İzmir Eğitim Kurumları. All rights reserved.</div>
+            </td>
+          </tr>
+        </table>
+        <!--[if (gte mso 9)|(IE)]>
         </td>
-        <td>&nbsp;</td>
       </tr>
     </table>
+  <![endif]-->
+      </td>
+    </tr>
+  </table>
+</body>
 
-  </body>
 </html>";
+            return emailConfirmationHtml;
+        }
 
-            var a = @"<!DOCTYPE html>
-                        <html>
-                            <head>
-                            </head>
-                            <body>
+        public static string GetForgotPasswordHtml(string passwordResetLink)
+        {
+            var passwordResetLinkHtml = @"<!doctype html>
+<html xmlns='http://www.w3.org/1999/xhtml'>
 
-                                <p>Merhaba" + name + @"</p>
-                                <p>Eğitim kurumunuzu daha kolay bulunur hale getirmenin en kolay yolu ve izmiregitimkurumlari.com 
-                                ayrıcalıklarından yararlanmak için e-posta adresinizi onaylayın.</p>
-                                <a href = '" + confirmationLink + @"' target='_blank'>E-posta adresinizi onaylayın!</a>
-  <div class='footer'>
-              <table border = '0' cellpadding='0' cellspacing='0'>
+<head>
+  <meta name='viewport' content='width=device-width'>
+  <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+  <!-- Turn off iOS phone number autodetect -->
+  <meta name='format-detection' content='telephone=no'>
+  <style>
+    body, p {
+          font-family: 'Helvetica Neue', Helvetica,Arial, sans-serif;
+          -webkit-font-smoothing: antialiased;
+          -webkit-text-size-adjust: none;
+      }
+      table {
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: 0;
+          padding: 0;
+      }
+      img {
+          margin: 0;
+          padding: 0;
+      }
+  
+      .content {
+          width: 600px;
+      }
+  
+      .no_text_resize {
+          -moz-text-size-adjust: none;
+          -webkit-text-size-adjust: none;
+          -ms-text-size-adjust: none;
+          text-size-adjust: none;
+      }
+  
+      /* Media Queries */
+      @media all and (max-width: 600px) {
+  
+          table[class='content'] {
+              width: 100% !important;
+          }
+  
+          tr[class='grid-no-gutter'] td[class='grid__col'] {
+              padding-left: 0 !important;
+              padding-right: 0 !important;
+          }
+  
+          td[class='grid__col'] {
+              padding-left: 18px !important;
+              padding-right: 18px !important;
+          }
+  
+          table[class='small_full_width'] {
+              width: 100% !important;
+              padding-bottom: 10px;
+          }
+  
+          a[class='header-link'] {
+              margin-right: 0 !important;
+              margin-left: 10px !important;
+          }
+  
+          a[class='btn'] {
+              width: 100%;
+              border-left-width: 0px !important;
+              border-right-width: 0px !important;
+          }
+  
+          table[class='col-layout'] {
+              width: 100% !important;
+          }
+  
+          td[class='col-container'] {
+              display: block !important;
+              width: 100% !important;
+              padding-left: 0 !important;
+              padding-right: 0 !important;
+          }
+  
+          td[class='col-nav-items'] {
+              display: inline-block !important;
+              padding-left: 0 !important;
+              padding-right: 10px !important;
+              background: none !important;
+          }
+  
+          img[class='col-img'] {
+              height: auto !important;
+              max-width: 520px !important;
+              width: 100% !important;
+          }
+  
+          td[class='col-center-sm'] {
+              text-align: center;
+          }
+  
+          tr[class='footer-attendee-cta'] > td[class='grid__col'] {
+              padding: 24px 0 0 !important;
+          }
+  
+          td[class='col-footer-cta'] {
+              padding-left: 0 !important;
+              padding-right: 0 !important;
+          }
+  
+          td[class='footer-links'] {
+              text-align: left !important;
+          }
+  
+          .hide-for-small {
+              display: none !important;
+          }
+  
+          .ribbon-mobile {
+              line-height: 1.3 !important;
+          }
+  
+          .small_full_width {
+              width: 100% !important;
+              padding-bottom: 10px;
+          }
+  
+          .table__ridge {
+              height: 7px !important;
+          }
+  
+          .table__ridge img {
+              display: none !important;
+          }
+  
+          .table__ridge--top {
+              background-size: 170% 7px;
+          }
+  
+          .table__ridge--bottom {
+              background-size: 170% 7px;
+          }
+  
+          .summary-table__total {
+              padding-right: 10px !important;
+          }
+  
+          .app-cta {
+              display: none !important;
+          }
+  
+          .app-cta__mobile {
+              width: 100% !important;
+              height: auto !important;
+              max-height: none !important;
+              overflow: visible !important;
+              float: none !important;
+              display: block !important;
+              margin-top: 12px !important;
+              visibility: visible;
+              font-size: inherit !important;
+          }
+  
+          /* List Event Cards */
+          .list-card__header {
+              width: 130px !important;
+          }
+  
+          .list-card__label {
+              width: 130px !important;
+          }
+  
+          .list-card__image-wrapper {
+              width: 130px !important;
+              height: 65px !important;
+          }
+  
+          .list-card__image {
+              max-width: 130px !important;
+              max-height: 65px !important;
+          }
+  
+          .list-card__body {
+              padding-left: 10px !important;
+          }
+  
+          .list-card__title {
+              margin-bottom: 10px !important;
+          }
+  
+          .list-card__date {
+              padding-top: 0 !important;
+          }
+      }
+  
+      @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
+          .ribbon-mobile {
+              line-height: 1.3 !important;
+          }
+  
+          .ribbon-mobile__text {
+              padding: 0 !important;
+          }
+      }
+  
+      @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
+          .ribbon-mobile {
+              line-height: 1.3 !important;
+          }
+  
+          .ribbon-mobile__text {
+              padding: 0 !important;
+          }
+      }
+  
+      @media screen and (min-device-height:480px) and (max-device-height:568px), (min-device-width : 375px) and (max-device-width : 667px) and (-webkit-min-device-pixel-ratio : 2), (min-device-width : 414px) and (max-device-width : 736px) and (-webkit-min-device-pixel-ratio : 3) {
+  
+          .hide_for_iphone {
+              display: none !important;
+          }
+  
+          .passbook {
+              width: auto !important;
+              height: auto !important;
+              line-height: auto !important;
+              visibility: visible !important;
+              display: block !important;
+              max-height: none !important;
+              overflow: visible !important;
+              float: none !important;
+              text-indent: 0 !important;
+              font-size: inherit !important;
+          }
+      }
+  </style>
+</head>
+<!-- Global container with background styles. Gmail converts BODY to DIV so we
+  lose properties like BGCOLOR. -->
+
+<body border='0' cellpadding='0' cellspacing='0' height='100%' width='100%' bgcolor='#F7F7F7' style='margin: 0;'>
+  <table border='0' cellpadding='0' cellspacing='0' height='100%' width='100%' bgcolor='#F7F7F7'>
+    <tr>
+      <td style='padding-right: 10px; padding-left: 10px;'>
+        <!-- Outlook Hack (doesn't support max-width property until 2013) -->
+        <!--[if (gte mso 9)|(IE)]>
+            <table width='600' align='center' cellpadding='0' cellspacing='0' border='0' bgcolor='#F7F7F7'>
+              <tr>
+                <td>
+                <![endif]-->
+        <table class='content' align='center' cellpadding='0' cellspacing='0' border='0' bgcolor='#F7F7F7' style='width: 600px; max-width: 600px;'>
+          <tr>
+            <td width='100%' style='text-align:left; padding:20px 0 10px 0;'>
+              <a href='https://www.izmiregitimkurumlari.com'>
+                <img src='https://i.ibb.co/Kbty44w/izmir-egitim-kurumlari.png' width='200' height='36' border='0'  style='width:200px; height:36px;' />
+              </a>
+            </td>
+            <td width='66%' valign='middle' style=' text-align: right; padding-top: 12px; vertical-align: middle;'></td>
+          </tr>
+        </table>
+        <!--[if (gte mso 9)|(IE)]>
+                </td>
+              </tr>
+            </table>
+          <![endif]-->
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <!--[if (gte mso 9)|(IE)]>
+            <table width='600' align='center' cellpadding='0' cellspacing='0' border='0' bgcolor='#FFFFFF'>
+              <tr>
+                <td>
+                <![endif]-->
+        <table class='content' align='center' cellpadding='0' cellspacing='0' border='0' bgcolor='#F7F7F7' style='width: 600px; max-width: 600px;'>
+          <tr>
+            <td colspan='2' style='background: #fff; border-radius: 8px;'>
+              <table border='0' cellpadding='0' cellspacing='0' width='100%'>
                 <tr>
-                  <td class='content-block'>
-                    <span class='apple-link'>Company Inc, 3 Abbey Road, San Francisco CA 94102</span>
-                    <br> Copyright 2020 <a href = 'www.izmiregitimkurumlari.com' > izmiregitimkurumlari </ a >.
-                  </ td >
-                </ tr >
+                  <td style=''>
+                    <tr class=''>
+                      <td class='grid__col' style=' padding: 32px 40px; '>
 
+                        <h2 style='color: #404040; font-weight: 300; margin: 0 0 12px 0; font-size: 24px; line-height: 30px;  '>
 
-              </ table >
-            </ div >
-                            </body>
-                        </html>";
+        Tebrikler,
+    
+</h2>
 
+                        <p style='color: #666666; font-weight: 400; font-size: 15px; line-height: 21px;  ' class=''>Sistemimizde kayıtlı e-posta adresinize bağlı oluşturduğunuz
+hesabınızın şifresini değiştirmek için, “Şifremi Sıfırla” butonuna
+tıklayınız.</p>
+                        <table width='100%' border='0' cellspacing='0' cellpadding='0' style='margin-top: 12px; margin-bottom: 12px; margin: 24px 0'>
+                          <tr>
+                            <td>
+                              <table border='0' cellspacing='0' cellpadding='0' width='100%'>
+                                <tr>
+                                  <td style='-webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px;'>
+                                    <a href='" + passwordResetLink + @"' target='_blank' style='display:inline-block; color: #fff; font-weight: 400; border-left: 15px solid; border-right: 15px solid; border-top: 12px solid; border-bottom: 12px solid; font-size: 17px; text-decoration: none; text-align: center; -webkit-text-size-adjust: none; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px;  background-color: #7ad108; border-color: #7ad108;'
+                                      class='btn'> <span style='padding-left: 5px; padding-right: 5px;'>
+                                Şifremi Sıfırla
+                            </span>
 
-            return a;
+                                    </a>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>
+                        <p style='color: #666666; font-weight: 400; font-size: 15px; line-height: 21px;  ' class=''>E-posta adresinizi İzmir Eğitim Kurumları ile şifre sıfırlama girişiminde bulunmadıysanız, lütfen bu e-postayı silin.</p>
+                        <p style='color: #666666; font-weight: 400; font-size: 17px; line-height: 24px;  margin-bottom: 6px; margin-top: 24px;' class=''>Teşekkürler,</p>
+                        <a href='https://www.izmiregitimkurumlari.com'>
+                          <img src='https://i.ibb.co/Kbty44w/izmir-egitim-kurumlari.png' width='200' height='36'  style='border: 0;' width='200' height='36' />
+                        </a>
+                      </td>
+                    </tr>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+        <!--[if (gte mso 9)|(IE)]>
+              </td>
+              </tr>
+    </table>
+  <![endif]-->
+        <!--[if (gte mso 9)|(IE)]>
+    <table width='600' align='center' cellpadding='0' cellspacing='0' border='0'>
+      <tr>
+        <td>
+        <![endif]-->
+        <table class='content' align='center' cellpadding='0' cellspacing='0' border='0' style='width: 600px; max-width: 600px; font-family: Helvetica, Arial, sans-serif;'>
+          <tr>
+            <td style='padding-top: 24px;'>
+              <table cellspacing='0' cellpadding='0' width='100%'>
+                <tr>
+                  <td style='background-color: #dedede;  width: 100%; font-size: 1px; height: 1px; line-height: 1px;'>&nbsp;</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr class='footer-nav'>
+            <td class='grid__col' style=' padding: 9px 0; text-align: center;'>
+              <table cellspacing='0' cellpadding='0' width='100%' style='' align='' class='col-layout'>
+                <tr>
+                  <td width='auto' height='' style='display: inline-block; padding: 9px 15px 9px 10px; line-height: 11px;' align='center'
+                    valign='middle' class='col-nav-items' colspan='1'>
+                    <table border='0' cellpadding='0' cellspacing='0' width='100%'>
+                      <a style='text-decoration: none; color: #0f90ba;  font-size: 11px; color: #666666; text-transform: uppercase;' href='https://www.izmiregitimkurumlari.com/iletisim'
+                        class=''>İletişim</a>
+                    </table>
+                  </td>
+                  <td width='auto' height='' style='display: inline-block; padding: 9px 15px 9px 10px; line-height: 11px;' align='center'
+                    valign='middle' class='col-nav-items' colspan='1'>
+                    <table border='0' cellpadding='0' cellspacing='0' width='100%'>
+                      <a style='text-decoration: none; color: #0f90ba;  font-size: 11px; color: #666666; text-transform: uppercase;' href='https://www.izmiregitimkurumlari.com/bloglar'
+                        class=''>Blog</a>
+                    </table>
+                  </td>
+                  <!-- <td width='auto' height='' style='display: inline-block; line-height: 11px; padding-left: 10px;' align='center' valign='middle' class='col-nav-items' colspan='1'>
+                    <table border='0' cellpadding='0' cellspacing='0' width='100%'>
+                      <a style='text-decoration: none; color: #0f90ba;  display: inline-block; height: 22px; vertical-align: middle; margin-left: 5px;' href='' class=''>
+                        <img src='https://cdn.evbstatic.com/s3-s3/marketing/emails/images/icons/facebook.png' title='Facebook' alt='Facebook' border='0' width='22' height='22' class='' />
+                      </a>
+                      <a style='text-decoration: none; color: #0f90ba;  display: inline-block; height: 22px; vertical-align: middle; margin-left: 5px;' href='' class=''>
+                        <img src='https://cdn.evbstatic.com/s3-s3/marketing/emails/images/icons/twitter.png' title='Twitter' alt='Twitter' border='0' width='22' height='22' class='' />
+                      </a>
+                    </table>
+                  </td> -->
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <table cellspacing='0' cellpadding='0' width='100%'>
+                <tr>
+                  <td style='background-color: #dedede;  width: 100%; font-size: 1px; height: 1px; line-height: 1px;'>&nbsp;</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr class=''>
+            <td class='grid__col' style=' padding: 24px 0; text-align: center;'>
+              <div style='color: #666666; font-weight: 400; font-size: 13px; line-height: 18px;  font-weight: 300; padding-bottom: 6px;' class=''>
+                <span class=''>
+                Bu mail 
+
+    <a style='text-decoration: none; color: #0f90ba;' href='https://www.izmiregitimkurumlari.com' class=''>www.izmiregitimkurumlari.com</a>
+    adresinden gönderilmiştir.
+            </span>
+
+              </div>
+              <div style='color: #666666; font-weight: 400; font-size: 13px; line-height: 18px;  font-weight: 300; ' class=''>Copyright &copy; 2020 İzmir Eğitim Kurumları. All rights reserved.</div>
+            </td>
+          </tr>
+        </table>
+        <!--[if (gte mso 9)|(IE)]>
+        </td>
+      </tr>
+    </table>
+  <![endif]-->
+      </td>
+    </tr>
+  </table>
+</body>
+
+</html>";
+            return passwordResetLinkHtml;
         }
 
     }

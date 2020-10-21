@@ -17,7 +17,7 @@ namespace SE.Data.Mapping
             builder.Property(x => x.Name).HasMaxLength(100).IsRequired();
 
             builder.HasMany(x => x.Attributes).WithOne(y=>y.AttributeCategory).HasForeignKey(b => b.AttributeCategoryId).IsRequired()
-               .OnDelete(DeleteBehavior.Cascade);
+               .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

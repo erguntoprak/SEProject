@@ -1,21 +1,46 @@
 export interface LoginModel {
-    email: string;
-    password: string;
+  email: string;
+  password: string;
 }
 export interface RegisterModel {
-    email: string;
-    phone: string;
-    password: string;
+  name: string;
+  surname: string;
+  email: string;
+  phone: string;
+  password: string;
+}
+export interface UserLoginModel {
+  name: string;
+  surname: string;
+  email: string;
+  token: string;
+  roles: string[];
 }
 export interface UserModel {
-    id: string;
-    name: string;
-    surname: string;
-    token: string;
+  id:string;
+  name: string;
+  surname: string;
+  email: string;
+  phoneNumber:string;
+  roles: string[];
+}
+export interface UserListModel {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  roles: string[];
+  emailConfirmed: string;
+  activated: string;
+}
+export interface RoleModel {
+  id: string;
+  name: string;
 }
 export interface KeyValueModel {
-    key: any;
-    value: any;
+  key: any;
+  value: any;
 }
 export interface EducationListModel {
   id: number;
@@ -62,9 +87,20 @@ export interface CategoryModel {
   name: string;
   seoUrl: string;
 }
+export interface AttributeCategoryModel {
+  id: number;
+  name: string;
+}
+export interface AttributeListModel {
+  id: number;
+  name: string;
+  attributeCategoryId: number;
+  attributeCategoryName: string;
+}
 export interface SearchResult {
   text: string;
   url: string;
+  districtUrl: string;
 }
 export interface EducationSearchResult {
   name: string;
@@ -130,3 +166,20 @@ export interface BlogUpdateModel {
   firstVisibleImageName: string;
   blogItems: BlogItemModel[];
 }
+export interface NavigationModel {
+  title:string;
+  key: string;
+  isVisible: boolean;
+  navigationItems:NavigationItemModel[];
+}
+export interface NavigationItemModel {
+  name:string;
+  routeUrl: string;
+  icon: string;
+  key: string;
+  isVisible: boolean;
+}
+export interface ActionPermissionModel {
+  [action: string]: string[];
+}
+

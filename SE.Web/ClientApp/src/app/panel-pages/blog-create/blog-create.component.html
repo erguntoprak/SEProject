@@ -39,15 +39,21 @@
         <div class="form-group col-md-12">
           <label>Sayfalarda Gösterilecek İlk Görsel</label>
           <div class="custom-file">
-            <input type="file" class="custom-file-input" accept="image/*" (change)="onFirstVisibleImageSelectFile($event)">
+            <input type="file" class="custom-file-input" accept="image/png,image/jpeg" (change)="onFirstVisibleImageSelectFile($event)">
             <label class="custom-file-label">Görsel Seç</label>
           </div>
+          <span class="not-valid" *ngFor="let errorMessage of firstVisibleImageUploadErrorMessage">
+            {{errorMessage}}
+          </span>
           <span class="not-valid" *ngIf="submitted && blogInsertForm.get('firstVisibleImageName').errors != null ? blogInsertForm.get('firstVisibleImageName').errors.required:false">
             Lütfen sayfalarda gösterilecek ilk görsel seçiniz.
           </span>
         </div>
       </div>
       <div formArrayName="blogItems" class="col-md-12">
+        <span class="not-valid" *ngIf="imageUploadErrorMessage">
+          {{imageUploadErrorMessage}}
+        </span>
         <div class="form-row group-box" [formGroupName]="i" *ngFor="let item of getBlogItemControl(); let i = index;">
           <div class="form-group col-md-12" *ngIf="item.value.imageName">
             <div class="blog-image">
@@ -57,7 +63,7 @@
           </div>
           <div class="form-group col-md-12">
             <div class="custom-file">
-              <input type="file" class="custom-file-input" accept="image/*" (change)="onSelectFile($event,i)">
+              <input type="file" class="custom-file-input" accept="image/png,image/jpeg" (change)="onSelectFile($event,i)">
               <label class="custom-file-label">Görsel Seç</label>
             </div>
           </div>

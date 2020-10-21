@@ -19,11 +19,19 @@ export class BlogViewListComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.acdcLoadingService.showLoading();
-      this.baseService.getByName<BlogListModel>("Blog/GetAllBlogListByUserName?userName=", params['userName']).subscribe(data => {
-        this.blogListModel = data;
-        console.log(this.blogListModel)
-        this.acdcLoadingService.hideLoading();
-      })
-    }); 
+      let userName = params['userName'];
+      if (userName != undefined) {
+        this.baseService.getByName<BlogListModel>("Blog/GetAllBlogListByUserName?userName=", userName).subscribe(data => {
+          this.blogListModel = data;
+          this.acdcLoadingService.hideLoading();
+        });
+      }
+      else {
+        this.baseService.getAll<BlogListModel>("Blog/GetAllBlogList").subscribe(data => {
+          this.blogListModel = data;
+          this.acdcLoadingService.hideLoading();
+        });
+      }
+    });
   }
 }

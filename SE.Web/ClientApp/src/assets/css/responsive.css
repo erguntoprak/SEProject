@@ -2155,9 +2155,9 @@
   .navbar-collapse, .menu_four .navbar-collapse {
     max-height: 400px;
     overflow-y: scroll;
+    padding:10px;
     margin-left: 0px;
     margin-right: 0px;
-    background: #fff;
   }
 
   .menu > .nav-item {
@@ -3012,7 +3012,7 @@
 
   .domain_form_inner input {
     width: 100%;
-    font-size:16px;
+    font-size: 16px;
   }
 
   .domain_form_inner .domain_select {
@@ -3547,20 +3547,39 @@
 }
 
 @media (max-width:768px) {
+  .menu > .nav-item.submenu.mega_menu.mega_menu_two .mega_menu_inner .dropdown-menu .nav-item .item .img img {
+    max-width: 100%;
+    width: 64px;
+    height: 64px;
+  }
+
+  .menu > .nav-item.submenu.mega_menu.mega_menu_two .mega_menu_inner .dropdown-menu .nav-item .dropdown-menu .nav-item {
+      padding:7px;
+  }
+
+  .app-logo {
+    width: 250px;
+    height: 46px;
+  }
+
   .select-box-homepage {
     margin-right: 0px;
     margin-left: 0px;
   }
+
   .search-result-list {
     top: 280px;
     width: 91%;
   }
-    .domain_form_inner .domain_select {
+
+  .domain_form_inner .domain_select {
     width: 100%;
   }
+
   .domain_form_inner button {
-      width:100%;
+    width: 100%;
   }
+
   .sec_title br, .prototype_service_info h2 br, .hosting_title h2 br {
     display: none;
   }
@@ -4300,7 +4319,7 @@
 
   .domain_form_inner input {
     width: 100%;
-    margin:10px;
+    margin: 10px;
   }
 
   .h_map_area .hosting_title br {

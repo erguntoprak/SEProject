@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   isSearchResult: boolean = false;
   selectedDistrictId: number;
   selectedSearchFormCategoryName: string = "Özel Anaokul";
-  selectedCategoryUrl: string = '';
+  selectedCategoryUrl: string = '/ozel-anaokul';
   searchResult: SearchResult[] = [];
   educationSearchResult: EducationSearchResult[];
 
@@ -98,7 +98,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.baseService.getAll<AddressModel>("Address/GetCityNameDistricts").subscribe(addressModel => {
       this.districtList = addressModel.districtListModel;
       this.districtList.forEach(d => {
-        this.searchResult.push({ text: d.name, url: 'egitim-kurumlari/' + d.seoUrl + '/ozel-anaokul' });
+        this.searchResult.push({ text: d.name, url: 'egitim-kurumlari',districtUrl:d.seoUrl});
       });
     });
   }

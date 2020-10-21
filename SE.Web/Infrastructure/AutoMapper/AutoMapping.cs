@@ -30,7 +30,7 @@ namespace SE.Web.Infrastructure.AutoMapper
             CreateMap<EducationListDto, EducationListModel>();
             CreateMap<CategoryAttributeListDto, CategoryAttributeListModel>().ForMember(dest => dest.AttributeListModel, opt => opt.MapFrom(src => src.AttributeListDto));
             CreateMap<AttributeDto, AttributeModel>();
-            CreateMap<CategoryDto, CategoryModel>();
+            CreateMap<CategoryDto, CategoryModel>().ReverseMap();
             CreateMap<CityDto, CityModel>();
             CreateMap<DistrictDto, DistrictModel>();
             CreateMap<AddressDto, AddressModel>().ForMember(dest => dest.DistrictListModel, opt => opt.MapFrom(src => src.DistrictListDto)).ForMember(dest => dest.CityModel, opt => opt.MapFrom(src => src.CityDto));
@@ -51,7 +51,18 @@ namespace SE.Web.Infrastructure.AutoMapper
             CreateMap<SearchEducationDto, SearchEducationModel>();
             CreateMap<FilterModel, FilterDto>();
             CreateMap<EducationFilterListDto, EducationFilterListModel>();
-
+            CreateMap<EmailConfirmation, EmailConfirmationDto>();
+            CreateMap<UserListDto, UserListModel>();
+            CreateMap<RoleDto, RoleModel>();
+            CreateMap<UserDto, UserModel>();
+            CreateMap<UserUpdateModel, UserUpdateDto>();
+            CreateMap<UserPasswordUpdateModel, UserPasswordUpdateDto>();
+            CreateMap<ResetPasswordModel, ResetPasswordDto>();
+            CreateMap<AttributeCategoryModel, AttributeCategoryDto>().ReverseMap();
+            CreateMap<CategoryAttributeCategoryModel, CategoryAttributeCategoryDto>();
+            CreateMap<CategoryAttributeCategoryInsertModel, CategoryAttributeCategoryInsertDto>();
+            CreateMap<AttributeListDto, AttributeListModel>();
+            CreateMap<AttributeDto, AttributeModel>().ReverseMap();
         }
     }
 }

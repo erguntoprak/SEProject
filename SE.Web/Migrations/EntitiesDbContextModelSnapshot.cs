@@ -160,14 +160,6 @@ namespace SE.Web.Migrations
                     b.Property<int>("AttributeCategoryId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
-
-                    b.Property<int>("DisplayOrder")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)")
@@ -579,6 +571,9 @@ namespace SE.Web.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
@@ -685,7 +680,7 @@ namespace SE.Web.Migrations
                     b.HasOne("SE.Core.Entities.AttributeCategory", "AttributeCategory")
                         .WithMany("Attributes")
                         .HasForeignKey("AttributeCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -727,13 +722,13 @@ namespace SE.Web.Migrations
                     b.HasOne("SE.Core.Entities.AttributeCategory", "AttributeCategory")
                         .WithMany("CategoryAttributeCategories")
                         .HasForeignKey("AttributeCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SE.Core.Entities.Category", "Category")
                         .WithMany("CategoryAttributeCategories")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -742,7 +737,7 @@ namespace SE.Web.Migrations
                     b.HasOne("SE.Core.Entities.City", "City")
                         .WithMany("Districts")
                         .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -751,7 +746,7 @@ namespace SE.Web.Migrations
                     b.HasOne("SE.Core.Entities.Category", "Category")
                         .WithMany("Educations")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SE.Core.Entities.User", "User")
@@ -766,7 +761,7 @@ namespace SE.Web.Migrations
                     b.HasOne("SE.Core.Entities.City", "City")
                         .WithMany("EducationAddress")
                         .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SE.Core.Entities.District", "District")

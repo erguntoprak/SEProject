@@ -13,6 +13,7 @@ namespace SE.Data
         void Insert(TEntity entity);
         void Update(TEntity entity);
         void Delete(TEntity entity);
+        void Delete(IEnumerable<TEntity> entities);
         IQueryable<TEntity> Table { get; }
         IQueryable<TEntity> Include(params Expression<Func<TEntity, object>>[] includes);
     }

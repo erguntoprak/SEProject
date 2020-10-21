@@ -17,11 +17,13 @@ namespace SE.Data.Mapping
             builder.HasOne(mapping => mapping.Education)
                  .WithMany(discount => discount.AttributeEducations)
                  .HasForeignKey(mapping => mapping.EducationId)
+                 .OnDelete(DeleteBehavior.Cascade)
                  .IsRequired();
 
             builder.HasOne(mapping => mapping.Attribute)
                 .WithMany(category => category.AttributeEducations)
                 .HasForeignKey(mapping => mapping.AttributeId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
 
         }

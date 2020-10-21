@@ -1,0 +1,74 @@
+<div class="breadcrumb-area">
+  <h1>Dashboard</h1>
+
+  <ol class="breadcrumb">
+    <li class="item"><a href="dashboard-analytics.html"><i class="bx bx-home-alt"></i></a></li>
+
+    <li class="item">Dashboard</li>
+
+    <li class="item">Forms</li>
+  </ol>
+</div>
+<div class="card mb-30">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h3>Kullanıcı Bilgileri</h3>
+    <hr />
+  </div>
+
+  <div class="card-body">
+    <form [formGroup]="userUpdateForm" (ngSubmit)="onSubmit()">
+      <div class="form-row" *ngIf="errorList">
+        <span class="not-valid" *ngFor="let error of errorList">
+          {{error}}
+        </span>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Ad</mat-label>
+            <input required matInput formControlName="name" [errorStateMatcher]="matcher">
+            <mat-error *ngIf="userUpdateForm.get('name').hasError('required')">
+              Lütfen Ad giriniz.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="form-group col-md-6">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Soyad</mat-label>
+            <input required matInput formControlName="surname" [errorStateMatcher]="matcher">
+            <mat-error *ngIf="userUpdateForm.get('surname').hasError('required')">
+              Lütfen Soyad giriniz.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="form-group col-md-6">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>E-posta</mat-label>
+            <input required matInput formControlName="email" [errorStateMatcher]="matcher">
+            <mat-error *ngIf="userUpdateForm.get('email').hasError('email') && !userUpdateForm.get('email').hasError('required')">
+              Lütfen geçerli E-posta giriniz.
+            </mat-error>
+            <mat-error *ngIf="userUpdateForm.get('email').hasError('required')">
+              Lütfen E-posta giriniz.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="form-group col-md-6">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Telefon Numarası</mat-label>
+            <input required matInput formControlName="phoneNumber" mask="(000) 000 00 00" [errorStateMatcher]="matcher">
+            <mat-error *ngIf="userUpdateForm.get('phoneNumber').hasError('required')">
+              Lütfen Telefon Numarası giriniz.
+            </mat-error>
+            <mat-error *ngIf="userUpdateForm.get('phoneNumber').hasError('Mask error') && !userUpdateForm.get('phoneNumber').hasError('required')">
+              Lütfen geçerli Telefon Numarası giriniz.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="form-group col-md-12">
+          <button type="submit" class="float-right" mat-raised-button color="primary">Güncelle</button>
+        </div>
+      </div>
+  </form>
+  </div>
+</div>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SE.Business.AddressServices;
@@ -14,6 +15,7 @@ namespace SE.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("ApiPolicy")]
     public class AddressController : ControllerBase
     {
         private readonly IAddressService _addressService;

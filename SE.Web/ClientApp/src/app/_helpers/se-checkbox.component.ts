@@ -37,6 +37,8 @@ export class SeCheckBox extends BaseControlValueAccessor<number> implements OnIn
     this.checkControl = _.includes(this.existingAttributeIds, this.id);
   }
   ngOnChanges(changes) {
-    this.checkControl = _.includes(changes.existingAttributeIds.currentValue, this.id);
+    if (changes.existingAttributeIds) {
+      this.checkControl = _.includes(changes.existingAttributeIds.currentValue, this.id);
+    }
   }
 }

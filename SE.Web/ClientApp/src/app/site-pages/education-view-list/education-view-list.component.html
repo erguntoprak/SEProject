@@ -1,8 +1,20 @@
-<section class="breadcrumb_area">
+<section class="breadcrumb_area" style="    background-image: url('assets/img/new/startup_banner_bg.png');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  ">
+  <ul class="list-unstyled cloud_animation">
+    <li><img src="assets/img/erp-home/cloud_01.png" alt=""></li>
+    <li><img src="assets/img/erp-home/cloud_02.png" alt=""></li>
+    <li><img src="assets/img/erp-home/cloud_03.png" alt=""></li>
+    <li><img src="assets/img/erp-home/cloud_04.png" alt=""></li>
+    <li><img src="assets/img/erp-home/cloud_05.png" alt=""></li>
+    <li><img src="assets/img/erp-home/cloud_06.png" alt=""></li>
+  </ul>
   <div class="container">
     <div class="breadcrumb_content text-center">
-      <h1 class="f_p f_700 f_size_50 w_color l_height50 mb_20">YAŞAR ÜNİVERSİTESİ</h1>
-      <p class="f_400 w_color f_size_20 l_height26">Bizi ilgilendiren konu yalnız barışı kurmanın ve korumanın teknik çareleri değil, aynı zamanda kafaları eğitmenin, aydınlatmanın yoludur.</p>
+      <h1 class="f_p f_700 f_size_50 w_color l_height50 mb_20">İzmir Eğitim Kurumları</h1>
+      <p class="f_400 w_color f_size_20 l_height26">Eğitim kurumlarını sizin için listeledik. Hemen incelemeye başlayın!</p>
     </div>
   </div>
 </section>
@@ -17,7 +29,7 @@
               <div class="sidebar__body">
                 <div class="sidebar__header">
                   <div class="sidebar__title">Filtreler</div><button class="sidebar__close"
-                                                                   type="button">
+                                                                     type="button">
                     <i class="ti-close"></i>
                   </button>
                 </div>
@@ -50,6 +62,7 @@
                                      notFoundText="İlçe bulunamadı."
                                      [multiple]="true"
                                      placeholder="İlçe Seçiniz"
+                                     (change)="onChangeDistrict()"
                                      bindValue="id" [searchable]="true" [(ngModel)]="selectedDistrictIds">
                           </ng-select>
                         </mat-expansion-panel>
@@ -89,34 +102,35 @@
                       </span><span class="filters-button__title">Filtreler</span>
                     </button>
                     <div class="view-options__spring"></div>
+
                     <div class="view-options__select">
-                      <label for="view-option-sort">Sort:</label> <select id="view-option-sort"
-                                                                          class="form-control form-control-sm" name="">
-                        <option value="">Price</option>
-                      </select>
-                    </div>
-                    <div class="view-options__select">
-                      <label for="view-option-limit">Show:</label> <select id="view-option-limit"
-                                                                           class="form-control form-control-sm" name="">
-                        <option value="">16</option>
+                      <label for="view-option-limit">Göster:</label>
+                      <select id="view-option-limit" (change)="changeeducationViewItemCount()" [(ngModel)]="educationViewItemCount" class="form-control form-control-sm">
+                        <option value="12">12</option>
+                        <option value="12">24</option>
+                        <option value="12">48</option>
+                        <option value="12">100</option>
                       </select>
                     </div>
                   </div>
-                  <div *ngIf="selectedDistrictIds.length>0 || selectedAttributeIds.length>0" class="view-options__body view-options__body--filters">
-                    <div class="view-options__label">SEÇİLİ FİLTRELER</div>
-                    <div class="applied-filters">
+                  <div class="view-options__body view-options__body--filters">
+                    <div *ngIf="selectedDistrictIds.length>0 || selectedAttributeIds.length>0" class="view-options__label">SEÇİLİ FİLTRELER</div>
+                    <div *ngIf="selectedDistrictIds.length>0 || selectedAttributeIds.length>0" class="applied-filters">
                       <ul class="applied-filters__list">
-                        <li *ngFor="let districtId of selectedDistrictIds" class="applied-filters__item">
-                          <label class="applied-filters__button applied-filters__button--filter">
-                            {{getSelectedDistrictName(districtId)}} <i (click)="removeSelectedDistrictId(districtId)" class="ti-close cursor-element"></i>
-                          </label>
-                        </li>
-                        <li *ngFor="let attributeId of selectedAttributeIds" class="applied-filters__item">
-                          <label class="applied-filters__button applied-filters__button--filter">
-                            {{getSelectedAttributeName(attributeId)}} <i (click)="removeSelectedAttributeId(attributeId)" class="ti-close cursor-element"></i>
-                          </label>
-                        </li>
-
+                        <ng-container *ngIf="districtList.length>0">
+                          <li *ngFor="let districtId of selectedDistrictIds" class="applied-filters__item">
+                            <label class="applied-filters__button applied-filters__button--filter">
+                              {{getSelectedDistrictName(districtId)}} <i (click)="removeSelectedDistrictId(districtId)" class="ti-close cursor-element"></i>
+                            </label>
+                          </li>
+                        </ng-container>
+                        <ng-container *ngIf="attributeList.length>0">
+                          <li *ngFor="let attributeId of selectedAttributeIds" class="applied-filters__item">
+                            <label class="applied-filters__button applied-filters__button--filter">
+                              {{getSelectedAttributeName(attributeId)}} <i (click)="removeSelectedAttributeId(attributeId)" class="ti-close cursor-element"></i>
+                            </label>
+                          </li>
+                        </ng-container>
                         <li class="applied-filters__item">
                           <button type="button" (click)="removeAllFilters()"
                                   class="applied-filters__button applied-filters__button--clear">
@@ -130,7 +144,7 @@
                     <div class="row">
                       <div class="col-lg-12 blog_grid_info">
                         <div class="row">
-                          <div class="col-sm-6 col-md-6 col-lg-4 col-12" *ngFor="let education of educationFilterList | educationListFilter:selectedDistrictIds:selectedAttributeIds | paginate: { itemsPerPage: 3, currentPage: pageNumber }">
+                          <div class="col-sm-6 col-md-6 col-lg-4 col-12" *ngFor="let education of educationFilterList | educationListFilter:selectedDistrictIds:selectedAttributeIds | paginate: { itemsPerPage: educationViewItemCount, currentPage: pageNumber }" #filteredItems>
                             <div class="blog_list_item blog_list_item_two">
                               <a routerLink="/{{education.categorySeoUrl}}" class="post_date">
                                 <span>{{education.categoryName}}</span>
@@ -147,9 +161,15 @@
                               </div>
                             </div>
                           </div>
+                          <div *ngIf="(educationFilterList | educationListFilter:selectedDistrictIds:selectedAttributeIds).length < 1 " class="col-12">
+                            <p class="f_400 f_size_16 mb-0">
+                              Eğitim kurumu bulunamadı.
+                            </p>
+                          </div>
                           <div class="col-12">
                             <pagination-controls (pageChange)="pageNumber = $event"
-                                                 maxSize="4"
+                                                 maxSize="5"
+                                                 autoHide="true"
                                                  responsive="true"
                                                  previousLabel="Geri"
                                                  nextLabel="İleri">
@@ -159,7 +179,7 @@
                       </div>
                     </div>
                   </div>
-                  
+
                 </div>
               </div>
             </div>

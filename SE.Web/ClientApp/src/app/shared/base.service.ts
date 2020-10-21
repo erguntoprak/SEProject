@@ -15,7 +15,7 @@ export class BaseService{
       .get<T>(url);
   }
 
-  public getById<T>(url: string,id: number) {
+  public getById<T>(url: string,id: any) {
     return this.httpClient
       .get<T>(`${url}${id}`);
   }

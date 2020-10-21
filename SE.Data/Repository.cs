@@ -47,6 +47,14 @@ namespace SE.Data
             }
         }
 
+        public void Delete(IEnumerable<TEntity> entities)
+        {
+            if (entities == null)
+                throw new ArgumentNullException(nameof(entities));
+
+            Entities.RemoveRange(entities);
+        }
+
 
 
         public void Insert(TEntity entity)

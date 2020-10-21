@@ -9,6 +9,7 @@ using AutoMapper;
 using FluentValidation;
 using LazZiya.ImageResize;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SE.Business.BlogServices;
@@ -20,6 +21,7 @@ namespace SE.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("ApiPolicy")]
     public class BlogController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -31,7 +33,7 @@ namespace SE.Web.Controllers
             _blogService = blogService;
         }
 
-        [Authorize]
+        [Authorize(Policy = "UserPolicy")]
         [HttpPost("InsertBlog")]
         public IActionResult InsertBlog([FromBody]BlogInsertModel blogInsertModel)
         {
@@ -99,7 +101,7 @@ namespace SE.Web.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Policy = "UserPolicy")]
         [HttpPost("UpdateBlog")]
         public IActionResult UpdateBlog([FromBody]BlogUpdateModel blogUpdateModel)
         {
@@ -196,7 +198,6 @@ namespace SE.Web.Controllers
                 return StatusCode(StatusCodes.Status400BadRequest, "Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.");
             }
         }
-        [Authorize]
         [HttpGet("GetAllBlogListByUserId")]
         public IActionResult GetAllBlogListByUserId()
         {
@@ -225,6 +226,19 @@ namespace SE.Web.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
             }
         }
+        [HttpGet("GetAllBlogList")]
+        public IActionResult GetAllBlogList()
+        {
+            try
+            {
+                var blogListModel = _mapper.Map<List<BlogListModel>>(_blogService.GetAllBlogList());
+                return Ok(blogListModel);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
+            }
+        }
 
         [HttpGet("GetBlogDetailBySeoUrl")]
         public IActionResult GetBlogDetailBySeoUrl(string seoUrl)
@@ -240,6 +254,7 @@ namespace SE.Web.Controllers
             }
         }
 
+        [Authorize(Policy = "UserPolicy")]
         [HttpGet("GetBlogUpdateBySeoUrl")]
         public IActionResult GetBlogUpdateBySeoUrl(string seoUrl)
         {
@@ -258,7 +273,8 @@ namespace SE.Web.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
             }
         }
-        [Authorize]
+
+        [Authorize(Policy = "UserPolicy")]
         [HttpDelete("DeleteBlog")]
         public IActionResult DeleteBlog(int blogId)
         {

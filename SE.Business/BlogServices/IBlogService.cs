@@ -12,6 +12,7 @@ namespace SE.Business.BlogServices
         void DeleteBlog(int blogId, string userId);
         List<BlogListDto> GetAllBlogListByUserId(string userId);
         List<BlogListDto> GetAllBlogListByUserName(string userName);
+        List<BlogListDto> GetAllBlogList();
         BlogDetailDto GetBlogDetailBySeoUrl(string seoUrl);
         BlogUpdateDto GetBlogUpdateBySeoUrl(string seoUrl, string userId);
         BlogDetailDto GetBlogDetailById(int Id);

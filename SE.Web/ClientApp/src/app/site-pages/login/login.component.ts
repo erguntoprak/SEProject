@@ -1,12 +1,11 @@
 import { Router } from '@angular/router';
 import { AuthService } from './../../_services/auth.service';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, NgForm, Validators, FormControl, FormGroupDirective } from '@angular/forms';
-import { BaseService } from '../../shared/base.service';
-import { NgxSpinnerService } from "ngx-spinner";
-import { LoginModel, RegisterModel } from '../../shared/models';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { LoginModel } from '../../shared/models';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AcdcLoadingService } from 'acdc-loading';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -16,10 +15,11 @@ import { AcdcLoadingService } from 'acdc-loading';
 export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
-  errorList = [];
+  errorList: string[] = [];
   loginModel: LoginModel;
   submitted = false;
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router, private acdcLoadingService: AcdcLoadingService) { }
+  resendEmailConfirmation = false;
+  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router, private acdcLoadingService: AcdcLoadingService, private toastr: ToastrService) { }
 
   ngOnInit() {
     this.acdcLoadingService.hideLoading();
@@ -29,8 +29,11 @@ export class LoginComponent implements OnInit {
     });
   }
   onLoginSubmit() {
+    this.acdcLoadingService.showLoading();
     this.submitted = true;
-
+    if (this.loginForm.invalid) {
+      return;
+    }
     this.loginModel = {
       email: this.loginForm.value.email,
       password: this.loginForm.value.password
@@ -38,9 +41,20 @@ export class LoginComponent implements OnInit {
     this.authService.login(this.loginModel).subscribe(
       data => {
         this.router.navigate(['/panel']);
+        this.toastr.success('Giriş işlemi yapıldı.', 'Başarılı!');
+        this.acdcLoadingService.hideLoading();
       },
-      (error : HttpErrorResponse) => {
-        console.log(error);
+      (error: HttpErrorResponse) => {
+        this.errorList = [];
+        this.errorList.push(error.error);
+        this.errorList = [...this.errorList];
+        if (error.status == 405) {
+          this.resendEmailConfirmation = true;
+        }
+        else {
+          this.resendEmailConfirmation = false;
+        }
+        this.acdcLoadingService.hideLoading();
       }
     );
   }

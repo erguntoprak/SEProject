@@ -1,7 +1,10 @@
 ::ng-deep {
-  .ngx-pagination{
-      text-align:center;
+  .ngx-pagination {
+    text-align: center;
+    font-size: 1rem;
+    padding:0;
   }
+
   .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value {
     color: #333;
   }

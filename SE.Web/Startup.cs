@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
@@ -16,11 +17,13 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using SE.Business.EmailSenders;
 using SE.Business.Infrastructure.Autofac;
+using SE.Business.Infrastructure.ConfigurationManager;
 using SE.Core.Entities;
 using SE.Data;
 using SE.Web.Extentions;
 using SE.Web.Infrastructure;
 using SE.Web.Infrastructure.Jwt;
+using System;
 using System.IO;
 using System.Text;
 
@@ -45,13 +48,19 @@ namespace SE.Web
                 cfg.Password.RequireUppercase = false;
                 cfg.Password.RequireNonAlphanumeric = false;
                 cfg.SignIn.RequireConfirmedEmail = true;
+                cfg.Password.RequireDigit = false;
+                cfg.Password.RequireLowercase = false;
             }).AddEntityFrameworkStores<EntitiesDbContext>().AddDefaultTokenProviders();
+
+            services.Configure<DataProtectionTokenProviderOptions>(options =>
+                            options.TokenLifespan = TimeSpan.FromDays(1));
 
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                
             }).AddCookie().AddJwtBearer(options =>
                 {
                     options.SaveToken = true;
@@ -67,14 +76,43 @@ namespace SE.Web
             string sqlConnection = @"Server =.; Database = EducationDb; Trusted_Connection = True;";
             services.AddDbContext<EntitiesDbContext>(dbcontextoption => dbcontextoption.UseSqlServer(sqlConnection, b => b.MigrationsAssembly("SE.Web")));
             services.DependencyRegister();
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("ApiPolicy",
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("http://localhost:4200").AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                                  });
+            });
             services.AddDirectoryBrowser();
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
             services.Configure<JwtSecurityTokenSetting>(Configuration.GetSection("Token"));
+            services.Configure<Configuration>(Configuration.GetSection("Configuration"));
+            services.Configure<FormOptions>(o =>
+            {
+                o.ValueLengthLimit = int.MaxValue;
+                o.MultipartBodyLengthLimit = int.MaxValue;
+                o.MemoryBufferThreshold = int.MaxValue;
+            });
             services.AddAutoMapper(typeof(Startup));
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(Policy.Admin, builder =>
+                {
+                    builder.RequireAuthenticatedUser();
+                    builder.RequireRole("Admin");
+                });
+                options.AddPolicy(Policy.User, builder =>
+                {
+                    builder.RequireAuthenticatedUser();
+                    builder.RequireRole("User","Admin");
+                });
+            });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<User> userManager,
+RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -86,12 +124,10 @@ namespace SE.Web
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
+            IdentitySeedData.SeedData(userManager, roleManager);
             app.UseStaticFiles();
             app.UseRouting();
-            app.UseCors(x => x
-               .AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader());
+            app.UseCors("ApiPolicy");
             app.UseAuthentication();
             app.UseDirectoryBrowser(new DirectoryBrowserOptions
             {

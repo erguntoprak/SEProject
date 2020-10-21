@@ -7,17 +7,21 @@
           <h2 class="f_p f_700 f_size_40 t_color3 mb_20">Giriş Yap</h2>
           <div *ngIf="errorList">
             <span class="not-valid" *ngFor="let error of errorList">
+              {{error}}
+            </span>
+            <span *ngIf="resendEmailConfirmation" class="not-valid">
+              E-postanıza mail gelmediğini düşünüyorsanız, lüften <a routerLink="/e-posta-onay-yeniden-gonder">tıklayınız.</a> 
             </span>
           </div>
-          <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()" class="login-form mt_60">
+          <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()" class="login-form">
             <div class="form-group text_box">
-              <label class="f_p text_c f_400">Email</label>
-              <input type="text" id="email" formControlName="email" [ngClass]="{ 'is-invalid':loginForm.get('email').errors && (loginForm.get('email').dirty || loginForm.get('email').touched)}" placeholder="Email Adresiniz">
+              <label class="f_p text_c f_400">E-posta</label>
+              <input type="text" id="email" formControlName="email" [ngClass]="{ 'is-invalid':loginForm.get('email').errors && (loginForm.get('email').dirty || loginForm.get('email').touched)}" placeholder="E-posta">
               <span class="not-valid" *ngIf="(loginForm.get('email').dirty || loginForm.get('email').touched || submitted ) && loginForm.get('email').errors!=null ? loginForm.get('email').errors.required:false">
-                Lütfen email adresi giriniz.
+                Lütfen e-posta adresi giriniz.
               </span>
               <span class="not-valid" *ngIf="(loginForm.get('email').dirty || loginForm.get('email').touched || submitted ) && loginForm.get('email').errors!=null ? loginForm.get('email').errors.email:false">
-                Lütfen geçerli email adresi giriniz.
+                Lütfen geçerli e-posta adresi giriniz.
               </span>
             </div>
             <div class="form-group text_box">
@@ -27,10 +31,11 @@
                 Lütfen şifrenizi giriniz.
               </div>
             </div>
-            
+
             <button type="submit" class="btn_three">Giriş</button>
+            <span><a routerLink="/sifreyi-unuttum">Şifremi unuttum</a></span>
             <div class="alter-login text-center mt_30">
-              Üye olmak için lütfen ? <a class="login-link" routerLink="/kayit-ol">Kayıt Ol</a>
+              Kayıt olmak için lütfen ? <a class="login-link" routerLink="/kayit-ol">Kayıt Ol</a>
             </div>
           </form>
         </div>

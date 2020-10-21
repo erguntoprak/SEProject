@@ -16,8 +16,8 @@ namespace SE.Data.Mapping
 
             builder.Property(d => d.Name).HasMaxLength(50).IsRequired();
 
-            builder.HasMany(d => d.Districts).WithOne(d => d.City).HasForeignKey(d => d.CityId).IsRequired().OnDelete(DeleteBehavior.Cascade);
-            builder.HasMany(d => d.EducationAddress).WithOne(d => d.City).HasForeignKey(d => d.CityId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(d => d.Districts).WithOne(d => d.City).HasForeignKey(d => d.CityId).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            builder.HasMany(d => d.EducationAddress).WithOne(d => d.City).HasForeignKey(d => d.CityId).IsRequired().OnDelete(DeleteBehavior.Restrict);
 
 
         }

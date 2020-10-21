@@ -1,11 +1,13 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ViewChildren } from '@angular/core';
 import { BaseService } from '../../shared/base.service';
 import * as _ from 'lodash';
 import { AcdcLoadingService } from 'acdc-loading';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { CategoryModel, DistrictModel, AddressModel, CategoryAttributeListModel, FilterModel, EducationListModel, EducationFilterListModel } from '../../shared/models';
 import { FormControl, FormArray } from '@angular/forms';
 import { Observable, forkJoin } from 'rxjs';
+import { Location } from '@angular/common';
+
 declare var $: any;
 
 
@@ -16,33 +18,39 @@ declare var $: any;
 })
 export class EducationViewListComponent implements OnInit, AfterViewInit {
 
-
-  categories: CategoryModel[];
-  districtList: DistrictModel[];
-  attributeList: CategoryAttributeListModel[];
+  @ViewChildren('filteredItems') filteredItems;
+  categories: CategoryModel[] = [];
+  districtList: DistrictModel[] = [];
+  attributeList: CategoryAttributeListModel[] = [];
   filterModel: FilterModel;
-  educationFilterList: EducationFilterListModel[];
-  educationFilterTempList: EducationFilterListModel[];
+  educationFilterList: EducationFilterListModel[] = [];
+  educationFilterTempList: EducationFilterListModel[] = [];
   selectedCategoryIndex: number = null;
   selectedCategoryUrl: string;
-  selectedDistrictUrl: string;
+  selectedDistrictUrls: string[] = [];
   selectedDistrictIds: number[] = [];
   selectedAttributeIds: number[] = [];
   selectedCategoryId: number;
+  educationViewItemCount = 12;
   pageNumber: number = 1;
 
-  constructor(private baseService: BaseService, private acdcLoadingService: AcdcLoadingService, private route: ActivatedRoute) {
+  constructor(private baseService: BaseService, private acdcLoadingService: AcdcLoadingService, private route: ActivatedRoute, private router: Router, private location: Location) {
 
   }
   ngOnInit(): void {
     this.acdcLoadingService.showLoading();
     this.route.params.subscribe(params => {
-      this.selectedDistrictUrl = params['district'];
       this.selectedCategoryUrl = params['category'];
     });
+    this.route.queryParams.subscribe(params => {
+      if (params['ilce']) {
+        this.selectedDistrictUrls = params['ilce'].split(',');
+      }
+      if (params['ozellik']) {
+        this.selectedAttributeIds = params['ozellik'].split(',').map(d => +d);
+      }
+    });
     this.getAllCallMethod();
-
-    
   }
   ngAfterViewInit(): void {
 
@@ -94,10 +102,15 @@ export class EducationViewListComponent implements OnInit, AfterViewInit {
       };
       sidebar_offcanvas();
     });
-    
+
   }
   onChangeCategory(categoryId, index) {
-    this.acdcLoadingService.showLoading();
+    this.selectedCategoryUrl = this.categories.find(d => d.id == categoryId).seoUrl;
+    const queryParams: any = {};
+    if (this.selectedDistrictUrls.length > 0) {
+      queryParams.ilce = this.selectedDistrictUrls.join(',');
+    }
+    this.router.navigate(["egitim-kurumlari", this.selectedCategoryUrl], { queryParams: queryParams});
     this.selectedCategoryIndex = index;
     this.selectedAttributeIds = [];
     this.baseService.getAll<CategoryAttributeListModel[]>("Attribute/GetAllAttributeByEducationCategoryId?categoryId=" + categoryId).subscribe(attributeList => {
@@ -127,19 +140,22 @@ export class EducationViewListComponent implements OnInit, AfterViewInit {
         });
       }
       this.districtList = results[1].districtListModel;
-      let district = this.districtList.find(d => d.seoUrl == this.selectedDistrictUrl);
-      if (district != undefined) {
-        this.selectedDistrictIds.push(district.id);
-        this.selectedDistrictIds = [...this.selectedDistrictIds];
-      }
+      this.selectedDistrictUrls.forEach(u => {
+        let district = this.districtList.find(d => d.seoUrl == u);
+        if (district != undefined) {
+          this.selectedDistrictIds.push(district.id);
+          this.selectedDistrictIds = [...this.selectedDistrictIds];
+        }
+      });
+
       this.baseService.getAll<EducationFilterListModel[]>(`Education/GetAllEducationListByFilter?categoryId=${this.selectedCategoryId}`).subscribe(educationList => {
         this.educationFilterList = educationList;
         this.acdcLoadingService.hideLoading();
       });
-    });    
+    });
   }
 
-  getSelectedDistrictName(districtId:number) {
+  getSelectedDistrictName(districtId: number) {
     return this.districtList.find(d => d.id == districtId).name;
   }
   removeSelectedDistrictId(districtId: number) {
@@ -147,10 +163,11 @@ export class EducationViewListComponent implements OnInit, AfterViewInit {
     if (index !== -1) {
       this.selectedDistrictIds.splice(index, 1);
       this.selectedDistrictIds = [...this.selectedDistrictIds];
-      if (this.selectedDistrictIds.length > 0) {
-        this.educationFilterTempList = this.educationFilterList.filter(d => this.selectedDistrictIds.includes(d.districtId));
-      }
-    }       
+      this.navigateFilterUrl();
+    }
+  }
+  onChangeDistrict() {
+    this.navigateFilterUrl();
   }
   //Checkbox change checked type
   onChange(id: number, isChecked: boolean) {
@@ -164,8 +181,11 @@ export class EducationViewListComponent implements OnInit, AfterViewInit {
         this.selectedAttributeIds = [...this.selectedAttributeIds];
       }
     }
+    this.navigateFilterUrl();
   }
-
+  changeeducationViewItemCount() {
+    this.pageNumber = 1;
+  }
   getSelectedAttributeName(attributeId: number) {
     let attributeName: string;
     this.attributeList.forEach(attributeList => {
@@ -182,11 +202,29 @@ export class EducationViewListComponent implements OnInit, AfterViewInit {
       this.selectedAttributeIds.splice(index, 1);
       this.selectedAttributeIds = [...this.selectedAttributeIds];
     }
+    this.navigateFilterUrl();
   }
 
   removeAllFilters() {
     this.selectedAttributeIds = [];
     this.selectedDistrictIds = [];
+    this.navigateFilterUrl();
   }
+  navigateFilterUrl() {
 
+    this.selectedDistrictUrls = this.districtList.filter(d => this.selectedDistrictIds.includes(d.id)).map(d => d.seoUrl);
+    const queryParams: any = {};
+    if (this.selectedDistrictUrls.length > 0) {
+      queryParams.ilce = this.selectedDistrictUrls.join(',');
+    }
+    if (this.selectedAttributeIds.length > 0) {
+      queryParams.ozellik = this.selectedAttributeIds.join(',');
+    }
+    const navigationExtras: NavigationExtras = {
+      queryParams
+    };
+    this.router.navigate(
+      [], navigationExtras
+    );
+  }
 }

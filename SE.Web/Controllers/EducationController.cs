@@ -9,6 +9,7 @@ using AutoMapper;
 using FluentValidation;
 using LazZiya.ImageResize;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,7 @@ namespace SE.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("ApiPolicy")]
     public class EducationController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -37,8 +39,9 @@ namespace SE.Web.Controllers
             _imageService = imageService;
             _categoryService = categoryService;
         }
-        [Authorize]
+        [Authorize(Policy = "UserPolicy")]
         [HttpPost("AddEducation")]
+        [DisableRequestSizeLimit]
         public IActionResult AddEducation([FromBody]EducationInsertModel educationInsertModel)
         {
             try
@@ -77,7 +80,8 @@ namespace SE.Web.Controllers
                 return StatusCode(StatusCodes.Status400BadRequest, "Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.");
             }
         }
-        [Authorize]
+
+        [Authorize(Policy = "UserPolicy")]
         [HttpGet("GetAllEducationListByUserId")]
         public IActionResult GetAllEducationListByUserId()
         {
@@ -92,7 +96,8 @@ namespace SE.Web.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
             }
         }
-        [Authorize]
+
+        [Authorize(Policy = "UserPolicy")]
         [HttpGet("GetEducationUpdateModelBySeoUrl")]
         public IActionResult GetEducationUpdateModelBySeoUrl(string seoUrl)
         {
@@ -112,6 +117,7 @@ namespace SE.Web.Controllers
             }
 
         }
+
         [HttpGet("GetEducationDetailModelBySeoUrl")]
         public IActionResult GetEducationDetailModelBySeoUrl(string seoUrl)
         {
@@ -130,7 +136,8 @@ namespace SE.Web.Controllers
             }
 
         }
-        [Authorize]
+
+        [Authorize(Policy = "UserPolicy")]
         [HttpPost("UpdateEducation")]
         public IActionResult UpdateEducation([FromBody]EducationUpdateModel educationUpdateModel)
         {
@@ -206,7 +213,9 @@ namespace SE.Web.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.");
             }
         }
-        [Authorize]
+
+
+        [Authorize(Policy = "UserPolicy")]
         [HttpDelete("DeleteEducation")]
         public IActionResult DeleteEducation(int educationId)
         {
@@ -244,6 +253,7 @@ namespace SE.Web.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.");
             }
         }
+
         [HttpGet("GetAllEducationListByRandomCategoryId")]
         public IActionResult GetAllEducationListByRandomCategoryId()
         {
@@ -264,6 +274,8 @@ namespace SE.Web.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
             }
         }
+
+
         [HttpGet("GetAllEducationListByCategoryIdAndDistrictId")]
         public IActionResult GetAllEducationListByCategoryIdAndDistrictId(int categoryId, int districtId)
         {
@@ -281,6 +293,7 @@ namespace SE.Web.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
             }
         }
+
         [HttpGet("GetAllEducationListByFilter")]
         public IActionResult GetAllEducationListByFilter([FromQuery]FilterModel filterModel)
         {
@@ -300,6 +313,8 @@ namespace SE.Web.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
             }
         }
+
+
         [HttpGet("GetEducationImagesByEducationId")]
         public IActionResult GetEducationImagesByEducationId(int educationId)
         {
@@ -317,6 +332,8 @@ namespace SE.Web.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
             }
         }
+
+        [Authorize(Policy = "UserPolicy")]
         [HttpPost("InsertFirstVisibleImage")]
         public IActionResult InsertFirstVisibleImage([FromBody]ImageModel imageModel)
         {
@@ -341,6 +358,8 @@ namespace SE.Web.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
             }
         }
+
+        [Authorize(Policy = "UserPolicy")]
         [HttpPost("UpdateFirstVisibleImage")]
         public IActionResult UpdateFirstVisibleImage([FromBody]ImageModel imageModel)
         {
@@ -400,7 +419,7 @@ namespace SE.Web.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Policy = "UserPolicy")]
         [HttpGet("GetEducationContactFormListModelBySeoUrl")]
         public IActionResult GetEducationContactFormListModelBySeoUrl(string seoUrl)
         {

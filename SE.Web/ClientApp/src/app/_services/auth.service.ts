@@ -3,20 +3,20 @@ import { BaseService } from './../shared/base.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { UserModel, LoginModel, RegisterModel } from '../shared/models';
+import { LoginModel, RegisterModel, UserLoginModel } from '../shared/models';
 import { map } from 'rxjs/operators';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  public currentUserSubject: BehaviorSubject<UserModel>;
+  public currentUserSubject: BehaviorSubject<UserLoginModel>;
  
   constructor(private baseService:BaseService,private router:Router){
-    this.currentUserSubject = new BehaviorSubject<UserModel>(JSON.parse(localStorage.getItem('currentUser')));
+    this.currentUserSubject = new BehaviorSubject<UserLoginModel>(JSON.parse(localStorage.getItem('currentUser')));
   }
   public get currentUserValue(){
     return this.currentUserSubject;
   }
   login(loginModel:LoginModel){
-    return this.baseService.post<UserModel>("Account/Login", loginModel)
+    return this.baseService.post<UserLoginModel>("Account/Login", loginModel)
       .pipe(map(user => {
         if (user && user.token) {
           localStorage.setItem('currentUser', JSON.stringify(user));
@@ -26,9 +26,9 @@ export class AuthService {
       }));
   }
   logout() {
-    this.router.navigate(['/']);
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
+    this.router.navigate(['/']);
   }
 
   signup(registerModel:RegisterModel) {

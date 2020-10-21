@@ -87,6 +87,29 @@ namespace SE.Business.BlogServices
                 throw;
             }
         }
+        public List<BlogListDto> GetAllBlogList()
+        {
+            try
+            {
+                var blogList = _unitOfWork.BlogRepository.Include(d => d.User)
+                    .AsNoTracking().Select(d => new BlogListDto
+                {
+                    Id = d.Id,
+                    UserName = d.User.UserName,
+                    UserSeoUrl = UrlHelper.FriendlyUrl(d.User.UserName),
+                    CreateTime = d.CreateTime,
+                    FirstVisibleImageName = d.FirstVisibleImageName,
+                    Title = d.Title,
+                    SeoUrl = d.SeoUrl
+                }).ToList();
+                return blogList;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        
 
         public BlogDetailDto GetBlogDetailById(int Id)
         {

@@ -60,6 +60,9 @@
               <input type="file" class="custom-file-input" accept="image/*" multiple (change)="onSelectFile($event)">
               <label class="custom-file-label">Görsel Seç</label>
             </div>
+            <span class="not-valid" *ngFor="let errorMessage of imageUploadErrorMessage">
+              {{errorMessage}}
+            </span>
             <span class="not-valid" *ngIf="nextStepOneValidation && urlImages.length==0">
               Lütfen görsel seçiniz.
             </span>

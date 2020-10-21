@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SE.Business.Helpers;
 using SE.Core.Entities;
 using SE.Data;
@@ -26,23 +27,7 @@ namespace SE.Web.Extentions
 
                 var attributes = new List<Core.Entities.Attribute>
                 {
-                    new Core.Entities.Attribute { AttributeCategory= fizikselImkanlar, Name="Uyku Odası", Description="", DisplayOrder=0},
-                    new Core.Entities.Attribute { AttributeCategory= fizikselImkanlar, Name="Yemekhane", Description="", DisplayOrder=1},
-                    new Core.Entities.Attribute { AttributeCategory= fizikselImkanlar, Name="Havuz", Description="", DisplayOrder=2},
-                    new Core.Entities.Attribute { AttributeCategory= fizikselImkanlar, Name="Oyun Alanı", Description="", DisplayOrder=3},
-                    new Core.Entities.Attribute { AttributeCategory= fizikselImkanlar, Name="Bahçe", Description="", DisplayOrder=3},
-
-                    new Core.Entities.Attribute { AttributeCategory= hizmetler, Name="Güvenlik", Description="", DisplayOrder=0},
-                    new Core.Entities.Attribute { AttributeCategory= hizmetler, Name="Rehberlik", Description="", DisplayOrder=1},
-                    new Core.Entities.Attribute { AttributeCategory= hizmetler, Name="Servis", Description="", DisplayOrder=2},
-                    new Core.Entities.Attribute { AttributeCategory= hizmetler, Name="Oyun Grubu", Description="", DisplayOrder=3},
-                    new Core.Entities.Attribute { AttributeCategory= hizmetler, Name="Organik Beslenme", Description="", DisplayOrder=3},
-
-                    new Core.Entities.Attribute { AttributeCategory= kulupler, Name="Satranç", Description="", DisplayOrder=0},
-                    new Core.Entities.Attribute { AttributeCategory= kulupler, Name="Rehberlik", Description="", DisplayOrder=1},
-                    new Core.Entities.Attribute { AttributeCategory= kulupler, Name="Müzik Kulübü", Description="", DisplayOrder=2},
-                    new Core.Entities.Attribute { AttributeCategory= kulupler, Name="Gezi Kulübü", Description="", DisplayOrder=3},
-                    new Core.Entities.Attribute { AttributeCategory= kulupler, Name="Akıl ve Zeka Oyunları", Description="", DisplayOrder=3},
+                  
 
                 };
                 context.Attribute.AddRange(attributes);
@@ -128,7 +113,7 @@ namespace SE.Web.Extentions
                 context.District.Add(new District { Name = "URLA", CityId = 1 });
                 context.SaveChanges();
             }
-
+            
 
         }
     }
