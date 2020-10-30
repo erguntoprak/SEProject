@@ -19,7 +19,7 @@ export class BlogDetailComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.acdcLoadingService.showLoading();
-      this.baseService.getByName<BlogDetailModel>("Blog/GetBlogDetailBySeoUrl?seoUrl=", params['name']).subscribe(data => {
+      this.baseService.get<BlogDetailModel>("Blog/GetBlogDetailBySeoUrl?seoUrl=", params['name']).subscribe(data => {
         this.blogDetailModel = data;
         console.log(this.blogDetailModel)
         this.acdcLoadingService.hideLoading();

@@ -1,33 +1,46 @@
-<section class="breadcrumb_area" style="background-image: url('assets/img/education-green-bay-primary-2000x800-yq882y.jpg');
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  ">
+<section *ngIf="educationDetailModel" style="background: #fbfbfd;">
   <div class="container">
-    <div class="breadcrumb_content text-center">
-      <h1 class="f_p f_700 f_size_50 w_color l_height50 mb_20">YAŞAR ÜNİVERSİTESİ</h1>
-      <p class="f_400 w_color f_size_20 l_height26">Bizi ilgilendiren konu yalnız barışı kurmanın ve korumanın teknik çareleri değil, aynı zamanda kafaları eğitmenin, aydınlatmanın yoludur.</p>
+    <div class="breadcrumb-area">
+      <h1>{{educationDetailModel.generalInformation.educationName}}<img src="assets/img/tick.png" class="tick-image">
+      </h1>
+      <ol class="breadcrumb">
+        <li class="item"><a routerLink="/">Anasayfa</a></li>
+        <li class="item"><i class="ti-control-forward"></i><a
+            routerLink="/egitim-kurumlari/{{educationDetailModel.generalInformation.categorySeoUrl}}">{{educationDetailModel.generalInformation.categoryName}}</a>
+        </li>
+        <li class="item"><i class="ti-control-forward"></i><a
+            [queryParams]="{ilce: educationDetailModel.addressInformation.districSeoUrl}"
+            routerLink="/egitim-kurumlari/{{educationDetailModel.generalInformation.categorySeoUrl}}">{{educationDetailModel.addressInformation.districtName}}</a>
+        </li>
+        <li class="item"><i class="ti-control-forward"></i>{{educationDetailModel.generalInformation.educationName}}
+        </li>
+      </ol>
     </div>
   </div>
 </section>
 <section class="education_details_area" *ngIf="educationDetailModel">
   <div class="container">
     <div class="row">
-      <div class="col-lg-12" id="images">
-        <ng-image-slider *ngIf="imageObject.length>0" [imageSize]="{width: '400px', height: '240px'}" [images]="imageObject"></ng-image-slider>
-      </div>
-      <div class="col-lg-12">
 
-      </div>
       <div class="col-lg-8 lg-pr">
+        <div id="images">
+          <ngx-gallery [options]="galleryOptions" [images]="galleryImages" class="ngx-gallery"></ngx-gallery>
+        </div>
         <div class="details_content" id="education-about">
           <div class="mb_20">
-            <h3 class="f_p f_size_22 f_500 t_color3 mb_20">{{educationDetailModel.generalInformation.educationName}}</h3>
+            <h3 class="f_p f_size_22 f_500 t_color3 mb_20">{{educationDetailModel.generalInformation.educationName}}
+              Hakkında
+            </h3>
             <hr />
             <p class="f_400 l_height32" [innerHTML]="educationDetailModel.generalInformation.description"></p>
+            <div class="f_widget social-widget text-right">
+              <share-buttons
+                [include]="['facebook','twitter','telegram','messenger','whatsapp','email']"></share-buttons>
+            </div>
           </div>
         </div>
-        <div *ngIf="educationDetailModel.categoryAttributeList.length>0" class="details_content" id="education-facilities">
+        <div *ngIf="educationDetailModel.categoryAttributeList.length>0" class="details_content"
+          id="education-facilities">
           <div class="mb_20" *ngFor="let attribute of educationDetailModel.categoryAttributeList">
             <h3 class="f_p f_size_22 f_500 t_color3 mb_20">{{attribute.categoryName}}</h3>
             <ul class="list-unstyled mb-0">
@@ -48,7 +61,8 @@
             </div>
           </div>
         </div>
-        <div class="iframe-container" *ngIf="educationDetailModel.socialInformation.mapCode != ''" [innerHTML]="educationDetailModel.socialInformation.mapCode">
+        <div class="iframe-container" *ngIf="educationDetailModel.socialInformation.mapCode != ''"
+          [innerHTML]="educationDetailModel.socialInformation.mapCode">
         </div>
         <div *ngIf="educationDetailModel.socialInformation.youtubeVideoTwo != undefined" class="iframe-container">
           <youtube-player videoId="{{educationDetailModel.socialInformation.youtubeVideoTwo}}"></youtube-player>
@@ -73,21 +87,19 @@
               </div>
             </div>
             <div class="col-lg-12">
-              <a routerLink="/bloglar/{{educationDetailModel.blogList[0].userName}}" class="learn_btn_two">Diğer ilgili bloglara göz at<i class="ti-arrow-right"></i></a>
+              <a routerLink="/bloglar/{{educationDetailModel.blogList[0].userName}}" class="learn_btn_two">Diğer ilgili
+                bloglara göz at<i class="ti-arrow-right"></i></a>
             </div>
           </div>
         </div>
       </div>
       <div class="col-lg-4">
         <div class="job_info">
-          <div class="info_head">
-            <i class="ti-receipt"></i>
-            <h6 class="f_p f_600 f_size_18 t_color3">Eğitim Bilgileri</h6>
-          </div>
           <div class="info_item">
             <i class="ti-location-pin"></i>
             <h6>İl / İlçe</h6>
-            <p>{{educationDetailModel.addressInformation.cityName}} / {{educationDetailModel.addressInformation.districtName}}</p>
+            <p>{{educationDetailModel.addressInformation.cityName}} /
+              {{educationDetailModel.addressInformation.districtName}}</p>
           </div>
           <div class="info_item">
             <i class="ti-home"></i>
@@ -115,33 +127,39 @@
         </div>
         <div class="contact-form">
           <h6>Hemen Sizi Arıyalım</h6>
-          <p>Fiyat bilgileri, erken kayıt avantajları, randevu talepleri ve sorularınız için formu ücretsiz doldurun. Eğitim kurumu sizi hemen arasın.</p>
+          <p>Fiyat bilgileri, erken kayıt avantajları, randevu talepleri ve sorularınız için formu ücretsiz doldurun.
+            Eğitim kurumu sizi hemen arasın.</p>
           <div class="contact-form-input" *ngIf="contactFormDiv">
             <form [formGroup]="contactForm" (ngSubmit)="onContactFormSubmit()">
               <div class="form-group text_box">
                 <label for="nameSurname">Ad Soyad</label>
                 <input type="text" formControlName="nameSurname" />
-                <span class="not-valid" *ngIf="submitted && contactForm.get('nameSurname').errors != null ? contactForm.get('nameSurname').errors.required:false">
+                <span class="not-valid"
+                  *ngIf="submitted && contactForm.get('nameSurname').errors != null ? contactForm.get('nameSurname').errors.required:false">
                   Lütfen Ad Soyad giriniz.
                 </span>
               </div>
               <div class="form-group text_box">
                 <label for="exampleInputEmail1">Email</label>
                 <input type="text" formControlName="email" />
-                <span class="not-valid" *ngIf="submitted && contactForm.get('email').errors != null ? contactForm.get('email').errors.required:false">
+                <span class="not-valid"
+                  *ngIf="submitted && contactForm.get('email').errors != null ? contactForm.get('email').errors.required:false">
                   Lütfen Email adresi giriniz.
                 </span>
-                <span class="not-valid" *ngIf="submitted && contactForm.get('email').errors != null ? contactForm.get('email').errors.email:false">
+                <span class="not-valid"
+                  *ngIf="submitted && contactForm.get('email').errors != null ? contactForm.get('email').errors.email:false">
                   Lütfen geçerli Email adresi giriniz.
                 </span>
               </div>
               <div class="form-group text_box">
                 <label for="exampleInputEmail1">Telefon</label>
                 <input type="text" formControlName="phoneNumber" mask="(000) 000 00 00" [validation]="true" />
-                <span class="not-valid" *ngIf="submitted && contactForm.get('phoneNumber').errors != null ? contactForm.get('phoneNumber').errors.required:false">
+                <span class="not-valid"
+                  *ngIf="submitted && contactForm.get('phoneNumber').errors != null ? contactForm.get('phoneNumber').errors.required:false">
                   Lütfen Telefon numarası giriniz.
                 </span>
-                <span class="not-valid" *ngIf="submitted && contactForm.get('phoneNumber').errors != null ? contactForm.get('phoneNumber').errors['Mask error']:false">
+                <span class="not-valid"
+                  *ngIf="submitted && contactForm.get('phoneNumber').errors != null ? contactForm.get('phoneNumber').errors['Mask error']:false">
                   Lütfen geçerli bir Telefon numarası giriniz.
                 </span>
               </div>
@@ -183,7 +201,7 @@
                 </div>
               </a>
             </div>
-            <div class="col-3 p-0" *ngIf="educationDetailModel.socialInformation.youtubeAccountUrl != '' " >
+            <div class="col-3 p-0" *ngIf="educationDetailModel.socialInformation.youtubeAccountUrl != '' ">
               <a target="_blank" href="{{educationDetailModel.socialInformation.youtubeAccountUrl}}">
                 <div class="social-item">
                   <div class="social-item-icon">

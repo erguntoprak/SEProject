@@ -93,7 +93,7 @@ export class EducationEditComponent implements OnInit, AfterViewInit {
     this.getAllCallMethod();
     this.route.params.subscribe(params => {
       this.acdcLoadingService.showLoading();
-      this.baseService.getByName<any>("Education/GetEducationUpdateModelBySeoUrl?seoUrl=", params['name']).subscribe(educationUpdateModel => {
+      this.baseService.get<any>("Education/GetEducationUpdateModelBySeoUrl?seoUrl=", params['name']).subscribe(educationUpdateModel => {
         this.getAttributeList(educationUpdateModel.generalInformation.educationType)
         this.educationForm.patchValue({
           generalInformation: educationUpdateModel.generalInformation,
@@ -172,7 +172,7 @@ export class EducationEditComponent implements OnInit, AfterViewInit {
     }
     this.baseService.post("Education/UpdateEducation", this.educationForm.value).subscribe(educationId => {
       this.educationId = educationId;
-      this.baseService.getById<ImageModel[]>("Education/GetEducationImagesByEducationId?educationId=", educationId).subscribe(imageModel => {
+      this.baseService.get<ImageModel[]>("Education/GetEducationImagesByEducationId?educationId=", educationId).subscribe(imageModel => {
         this.savedImageList = imageModel;
         if (imageModel.filter(d => d.firstVisible == true)[0] !== undefined) {
           this.selectedImageModel = imageModel.filter(d => d.firstVisible == true)[0];
@@ -181,10 +181,7 @@ export class EducationEditComponent implements OnInit, AfterViewInit {
         this.nextStepFiveControl = true;
         this.acdcLoadingService.hideLoading();
       });
-    },
-      error => {
-        console.log(error);
-      });
+    });
   }
   saveSelectedFirsImage() {
     if (this.selectedImageModel.id === 0) {
@@ -360,7 +357,7 @@ export class EducationEditComponent implements OnInit, AfterViewInit {
     enableToolbar: true,
     showToolbar: true,
     placeholder: 'Buraya metin giriniz...',
-    defaultParagraphSeparator: 'p',
+    defaultParagraphSeparator: '',
     defaultFontName: '',
     defaultFontSize: '',
     fonts: [

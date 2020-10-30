@@ -29,80 +29,45 @@ namespace SE.Web.Controllers
         [HttpGet("GetAllAttributeByEducationCategoryId")]
         public IActionResult GetAllAttributeByEducationCategoryId(int categoryId)
         {
-            try
-            {
-                var categoryAttributeListModel = _mapper.Map<List<CategoryAttributeListModel>>(_attributeService.GetAllAttributeByEducationCategoryId(categoryId));
-                return Ok(categoryAttributeListModel);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu.Lütfen işlemi tekrar deneyiniz.");
-            }
+            var categoryAttributeListModel = _mapper.Map<List<CategoryAttributeListModel>>(_attributeService.GetAllAttributeByEducationCategoryId(categoryId));
+            return Ok(categoryAttributeListModel);
         }
 
         [HttpGet("GetAllAttributeList")]
         public IActionResult GetAllAttributeList()
         {
-            try
-            {
-                var attributeListModel = _mapper.Map<List<AttributeListModel>>(_attributeService.GetAllAttributeList());
-                return Ok(attributeListModel);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
+            var attributeListModel = _mapper.Map<List<AttributeListModel>>(_attributeService.GetAllAttributeList());
+            return Ok(attributeListModel);
         }
 
         [HttpGet("GetAttributeById")]
-        public IActionResult GetAttributeById([FromQuery]int attributeId)
+        public IActionResult GetAttributeById([FromQuery] int attributeId)
         {
-            try
-            {
-                var attributeModel = _mapper.Map<AttributeModel>(_attributeService.GetAttributeById(attributeId));
-                return Ok(attributeModel);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
+            var attributeModel = _mapper.Map<AttributeModel>(_attributeService.GetAttributeById(attributeId));
+            return Ok(attributeModel);
         }
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost("InsertAttribute")]
-        public IActionResult InsertAttribute([FromBody]AttributeModel attributeModel)
+        public IActionResult InsertAttribute([FromBody] AttributeModel attributeModel)
         {
-            try
-            {
-                var attributeDto = _mapper.Map<AttributeDto>(attributeModel);
-                _attributeService.InsertAttribute(attributeDto);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
+            var attributeDto = _mapper.Map<AttributeDto>(attributeModel);
+            _attributeService.InsertAttribute(attributeDto);
+            return Ok();
         }
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost("UpdateAttribute")]
-        public IActionResult UpdateAttribute([FromBody]AttributeModel attributeModel)
+        public IActionResult UpdateAttribute([FromBody] AttributeModel attributeModel)
         {
-            try
-            {
-                var attributeDto = _mapper.Map<AttributeDto>(attributeModel);
-                _attributeService.UpdateAttribute(attributeDto);
-                return Ok();
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
+            var attributeDto = _mapper.Map<AttributeDto>(attributeModel);
+            _attributeService.UpdateAttribute(attributeDto);
+            return Ok();
         }
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost("DeleteAttribute")]
-        public IActionResult DeleteAttribute([FromBody]int attributeId)
+        public IActionResult DeleteAttribute([FromBody] int attributeId)
         {
             try
             {
@@ -112,10 +77,6 @@ namespace SE.Web.Controllers
             catch (DbUpdateException ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Bu kaydı silemezsin. Silmek için bağlı olduğu diğer kayıtların silinmesi gerekiyor.");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
             }
         }
 

@@ -1,0 +1,2 @@
+2020-10-23 02:06:07.677 +03:00 [Information] {"FullName":"AccountService","MethodName":"LoginAsync","Parameters":[{"Name":"loginDto","Value":{"Email":"ergun.35.toprak@gmail.com","Password":"ergunsdfsdf"},"Type":"LoginDto"}],"UserEmail":"ergun.35.toprak@gmail.com"}
+2020-10-23 02:09:12.218 +03:00 [Information] {"FullName":"AccountService","MethodName":"LoginAsync","Parameters":[{"Name":"loginDto","Value":{"Email":"ergun.35.toprak@gmail.com","Password":"ergunsdfsdf"},"Type":"LoginDto"}],"UserEmail":"ergun.35.toprak@gmail.com"}

@@ -37,7 +37,8 @@
               "src/assets/vendors/nice-select/nice-select.css",
               "src/assets/vendors/scroll/jquery.mCustomScrollbar.min.css",
               "src/assets/css/style.css",
-              "src/assets/css/responsive.css"
+              "src/assets/css/responsive.css",
+              "./node_modules/font-awesome/css/font-awesome.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",

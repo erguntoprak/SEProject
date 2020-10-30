@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SE.Business.Helpers;
+using SE.Core.Aspects.Autofac.Caching;
+using SE.Core.Aspects.Autofac.Logging;
+using SE.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using SE.Core.DTO;
 using SE.Core.Entities;
 using SE.Data;
@@ -30,7 +33,8 @@ namespace SE.Business.CategoryServices
                 throw;
             }
         }
-
+        [CacheAspect]
+        [LogAspect(typeof(FileLogger))]
         public List<CategoryDto> GetAllCategoryList()
         {
             try

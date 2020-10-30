@@ -33,11 +33,7 @@ export class CategoryCreateComponent implements OnInit {
       this.categoryInsertForm.value).subscribe(data => {
         this.toastr.success('Kategori oluşturuldu.', 'Başarılı!');
         this.router.navigate(['/panel/kategori-listesi']);
-      },
-        (error: HttpErrorResponse) => {
-          this.toastr.success(error.error, 'Başarısız!');
-          this.acdcLoadingService.hideLoading();
-        });
+      });
   }
 }
 

@@ -21,7 +21,7 @@ export class BlogViewListComponent implements OnInit {
       this.acdcLoadingService.showLoading();
       let userName = params['userName'];
       if (userName != undefined) {
-        this.baseService.getByName<BlogListModel>("Blog/GetAllBlogListByUserName?userName=", userName).subscribe(data => {
+        this.baseService.get<BlogListModel>("Blog/GetAllBlogListByUserName?userName=", userName).subscribe(data => {
           this.blogListModel = data;
           this.acdcLoadingService.hideLoading();
         });

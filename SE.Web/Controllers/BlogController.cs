@@ -35,14 +35,10 @@ namespace SE.Web.Controllers
 
         [Authorize(Policy = "UserPolicy")]
         [HttpPost("InsertBlog")]
-        public IActionResult InsertBlog([FromBody]BlogInsertModel blogInsertModel)
+        public IActionResult InsertBlog([FromBody] BlogInsertModel blogInsertModel)
         {
             try
             {
-                if (User.FindFirstValue(ClaimTypes.NameIdentifier) == null || User.FindFirstValue(ClaimTypes.NameIdentifier) == string.Empty)
-                {
-                    return StatusCode(StatusCodes.Status400BadRequest, "Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.");
-                }
                 var blogInsertDto = _mapper.Map<BlogInsertDto>(blogInsertModel);
                 blogInsertDto.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 blogInsertDto.CreateTime = DateTime.Now;
@@ -95,22 +91,14 @@ namespace SE.Web.Controllers
             {
                 return StatusCode(StatusCodes.Status400BadRequest, ex.Errors.Select(d => d.ErrorMessage));
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status400BadRequest, "Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.");
-            }
         }
 
         [Authorize(Policy = "UserPolicy")]
         [HttpPost("UpdateBlog")]
-        public IActionResult UpdateBlog([FromBody]BlogUpdateModel blogUpdateModel)
+        public IActionResult UpdateBlog([FromBody] BlogUpdateModel blogUpdateModel)
         {
             try
             {
-                if (User.FindFirstValue(ClaimTypes.NameIdentifier) == null || User.FindFirstValue(ClaimTypes.NameIdentifier) == string.Empty)
-                {
-                    return StatusCode(StatusCodes.Status400BadRequest, "Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.");
-                }
                 var blogUpdateDto = _mapper.Map<BlogUpdateDto>(blogUpdateModel);
                 blogUpdateDto.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -146,7 +134,7 @@ namespace SE.Web.Controllers
                 {
                     if (!existingBlogDetailModel.BlogItems.Any(d => d.ImageName == blogItem.ImageName))
                     {
-                        if(blogItem.ImageName != "" && blogItem.ImageName.StartsWith("data:image"))
+                        if (blogItem.ImageName != "" && blogItem.ImageName.StartsWith("data:image"))
                         {
                             string imageName = $"{UrlHelper.FriendlyUrl(blogUpdateDto.Title)}-{Guid.NewGuid().ToString().Substring(0, 5)}";
                             string base64Data = blogItem.ImageName.Split(',')[1];
@@ -166,7 +154,7 @@ namespace SE.Web.Controllers
 
                 foreach (var blogItem in existingBlogDetailModel.BlogItems)
                 {
-                    if(!blogUpdateDto.BlogItems.Any(d=>d.ImageName==blogItem.ImageName) && blogItem.ImageName != "")
+                    if (!blogUpdateDto.BlogItems.Any(d => d.ImageName == blogItem.ImageName) && blogItem.ImageName != "")
                     {
                         string existingBlogItemImage = Path.Combine(filedir, blogItem.ImageName + "_1000x600.jpg");
                         if (System.IO.File.Exists(existingBlogItemImage))
@@ -193,65 +181,33 @@ namespace SE.Web.Controllers
             {
                 return StatusCode(StatusCodes.Status400BadRequest, ex.Errors.Select(d => d.ErrorMessage));
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status400BadRequest, "Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.");
-            }
         }
         [HttpGet("GetAllBlogListByUserId")]
         public IActionResult GetAllBlogListByUserId()
         {
-            try
-            {
-                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var blogListModel = _mapper.Map<List<BlogListModel>>(_blogService.GetAllBlogListByUserId(userId));
-                return Ok(blogListModel);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var blogListModel = _mapper.Map<List<BlogListModel>>(_blogService.GetAllBlogListByUserId(userId));
+            return Ok(blogListModel);
         }
 
         [HttpGet("GetAllBlogListByUserName")]
         public IActionResult GetAllBlogListByUserName(string userName)
         {
-            try
-            {
-                var blogListModel = _mapper.Map<List<BlogListModel>>(_blogService.GetAllBlogListByUserName(userName));
-                return Ok(blogListModel);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
+            var blogListModel = _mapper.Map<List<BlogListModel>>(_blogService.GetAllBlogListByUserName(userName));
+            return Ok(blogListModel);
         }
         [HttpGet("GetAllBlogList")]
         public IActionResult GetAllBlogList()
         {
-            try
-            {
-                var blogListModel = _mapper.Map<List<BlogListModel>>(_blogService.GetAllBlogList());
-                return Ok(blogListModel);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
+            var blogListModel = _mapper.Map<List<BlogListModel>>(_blogService.GetAllBlogList());
+            return Ok(blogListModel);
         }
 
         [HttpGet("GetBlogDetailBySeoUrl")]
         public IActionResult GetBlogDetailBySeoUrl(string seoUrl)
         {
-            try
-            {
-                var blogDetailModel = _mapper.Map<BlogDetailModel>(_blogService.GetBlogDetailBySeoUrl(seoUrl));
-                return Ok(blogDetailModel);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
+            var blogDetailModel = _mapper.Map<BlogDetailModel>(_blogService.GetBlogDetailBySeoUrl(seoUrl));
+            return Ok(blogDetailModel);
         }
 
         [Authorize(Policy = "UserPolicy")]
@@ -267,10 +223,6 @@ namespace SE.Web.Controllers
             catch (ArgumentNullException ex)
             {
                 return StatusCode(StatusCodes.Status404NotFound);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
             }
         }
 
@@ -299,9 +251,9 @@ namespace SE.Web.Controllers
 
                     if (System.IO.File.Exists(bigImageFile))
                     {
-                            System.IO.File.Delete(bigImageFile);
-                            System.GC.Collect();
-                            System.GC.WaitForPendingFinalizers();
+                        System.IO.File.Delete(bigImageFile);
+                        System.GC.Collect();
+                        System.GC.WaitForPendingFinalizers();
                     }
                 }
                 _blogService.DeleteBlog(blogId, userId);
@@ -310,10 +262,6 @@ namespace SE.Web.Controllers
             catch (ArgumentNullException ex)
             {
                 return StatusCode(StatusCodes.Status404NotFound);
-            }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.");
             }
         }
     }

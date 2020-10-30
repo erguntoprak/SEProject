@@ -17,8 +17,8 @@ export class PanelAsideComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.isUser = this.authService.currentUserValue.value.roles.includes("User");
-    this.isAdmin = this.authService.currentUserValue.value.roles.includes("Admin");
+    this.isUser = this.authService.currentUser.value.roles.includes("User");
+    this.isAdmin = this.authService.currentUser.value.roles.includes("Admin");
     this.navigationModelList = [
       {
         title: 'GENEL',

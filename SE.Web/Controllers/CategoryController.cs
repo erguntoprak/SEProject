@@ -26,76 +26,41 @@ namespace SE.Web.Controllers
         [HttpGet("GetAllCategoryList")]
         public IActionResult GetAllCategoryList()
         {
-            try
-            {
-                var categoryList = _mapper.Map<List<CategoryModel>>(_categoryService.GetAllCategoryList());
-                return Ok(categoryList);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
+            var categoryList = _mapper.Map<List<CategoryModel>>(_categoryService.GetAllCategoryList());
+            return Ok(categoryList);
         }
 
         [HttpGet("GetCategoryById")]
-        public IActionResult GetCategoryById([FromQuery]int categoryId)
+        public IActionResult GetCategoryById([FromQuery] int categoryId)
         {
-            try
-            {
-                var categoryModel = _mapper.Map<CategoryModel>(_categoryService.GetCategoryById(categoryId));
-                return Ok(categoryModel);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
+            var categoryModel = _mapper.Map<CategoryModel>(_categoryService.GetCategoryById(categoryId));
+            return Ok(categoryModel);
         }
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost("InsertCategory")]
-        public IActionResult InsertCategory([FromBody]CategoryModel categoryModel)
+        public IActionResult InsertCategory([FromBody] CategoryModel categoryModel)
         {
-            try
-            {
-                var categoryDto = _mapper.Map<CategoryDto>(categoryModel);
-                _categoryService.InsertCategory(categoryDto);
-                return Ok();
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
+            var categoryDto = _mapper.Map<CategoryDto>(categoryModel);
+            _categoryService.InsertCategory(categoryDto);
+            return Ok();
         }
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost("UpdateCategory")]
-        public IActionResult UpdateCategory([FromBody]CategoryModel categoryModel)
+        public IActionResult UpdateCategory([FromBody] CategoryModel categoryModel)
         {
-            try
-            {
-                var categoryDto = _mapper.Map<CategoryDto>(categoryModel);
-                _categoryService.UpdateCategory(categoryDto);
-                return Ok();
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
+            var categoryDto = _mapper.Map<CategoryDto>(categoryModel);
+            _categoryService.UpdateCategory(categoryDto);
+            return Ok();
         }
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost("DeleteCategory")]
-        public IActionResult DeleteCategory([FromBody]int categoryId)
+        public IActionResult DeleteCategory([FromBody] int categoryId)
         {
-            try
-            {
-                _categoryService.DeleteCategory(categoryId);
-                return Ok();
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
+            _categoryService.DeleteCategory(categoryId);
+            return Ok();
         }
     }
 }

@@ -197,7 +197,7 @@ namespace SE.Business.EducationServices
         {
             try
             {
-                var education = _unitOfWork.EducationRepository.Include(a => a.AttributeEducations, e => e.EducationAddress, i => i.Images, q => q.Questions, c => c.EducationAddress.City, d => d.EducationAddress.District).Where(d => d.SeoUrl == seoUrl).AsNoTracking().FirstOrDefault();
+                var education = _unitOfWork.EducationRepository.Include(x=>x.Category,a => a.AttributeEducations, e => e.EducationAddress, i => i.Images, q => q.Questions, c => c.EducationAddress.City, d => d.EducationAddress.District).Where(d => d.SeoUrl == seoUrl).AsNoTracking().FirstOrDefault();
 
                 if (education != null)
                 {
@@ -215,15 +215,23 @@ namespace SE.Business.EducationServices
 
                     educationDetailDto.BlogList = blogList;
 
+                   
+                    educationDetailDto.UserId = education.UserId;
+
                     educationDetailDto.GeneralInformation.Id = education.Id;
                     educationDetailDto.GeneralInformation.SeoUrl = education.SeoUrl;
-                    educationDetailDto.UserId = education.UserId;
                     educationDetailDto.GeneralInformation.Description = education.Description;
                     educationDetailDto.GeneralInformation.EducationName = education.Name;
                     educationDetailDto.GeneralInformation.EducationType = education.CategoryId;
+                    educationDetailDto.GeneralInformation.CategoryName = education.Category.Name;
+                    educationDetailDto.GeneralInformation.CategorySeoUrl = education.Category.SeoUrl;
+
+
                     educationDetailDto.AddressInformation.Address = education.EducationAddress.AddressOne;
                     educationDetailDto.AddressInformation.CityName = education.EducationAddress.City.Name;
                     educationDetailDto.AddressInformation.DistrictName = education.EducationAddress.District.Name;
+                    educationDetailDto.AddressInformation.DistricSeoUrl = education.EducationAddress.District.SeoUrl;
+
                     educationDetailDto.ContactInformation.AuthorizedEmail = education.AuthorizedEmail;
                     educationDetailDto.ContactInformation.AuthorizedName = education.AuthorizedName;
                     educationDetailDto.ContactInformation.EducationEmail = education.Email;

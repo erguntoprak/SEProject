@@ -67,14 +67,14 @@
                           </ng-select>
                         </mat-expansion-panel>
                       </div>
-                      <div *ngFor="let attribute of attributeList" class="widget-filters__item">
+                      <div *ngFor="let categoryAttribute of categoryAttributeList" class="widget-filters__item">
                         <mat-expansion-panel [expanded]="true">
                           <mat-expansion-panel-header>
                             <mat-panel-title>
-                              {{ attribute.categoryName }}
+                              {{ categoryAttribute.categoryName }}
                             </mat-panel-title>
                           </mat-expansion-panel-header>
-                          <label *ngFor="let attribute of attribute.attributeListModel" class="filter-list__item">
+                          <label *ngFor="let attribute of categoryAttribute.attributeListModel" class="filter-list__item">
                             <span class="input-check filter-list__input">
                               <span class="input-check__body">
                                 <se-checkbox [id]="attribute.id" [existingAttributeIds]="selectedAttributeIds" (change)="onChange(attribute.id, $event.target.checked)" [text]="attribute.name"></se-checkbox>
@@ -124,7 +124,7 @@
                             </label>
                           </li>
                         </ng-container>
-                        <ng-container *ngIf="attributeList.length>0">
+                        <ng-container *ngIf="categoryAttributeList.length>0">
                           <li *ngFor="let attributeId of selectedAttributeIds" class="applied-filters__item">
                             <label class="applied-filters__button applied-filters__button--filter">
                               {{getSelectedAttributeName(attributeId)}} <i (click)="removeSelectedAttributeId(attributeId)" class="ti-close cursor-element"></i>

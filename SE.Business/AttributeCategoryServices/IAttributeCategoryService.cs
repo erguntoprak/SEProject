@@ -1,14 +1,16 @@
 ﻿using SE.Core.DTO;
+using SE.Core.Utilities.Results;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SE.Business.AttributeCategoryServices
 {
     public interface IAttributeCategoryService
     {
-        List<AttributeCategoryDto> GetAllAttributeCategoryList();
-        AttributeCategoryDto GetAttributeCategoryById(int attributeCategoryId);
+        Task<IDataResult<IEnumerable<AttributeCategoryDto>>> GetAllAttributeCategoryListAsync();
+        Task<IDataResult<AttributeCategoryDto>> GetAttributeCategoryByIdAsync(int attributeCategoryId);
         void UpdateAttributeCategory(AttributeCategoryDto attributeCategoryDto);
         void InsertAttributeCategory(AttributeCategoryDto attributeCategoryDto);
         void DeleteAttributeCategory(int attributeCategoryId);

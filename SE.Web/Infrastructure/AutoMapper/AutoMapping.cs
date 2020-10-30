@@ -6,6 +6,7 @@ using SE.Web.Model.Address;
 using SE.Web.Model.Attribute;
 using SE.Web.Model.Blog;
 using SE.Web.Model.Category;
+using SE.Web.Model.Common;
 using SE.Web.Model.Education;
 using SE.Web.Model.Image;
 using System;
@@ -63,6 +64,8 @@ namespace SE.Web.Infrastructure.AutoMapper
             CreateMap<CategoryAttributeCategoryInsertModel, CategoryAttributeCategoryInsertDto>();
             CreateMap<AttributeListDto, AttributeListModel>();
             CreateMap<AttributeDto, AttributeModel>().ReverseMap();
+            CreateMap<DashboardDataDto, DashboardDataModel>();
+            CreateMap<DashboardFilterModel, DashboardFilterDto>();
         }
     }
 }

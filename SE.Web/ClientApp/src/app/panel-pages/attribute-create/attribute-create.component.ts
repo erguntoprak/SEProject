@@ -43,11 +43,7 @@ export class AttributeCreateComponent implements OnInit {
       this.attributeInsertForm.value).subscribe(data => {
         this.toastr.success('Özellik oluşturuldu.', 'Başarılı!');
         this.router.navigate(['/panel/ozellik-listesi']);
-      },
-        (error: HttpErrorResponse) => {
-          this.toastr.success(error.error, 'Başarısız!');
-          this.acdcLoadingService.hideLoading();
-        });
+      });
   }
 }
 

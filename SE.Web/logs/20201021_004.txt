@@ -1,0 +1,2 @@
+2020-10-21 15:28:16.257 +03:00 [Information] {"FullName":"CategoryService","MethodName":"GetAllCategoryList","ReturnValue":null,"Parameters":[]}
+2020-10-21 17:01:59.730 +03:00 [Information] {"FullName":"CategoryService","MethodName":"GetAllCategoryList","Parameters":[]}

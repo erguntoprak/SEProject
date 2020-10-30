@@ -14,26 +14,19 @@ export class BaseService{
     return this.httpClient
       .get<T>(url);
   }
-
-  public getById<T>(url: string,id: any) {
+  public get<T>(url: string,query: any) {
     return this.httpClient
-      .get<T>(`${url}${id}`);
-  }
-  public getByName<T>(url: string, name: string) {
-    return this.httpClient
-      .get<T>(`${url}${name}`);
+      .get<T>(`${url}${query}`);
   }
   public post<T>(url: string, item: any): Observable<any> {
     return this.httpClient
       .post<T>(`${url}`, JSON.stringify(item));
   }
-
   public update(url: string, item: any) {
     return this.httpClient
       .put<any>(`${url}`, item.json())
       .pipe(map(data => data.json()));
   }
-
   public delete(url:string, id: number) {
     return this.httpClient
       .delete(`${url}${id}`);

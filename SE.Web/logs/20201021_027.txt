@@ -1,0 +1,1 @@
+2020-10-21 18:03:05.882 +03:00 [Information] {"FullName":"AccountService","MethodName":"UpdateEmailConfirmation","Parameters":[{"Name":"userId","Value":"6bb8257b-0686-4565-bb34-e176868146fa","Type":"String"},{"Name":"emailConfirmation","Value":false,"Type":"Boolean"}],"UserEmail":"ergun.35.toprak@gmail.com"}

@@ -62,11 +62,7 @@ export class AttributeListComponent implements OnInit {
             this.toastr.success('Özellik Silindi.', 'Başarılı!');
             this.getAllAttributeList();
             this.acdcLoadingService.hideLoading();
-          },
-            (error: HttpErrorResponse) => {
-              this.toastr.error(error.error, 'Başarısız!');
-              this.acdcLoadingService.hideLoading();
-            });
+          });
       }
     })
   }

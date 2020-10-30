@@ -63,11 +63,7 @@ export class CategoryListComponent implements OnInit {
             this.toastr.success('Kategori Silindi.', 'Başarılı!');
             this.getAllCategoryList();
             this.acdcLoadingService.hideLoading();
-          },
-            (error: HttpErrorResponse) => {
-              this.toastr.success(error.error, 'Başarısız!');
-              this.acdcLoadingService.hideLoading();
-            });
+          });
       }
     })
   }

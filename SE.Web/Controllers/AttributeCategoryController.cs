@@ -27,68 +27,47 @@ namespace SE.Web.Controllers
             _mapper = mapper;
         }
         [HttpGet("GetAllAttributeCategoryList")]
-        public IActionResult GetAllAttributeCategoryList()
+        public async Task<IActionResult> GetAllAttributeCategoryList()
         {
-            try
-            {
-                var attributeCategoryList = _mapper.Map<List<AttributeCategoryModel>>(_attributeCategoryService.GetAllAttributeCategoryList());
-                return Ok(attributeCategoryList);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
+            var result = await _attributeCategoryService.GetAllAttributeCategoryListAsync();
+            if(result.Success)
+                return Ok(_mapper.Map<List<AttributeCategoryModel>>(result.Data));
+
+            return BadRequest(result);
+            
         }
 
         [HttpGet("GetAttributeCategoryById")]
-        public IActionResult GetAttributeCategoryById([FromQuery]int attributeCategoryId)
+        public async Task<IActionResult> GetAttributeCategoryById([FromQuery] int attributeCategoryId)
         {
-            try
-            {
-                var attributeCategoryModel = _mapper.Map<AttributeCategoryModel>(_attributeCategoryService.GetAttributeCategoryById(attributeCategoryId));
-                return Ok(attributeCategoryModel);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
+            var result = await _attributeCategoryService.GetAttributeCategoryByIdAsync(attributeCategoryId);
+            if (result.Success)
+                return Ok(_mapper.Map<AttributeCategoryModel>(result.Data));
+
+            return BadRequest(result);
         }
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost("InsertAttributeCategory")]
-        public IActionResult InsertAttributeCategory([FromBody]AttributeCategoryModel attributeCategoryModel)
+        public IActionResult InsertAttributeCategory([FromBody] AttributeCategoryModel attributeCategoryModel)
         {
-            try
-            {
-                var attributeCategoryDto = _mapper.Map<AttributeCategoryDto>(attributeCategoryModel);
-                _attributeCategoryService.InsertAttributeCategory(attributeCategoryDto);
-                return Ok();
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
+            var attributeCategoryDto = _mapper.Map<AttributeCategoryDto>(attributeCategoryModel);
+            _attributeCategoryService.InsertAttributeCategory(attributeCategoryDto);
+            return Ok();
         }
-        
+
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost("UpdateAttributeCategory")]
-        public IActionResult UpdateAttributeCategory([FromBody]AttributeCategoryModel attributeCategoryModel)
+        public IActionResult UpdateAttributeCategory([FromBody] AttributeCategoryModel attributeCategoryModel)
         {
-            try
-            {
-                var attributeCategoryDto = _mapper.Map<AttributeCategoryDto>(attributeCategoryModel);
-                _attributeCategoryService.UpdateAttributeCategory(attributeCategoryDto);
-                return Ok();
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
+            var attributeCategoryDto = _mapper.Map<AttributeCategoryDto>(attributeCategoryModel);
+            _attributeCategoryService.UpdateAttributeCategory(attributeCategoryDto);
+            return Ok();
         }
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost("DeleteAttributeCategory")]
-        public IActionResult DeleteAttributeCategory([FromBody]int attributeCategoryId)
+        public IActionResult DeleteAttributeCategory([FromBody] int attributeCategoryId)
         {
             try
             {
@@ -99,40 +78,22 @@ namespace SE.Web.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Bu kaydı silemezsin. Silmek için bağlı olduğu diğer kayıtların silinmesi gerekiyor.");
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
         }
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost("InsertCategoryAttributeCategory")]
-        public IActionResult InsertCategoryAttributeCategory([FromBody]CategoryAttributeCategoryInsertModel categoryAttributeCategoryInsertModel)
+        public IActionResult InsertCategoryAttributeCategory([FromBody] CategoryAttributeCategoryInsertModel categoryAttributeCategoryInsertModel)
         {
-            try
-            {
-                var categoryAttributeCategoryInsertDto = _mapper.Map<CategoryAttributeCategoryInsertDto>(categoryAttributeCategoryInsertModel);
-                _attributeCategoryService.InsertCategoryAttributeCategory(categoryAttributeCategoryInsertDto);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
+            var categoryAttributeCategoryInsertDto = _mapper.Map<CategoryAttributeCategoryInsertDto>(categoryAttributeCategoryInsertModel);
+            _attributeCategoryService.InsertCategoryAttributeCategory(categoryAttributeCategoryInsertDto);
+            return Ok();
         }
 
         [HttpGet("GetAttributeCategoryIdsByCategoryId")]
         public IActionResult GetAttributeCategoryIdsByCategoryId(int categoryId)
         {
-            try
-            {
-                var attributeCategoryIds = _attributeCategoryService.GetAttributeCategoryIdsByCategoryId(categoryId);
-                return Ok(attributeCategoryIds);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
+            var attributeCategoryIds = _attributeCategoryService.GetAttributeCategoryIdsByCategoryId(categoryId);
+            return Ok(attributeCategoryIds);
         }
     }
 }

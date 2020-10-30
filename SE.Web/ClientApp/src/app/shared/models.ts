@@ -10,6 +10,7 @@ export interface RegisterModel {
   password: string;
 }
 export interface UserLoginModel {
+  userId: string;
   name: string;
   surname: string;
   email: string;
@@ -182,4 +183,8 @@ export interface NavigationItemModel {
 export interface ActionPermissionModel {
   [action: string]: string[];
 }
-
+export interface DashboardDataModel {
+  educationTotalCount:number;
+  blogTotalCount:number;
+  contactFormCount:number;
+}

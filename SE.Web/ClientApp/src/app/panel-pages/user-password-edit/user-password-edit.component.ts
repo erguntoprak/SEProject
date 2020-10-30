@@ -48,11 +48,7 @@ export class UserPasswordEditComponent implements OnInit {
         this.toastr.success('Şifre değiştirme işlemi gerçekleşti.', 'Başarılı!');
         this.router.navigate(['/panel/kullanici-listesi']);
         this.acdcLoadingService.hideLoading();
-      },
-        (error: HttpErrorResponse) => {
-          this.toastr.success(error.error, 'Başarısız!');
-          this.acdcLoadingService.hideLoading();
-        });
+      });
   }
 }
 

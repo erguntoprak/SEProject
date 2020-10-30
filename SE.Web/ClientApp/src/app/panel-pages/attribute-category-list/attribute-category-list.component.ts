@@ -62,11 +62,7 @@ export class AttributeCategoryListComponent implements OnInit {
             this.toastr.success('Özellik Kategori Silindi.', 'Başarılı!');
             this.getAllAttributeCategoryList();
             this.acdcLoadingService.hideLoading();
-          },
-            (error: HttpErrorResponse) => {
-              this.toastr.error(error.error, 'Başarısız!');
-              this.acdcLoadingService.hideLoading();
-            });
+          });
       }
     })
   }

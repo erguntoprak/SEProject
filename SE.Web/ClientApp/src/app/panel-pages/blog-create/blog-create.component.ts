@@ -129,7 +129,7 @@ export class BlogCreateComponent implements OnInit {
     enableToolbar: true,
     showToolbar: true,
     placeholder: 'Buraya metin giriniz...',
-    defaultParagraphSeparator: 'p',
+    defaultParagraphSeparator: '',
     defaultFontName: '',
     defaultFontSize: '',
     fonts: [

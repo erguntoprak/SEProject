@@ -24,7 +24,7 @@ import { AcdcLoadingModule } from 'acdc-loading';
     NgxSpinnerModule,
     HttpClientModule,
     ToastrModule.forRoot(),
-    AcdcLoadingModule.forRoot()
+    AcdcLoadingModule.forRoot(),
   ],
   providers: [
     {

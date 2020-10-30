@@ -46,10 +46,6 @@ namespace SE.Web.Controllers
         {
             try
             {
-                if (User.FindFirstValue(ClaimTypes.NameIdentifier) == null || User.FindFirstValue(ClaimTypes.NameIdentifier) == string.Empty)
-                {
-                    return StatusCode(StatusCodes.Status400BadRequest, "Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.");
-                }
                 for (int i = 0; i < educationInsertModel.Images.Length; i++)
                 {
                     string imageName = $"{UrlHelper.FriendlyUrl(educationInsertModel.GeneralInformation.EducationName)}-{Guid.NewGuid().ToString().Substring(0, 5)}";
@@ -75,26 +71,15 @@ namespace SE.Web.Controllers
             {
                 return StatusCode(StatusCodes.Status400BadRequest, ex.Errors.Select(d => d.ErrorMessage));
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status400BadRequest, "Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.");
-            }
         }
 
         [Authorize(Policy = "UserPolicy")]
         [HttpGet("GetAllEducationListByUserId")]
         public IActionResult GetAllEducationListByUserId()
         {
-            try
-            {
                 string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var educationListModel = _mapper.Map<List<EducationListModel>>(_educationService.GetAllEducationListByUserId(userId));
                 return Ok(educationListModel);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
         }
 
         [Authorize(Policy = "UserPolicy")]
@@ -111,11 +96,6 @@ namespace SE.Web.Controllers
             {
                 return StatusCode(StatusCodes.Status404NotFound);
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
-
         }
 
         [HttpGet("GetEducationDetailModelBySeoUrl")]
@@ -130,11 +110,6 @@ namespace SE.Web.Controllers
             {
                 return StatusCode(StatusCodes.Status404NotFound);
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
-
         }
 
         [Authorize(Policy = "UserPolicy")]
@@ -208,10 +183,6 @@ namespace SE.Web.Controllers
             {
                 return StatusCode(StatusCodes.Status400BadRequest, ex.Errors.Select(d => d.ErrorMessage));
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.");
-            }
         }
 
 
@@ -248,10 +219,6 @@ namespace SE.Web.Controllers
             {
                 return StatusCode(StatusCodes.Status404NotFound);
             }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.");
-            }
         }
 
         [HttpGet("GetAllEducationListByRandomCategoryId")]
@@ -269,10 +236,6 @@ namespace SE.Web.Controllers
             {
                 return StatusCode(StatusCodes.Status404NotFound);
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
         }
 
 
@@ -287,10 +250,6 @@ namespace SE.Web.Controllers
             catch (ArgumentNullException ex)
             {
                 return StatusCode(StatusCodes.Status404NotFound);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
             }
         }
 
@@ -308,10 +267,6 @@ namespace SE.Web.Controllers
             {
                 return StatusCode(StatusCodes.Status404NotFound);
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
         }
 
 
@@ -326,10 +281,6 @@ namespace SE.Web.Controllers
             catch (ArgumentNullException ex)
             {
                 return StatusCode(StatusCodes.Status404NotFound);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
             }
         }
 
@@ -352,10 +303,6 @@ namespace SE.Web.Controllers
             catch (ArgumentNullException ex)
             {
                 return StatusCode(StatusCodes.Status404NotFound);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
             }
         }
 
@@ -393,10 +340,6 @@ namespace SE.Web.Controllers
             {
                 return StatusCode(StatusCodes.Status404NotFound);
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
         }
 
         [HttpPost("InsertContactForm")]
@@ -412,10 +355,6 @@ namespace SE.Web.Controllers
             catch (ArgumentNullException ex)
             {
                 return StatusCode(StatusCodes.Status404NotFound);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
             }
         }
 
@@ -433,11 +372,6 @@ namespace SE.Web.Controllers
             {
                 return StatusCode(StatusCodes.Status404NotFound);
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
-
         }
 
         [HttpGet("GetAllSearchEducationList")]
@@ -452,11 +386,6 @@ namespace SE.Web.Controllers
             {
                 return StatusCode(StatusCodes.Status404NotFound);
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
-
         }
     }
 }

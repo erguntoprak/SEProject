@@ -21,7 +21,7 @@ export class AuthGuard implements CanLoad {
 
   canLoad(route: Route, segments: UrlSegment[]): boolean | Observable<boolean> | Promise<boolean> {
 
-    return this.authService.currentUserValue.pipe(
+    return this.authService.currentUser.pipe(
       take(1),
       map(user => {
         let accessPermission = false;

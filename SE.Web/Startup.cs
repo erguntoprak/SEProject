@@ -18,7 +18,12 @@ using Microsoft.IdentityModel.Tokens;
 using SE.Business.EmailSenders;
 using SE.Business.Infrastructure.Autofac;
 using SE.Business.Infrastructure.ConfigurationManager;
+using SE.Core.CrossCuttingConcerns.Caching;
+using SE.Core.CrossCuttingConcerns.Caching.Microsoft;
+using SE.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using SE.Core.Entities;
+using SE.Core.Extensions;
+using SE.Core.Utilities.IoC;
 using SE.Data;
 using SE.Web.Extentions;
 using SE.Web.Infrastructure;
@@ -39,7 +44,7 @@ namespace SE.Web
         public IConfiguration Configuration { get; }
 
 
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
             services.AddIdentity<User, IdentityRole>(cfg =>
@@ -75,7 +80,6 @@ namespace SE.Web
                 });
             string sqlConnection = @"Server =.; Database = EducationDb; Trusted_Connection = True;";
             services.AddDbContext<EntitiesDbContext>(dbcontextoption => dbcontextoption.UseSqlServer(sqlConnection, b => b.MigrationsAssembly("SE.Web")));
-            services.DependencyRegister();
             services.AddCors(options =>
             {
                 options.AddPolicy("ApiPolicy",
@@ -95,6 +99,7 @@ namespace SE.Web
                 o.MemoryBufferThreshold = int.MaxValue;
             });
             services.AddAutoMapper(typeof(Startup));
+            services.AddTransient<FileLogger>();
 
             services.AddAuthorization(options =>
             {
@@ -109,6 +114,13 @@ namespace SE.Web
                     builder.RequireRole("User","Admin");
                 });
             });
+            services.AddMemoryCache();
+            services.AddSingleton<ICacheManager, MemoryCacheManager>();
+            var builder = new ContainerBuilder();
+            builder.RegisterModule<AutofacDependencyModule>();
+            builder.Populate(services);
+            var container = builder.Build();
+            return new AutofacServiceProvider(container);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<User> userManager,
@@ -125,6 +137,9 @@ RoleManager<IdentityRole> roleManager)
             }
             app.UseHttpsRedirection();
             IdentitySeedData.SeedData(userManager, roleManager);
+            ServiceTool.ServiceProvider = app.ApplicationServices;
+            app.ConfigureCustomExceptionMiddleware();
+
             app.UseStaticFiles();
             app.UseRouting();
             app.UseCors("ApiPolicy");
@@ -138,5 +153,7 @@ RoleManager<IdentityRole> roleManager)
             app.UseAuthorization();
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
+
+
     }
 }

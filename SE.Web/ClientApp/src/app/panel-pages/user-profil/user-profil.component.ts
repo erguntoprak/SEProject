@@ -32,7 +32,7 @@ export class UserProfilComponent implements OnInit {
   }
   getUserDetail() {
     this.acdcLoadingService.showLoading();
-    this.baseService.getByName<UserModel>("Account/GetUserByEmail?email=",this.authService.currentUserValue.value.email).subscribe(userModel => {
+    this.baseService.get<UserModel>("Account/GetUserByEmail?email=",this.authService.currentUser.value.email).subscribe(userModel => {
       this.userUpdateForm.patchValue(userModel);
       this.userUpdateForm.get('userId').setValue(userModel.id);
       this.acdcLoadingService.hideLoading();
@@ -48,11 +48,7 @@ export class UserProfilComponent implements OnInit {
       this.userUpdateForm.value).subscribe(data => {
         this.toastr.success('Güncelleme işlemi gerçekleşti.', 'Başarılı!');
         this.acdcLoadingService.hideLoading();
-      },
-        (error: HttpErrorResponse) => {
-          this.toastr.success(error.error, 'Başarısız!');
-          this.acdcLoadingService.hideLoading();
-        });
+      });
   }
 
 }

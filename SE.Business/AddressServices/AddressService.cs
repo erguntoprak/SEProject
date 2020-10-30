@@ -1,8 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using SE.Business.Helpers;
+using SE.Core.Aspects.Autofac.Caching;
 using SE.Core.DTO;
 using SE.Core.Entities;
+using SE.Core.Utilities.Results;
 using SE.Data;
 
 namespace SE.Business.AddressServices
@@ -15,11 +20,10 @@ namespace SE.Business.AddressServices
         {
             _unitOfWork = unitOfWork;
         }
-        public AddressDto GetCityNameDistricts()
+        [CacheAspect]
+        public async Task<IDataResult<AddressDto>> GetCityNameDistrictsAsync()
         {
-            try
-            {
-                AddressDto addressDto = _unitOfWork.CityRepository.Include(d => d.Districts).Select(d => new AddressDto {
+                AddressDto addressDto = await _unitOfWork.CityRepository.Include(d => d.Districts).Select(d => new AddressDto {
                     CityDto = new CityDto {
                         Id = d.Id,
                         Name = d.Name
@@ -30,13 +34,8 @@ namespace SE.Business.AddressServices
                         Name = c.Name,
                         SeoUrl = c.SeoUrl
                     }).ToList()
-                }).FirstOrDefault();
-                return addressDto;
-            }
-            catch
-            {
-                throw;
-            }
+                }).FirstOrDefaultAsync();
+            return new SuccessDataResult<AddressDto>(addressDto);
         }
     }
 }

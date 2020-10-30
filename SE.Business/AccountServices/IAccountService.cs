@@ -1,4 +1,5 @@
 ﻿using SE.Core.DTO;
+using SE.Core.Utilities.Results;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,22 +9,22 @@ namespace SE.Business.AccountServices
 {
     public interface IAccountService
     {
-        Task<bool> LoginAsync(LoginDto loginDto);
-        Task<UserDto> GetUserDtoByEmailAsync(string email);
-        Task<UserDto> GetUserDtoByIdAsync(string userId);
-        Task<bool> RegisterAsync(RegisterDto registerDto);
-        Task<bool> ResendEmailConfirmation(string email);
-        Task<string> EmailConfirmation(EmailConfirmationDto emailConfirmation);
-        Task<List<UserListDto>> GetAllUserList();
-        Task<List<RoleDto>> GetAllRoleList();
-        Task UpdateUserRole(string userId,List<string> roles);
-        Task UpdateEmailConfirmation(string userId,bool emailConfirmation);
-        Task UpdateUserActivate(string userId, bool isActive);
-        Task UpdateUserPassword(UserPasswordUpdateDto userPasswordUpdateDto);
-        Task UpdateUser(UserUpdateDto userUpdateDto);
-        Task DeleteUser(string userId);
-        Task ForgotPassword(string email);
-        Task ResetPassword(ResetPasswordDto resetPasswordDto);
+        Task<IResult> LoginAsync(LoginDto loginDto);
+        Task<IDataResult<UserDto>> GetUserDtoByEmailAsync(string email);
+        Task<IDataResult<UserDto>> GetUserDtoByIdAsync(string userId);
+        Task<IResult> RegisterAsync(RegisterDto registerDto);
+        Task<IResult> ResendEmailConfirmationAsync(string email);
+        Task<IResult> EmailConfirmationAsync(EmailConfirmationDto emailConfirmation);
+        Task<IDataResult<IEnumerable<UserListDto>>> GetAllUserListAsync();
+        Task<IDataResult<IEnumerable<RoleDto>>> GetAllRoleListAsync();
+        Task<IResult> UpdateUserRoleAsync(string userId,List<string> roles);
+        Task<IResult> UpdateEmailConfirmationAsync(string userId,bool emailConfirmation);
+        Task<IResult> UpdateUserActivateAsync(string userId, bool isActive);
+        Task<IResult> UpdateUserPasswordAsync(UserPasswordUpdateDto userPasswordUpdateDto);
+        Task<IResult> UpdateUserAsync(UserUpdateDto userUpdateDto);
+        Task<IResult> DeleteUserAsync(string userId);
+        Task<IResult> ForgotPasswordAsync(string email);
+        Task<IResult> ResetPasswordAsync(ResetPasswordDto resetPasswordDto);
 
     }
 }

@@ -21,7 +21,7 @@ export class EducationViewListComponent implements OnInit, AfterViewInit {
   @ViewChildren('filteredItems') filteredItems;
   categories: CategoryModel[] = [];
   districtList: DistrictModel[] = [];
-  attributeList: CategoryAttributeListModel[] = [];
+  categoryAttributeList: CategoryAttributeListModel[] = [];
   filterModel: FilterModel;
   educationFilterList: EducationFilterListModel[] = [];
   educationFilterTempList: EducationFilterListModel[] = [];
@@ -113,8 +113,8 @@ export class EducationViewListComponent implements OnInit, AfterViewInit {
     this.router.navigate(["egitim-kurumlari", this.selectedCategoryUrl], { queryParams: queryParams});
     this.selectedCategoryIndex = index;
     this.selectedAttributeIds = [];
-    this.baseService.getAll<CategoryAttributeListModel[]>("Attribute/GetAllAttributeByEducationCategoryId?categoryId=" + categoryId).subscribe(attributeList => {
-      this.attributeList = attributeList;
+    this.baseService.getAll<CategoryAttributeListModel[]>("Attribute/GetAllAttributeByEducationCategoryId?categoryId=" + categoryId).subscribe(categoryAttributeList => {
+      this.categoryAttributeList = categoryAttributeList;
       this.acdcLoadingService.hideLoading();
     });
     this.baseService.getAll<EducationFilterListModel[]>(`Education/GetAllEducationListByFilter?categoryId=${categoryId}`).subscribe(educationList => {
@@ -134,8 +134,8 @@ export class EducationViewListComponent implements OnInit, AfterViewInit {
       if (this.selectedCategoryUrl != undefined) {
         this.selectedCategoryId = this.categories.find(d => d.seoUrl == this.selectedCategoryUrl).id;
         this.filterModel = { categoryId: this.selectedCategoryId };
-        this.baseService.getAll<CategoryAttributeListModel[]>("Attribute/GetAllAttributeByEducationCategoryId?categoryId=" + this.selectedCategoryId).subscribe(attributeList => {
-          this.attributeList = attributeList;
+        this.baseService.getAll<CategoryAttributeListModel[]>("Attribute/GetAllAttributeByEducationCategoryId?categoryId=" + this.selectedCategoryId).subscribe(categoryAttributeList => {
+          this.categoryAttributeList = categoryAttributeList;
           this.acdcLoadingService.hideLoading();
         });
       }
@@ -188,7 +188,7 @@ export class EducationViewListComponent implements OnInit, AfterViewInit {
   }
   getSelectedAttributeName(attributeId: number) {
     let attributeName: string;
-    this.attributeList.forEach(attributeList => {
+    this.categoryAttributeList.forEach(attributeList => {
       let attributeListModel = attributeList.attributeListModel.find(d => d.id == attributeId);
       if (attributeListModel != null || attributeListModel != undefined) {
         attributeName = attributeListModel.name;

@@ -11,6 +11,8 @@ namespace SE.Core.DTO
         public int EducationType { get; set; }
         public string Description { get; set; }
         public string SeoUrl { get; set; }
+        public string CategoryName { get; set; }
+        public string CategorySeoUrl { get; set; }
 
     }
 }

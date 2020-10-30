@@ -1,10 +1,13 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EducationContactFormInsertModel } from '../../shared/models';
 import { BaseService } from '../../shared/base.service';
 import { ActivatedRoute } from '@angular/router';
 import { AcdcLoadingService } from 'acdc-loading';
 import { DomSanitizer } from '@angular/platform-browser';
+import 'hammerjs';
+import { NgxGalleryOptions, NgxGalleryImage} from 'ngx-gallery-9';
+
 declare var $: any;
 @Component({
   selector: 'se-educacation-detail',
@@ -22,14 +25,35 @@ export class EducationDetailComponent implements OnInit, AfterViewInit {
   zoom: number = 8;
   lat: number = 51.673858;
   lng: number = 7.815982;
+  galleryOptions: NgxGalleryOptions[];
+  galleryImages: NgxGalleryImage[] = [];
   constructor(private formBuilder: FormBuilder, private baseService: BaseService, private route: ActivatedRoute, private acdcLoadingService: AcdcLoadingService, private sanitizer: DomSanitizer) {
 
   }
   ngOnInit(): void {
     this.acdcLoadingService.showLoading();
+    this.galleryOptions = [
+      {
+        width: '100%',
+        height: '600px',
+        imageAutoPlay:true,
+        imageAutoPlayInterval: 5000,
+        imageAutoPlayPauseOnHover: true,
+        imageInfinityMove:true,
+        previewFullscreen:true,
+        previewCloseOnClick:true,
+        previewCloseOnEsc:true,
+        previewKeyboardNavigation:true,
+        previewZoom:true,
+        previewZoomMax:5,
+        previewRotate:true,
+        
+      }
+    ];
     this.route.params.subscribe(params => {
-      this.baseService.getByName("Education/GetEducationDetailModelBySeoUrl?seoUrl=", params['name']).subscribe(data => {
+      this.baseService.get("Education/GetEducationDetailModelBySeoUrl?seoUrl=", params['name']).subscribe(data => {
         this.educationDetailModel = data;
+        console.log(this.educationDetailModel);
         if (this.educationDetailModel.socialInformation.mapCode != '') {
           this.educationDetailModel.socialInformation.mapCode = this.sanitizer.bypassSecurityTrustHtml(this.educationDetailModel.socialInformation.mapCode);
         }
@@ -40,12 +64,15 @@ export class EducationDetailComponent implements OnInit, AfterViewInit {
         });
 
         this.educationDetailModel.images.forEach(image => {
-          this.imageObject.push({
-            image: `https://localhost:44362/images/${image}_1000x600.jpg`,
-            thumbImage: `https://localhost:44362/images/${image}_1000x600.jpg`
+          this.galleryImages.push({
+            small: `https://localhost:44362/images/${image}_1000x600.jpg`,
+            medium: `https://localhost:44362/images/${image}_1000x600.jpg`,
+            big:`https://localhost:44362/images/${image}_1000x600.jpg`
           });
-          this.acdcLoadingService.hideLoading();
         });
+
+        this.acdcLoadingService.hideLoading();
+
 
       })
     });

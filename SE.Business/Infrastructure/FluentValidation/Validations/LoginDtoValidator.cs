@@ -10,12 +10,9 @@ namespace SE.Business.Infrastructure.FluentValidation.Validations
     {
         public LoginDtoValidator()
         {
-            RuleSet("all", () =>
-            {
-                RuleFor(d => d.Email).EmailAddress().WithMessage("Geçerli email adresi giriniz.");
-                RuleFor(d => d.Email).NotNull().NotEmpty().WithMessage("Email alanı boş geçilemez.");
-                RuleFor(d => d.Password).NotNull().NotEmpty().WithMessage("Şifre alanı boş geçilemez.");
-            });
+            RuleFor(d => d.Email).EmailAddress().WithMessage("Geçerli email adresi giriniz.");
+            RuleFor(d => d.Email).NotNull().NotEmpty().WithMessage("Email alanı boş geçilemez.");
+            RuleFor(d => d.Password).NotNull().NotEmpty().WithMessage("Şifre alanı boş geçilemez.");
         }
     }
 }

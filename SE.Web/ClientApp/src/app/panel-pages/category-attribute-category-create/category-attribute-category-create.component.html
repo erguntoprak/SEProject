@@ -1,21 +1,15 @@
 <div class="breadcrumb-area">
-  <h1>Dashboard</h1>
-
-  <ol class="breadcrumb">
-    <li class="item"><a href="dashboard-analytics.html"><i class="bx bx-home-alt"></i></a></li>
-
-    <li class="item">Dashboard</li>
-
-    <li class="item">Forms</li>
-  </ol>
-</div>
+    <h1>Özellik Kategori</h1>
+  
+    <ol class="breadcrumb">
+        <li class="item"><a routerLink="/panel" ><i class="bx bx-home-alt"></i></a></li>
+    </ol>
+  </div>
 <div class="card mb-30">
-  <div class="card-header d-flex justify-content-between align-items-center"><h3>Özellik Kategori</h3><hr></div>
   <div class="card-body">
     <div cdkDropListGroup>
       <div class="example-container">
         <h3>Ekli Olmayan Özellik Listesi</h3>
-
         <div cdkDropList
              [cdkDropListData]="otherAttributeCategoryModelList"
              class="example-list"

@@ -29,7 +29,7 @@ export class BlogEditComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.acdcLoadingService.showLoading();
-      this.baseService.getByName<BlogUpdateModel>("Blog/GetBlogUpdateBySeoUrl?seoUrl=", params['name']).subscribe(blogUpdateModel => {
+      this.baseService.get<BlogUpdateModel>("Blog/GetBlogUpdateBySeoUrl?seoUrl=", params['name']).subscribe(blogUpdateModel => {
         this.blogUpdateForm.patchValue(blogUpdateModel);
         this.firstVisibleImageName = `https://localhost:44362/images/blog/${blogUpdateModel.firstVisibleImageName}_300x180.jpg`
         blogUpdateModel.blogItems.forEach(blogItem => {
@@ -120,7 +120,7 @@ export class BlogEditComponent implements OnInit {
     enableToolbar: true,
     showToolbar: true,
     placeholder: 'Buraya metin giriniz...',
-    defaultParagraphSeparator: 'p',
+    defaultParagraphSeparator: '',
     defaultFontName: '',
     defaultFontSize: '',
     fonts: [

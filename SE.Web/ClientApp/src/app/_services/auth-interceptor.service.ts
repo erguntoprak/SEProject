@@ -9,6 +9,7 @@ import {
   HttpErrorResponse
 } from '@angular/common/http';
 import { take, exhaustMap, catchError } from 'rxjs/operators';
+import Swal from 'sweetalert2';
 
 import { AuthService } from './auth.service';
 import { throwError } from 'rxjs';
@@ -43,6 +44,14 @@ export class AuthInterceptorService implements HttpInterceptor {
         return next.handle(modifiedReq).pipe(
           catchError((error: HttpErrorResponse) => {
             switch (error.status) {
+              case 400:
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Başarısız!',
+                    text: error.error.message
+                  });
+                  this.acdcLoadingService.hideLoading();
+                  break;
               case 404:      //login
                 this.router.navigateByUrl("/giris-yap");
                 this.acdcLoadingService.hideLoading();

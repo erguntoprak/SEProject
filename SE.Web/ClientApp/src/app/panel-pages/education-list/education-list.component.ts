@@ -13,7 +13,7 @@ import { AcdcLoadingService } from 'acdc-loading';
 })
 export class EducationListComponent implements OnInit {
 
-  educationList : EducationListModel[];
+  educationList: EducationListModel[];
   errorList = [];
 
   constructor(private baseService: BaseService, private acdcLoadingService: AcdcLoadingService) {
@@ -35,7 +35,7 @@ export class EducationListComponent implements OnInit {
       confirmButtonColor: '#6754e2',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Evet, sil!',
-      cancelButtonText:'Hayır'
+      cancelButtonText: 'Hayır'
     }).then((result) => {
       if (result.value) {
         this.baseService.delete("Education/DeleteEducation?educationId=", educationId).subscribe(data => {
@@ -44,12 +44,10 @@ export class EducationListComponent implements OnInit {
             '',
             'success'
           );
-          _.remove(this.educationList,(education) => {
+          _.remove(this.educationList, (education) => {
             return education.id == educationId;
           });
-        }, (error: HttpErrorResponse) => {this.errorList.push(error.error)}
-        )
-       
+        })
       }
     })
   }

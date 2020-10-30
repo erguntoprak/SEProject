@@ -46,8 +46,7 @@ export class BlogListComponent implements OnInit {
           _.remove(this.blogList,(blog) => {
             return blog.id == blogId;
           });
-        }, (error: HttpErrorResponse) => {this.errorList.push(error.error)}
-        )
+        })
        
       }
     })

@@ -31,7 +31,7 @@ export class CategoryAttributeCategoriCreateComponent implements OnInit {
       this.categoryId = params['categoryId'];
     });
     this.baseService.getAll<AttributeCategoryModel[]>("AttributeCategory/GetAllAttributeCategoryList").subscribe(attributeCategoryModelList => {
-      this.baseService.getById<number[]>("AttributeCategory/GetAttributeCategoryIdsByCategoryId?categoryId=", this.categoryId).subscribe(attributeCategoryIds => {
+      this.baseService.get<number[]>("AttributeCategory/GetAttributeCategoryIdsByCategoryId?categoryId=", this.categoryId).subscribe(attributeCategoryIds => {
         this.selectedAttributeCategoryModelList = attributeCategoryModelList.filter(d => attributeCategoryIds.includes(d.id));
         this.otherAttributeCategoryModelList = attributeCategoryModelList.filter(d => !attributeCategoryIds.includes(d.id));
       });
@@ -45,11 +45,7 @@ export class CategoryAttributeCategoriCreateComponent implements OnInit {
       { categoryId: +this.categoryId, attributeCategoryList: this.selectedAttributeCategoryModelList }).subscribe(data => {
         this.toastr.success('Güncelleme işlemi gerçekleşti.', 'Başarılı!');
         this.router.navigate(['/panel/kategori-listesi']);
-      },
-        (error: HttpErrorResponse) => {
-          this.toastr.error(error.error, 'Başarısız!');
-          this.acdcLoadingService.hideLoading();
-        });
+      });
   }
 
   drop(event: CdkDragDrop<string[]>) {

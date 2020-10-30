@@ -36,7 +36,7 @@ export class UserEditComponent implements OnInit {
     this.route.params.subscribe(params => {
       let userId = params['userId'];
       this.userUpdateForm.get('userId').setValue(userId);
-      this.baseService.getById<UserModel>("Account/GetUserById?userId=", userId).subscribe(userModel => {
+      this.baseService.get<UserModel>("Account/GetUserById?userId=", userId).subscribe(userModel => {
         this.userUpdateForm.patchValue(userModel);
         this.acdcLoadingService.hideLoading();
       });
@@ -53,11 +53,7 @@ export class UserEditComponent implements OnInit {
         this.toastr.success('Güncelleme işlemi gerçekleşti.', 'Başarılı!');
         this.router.navigate(['/panel/kullanici-listesi']);
         this.acdcLoadingService.hideLoading();
-      },
-        (error: HttpErrorResponse) => {
-          this.toastr.success(error.error, 'Başarısız!');
-          this.acdcLoadingService.hideLoading();
-        });
+      });
   }
 }
 

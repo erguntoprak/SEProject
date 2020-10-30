@@ -14,7 +14,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
 const routes: Routes = [
   {
     path: '',
-    component: EducationViewListComponent
+    component: EducationViewListComponent,
+    data: { breadcrumb: 'Home' }
   }
 ];
 @NgModule({

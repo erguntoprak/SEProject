@@ -27,17 +27,12 @@ namespace SE.Web.Controllers
             _mapper = mapper;
         }
         [HttpGet("GetCityNameDistricts")]
-        public IActionResult GetCityNameDistricts()
+        public async Task<IActionResult> GetCityNameDistricts()
         {
-            try
-            {
-                var addressModel = _mapper.Map<AddressModel>(_addressService.GetCityNameDistricts());
-                return Ok(addressModel);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu. Lütfen işlemi tekrar deneyiniz.");
-            }
+            var result = await _addressService.GetCityNameDistrictsAsync();
+            if (result.Success)
+                return Ok(_mapper.Map<AddressModel>(result.Data));
+            return BadRequest(result);
         }
     }
 }

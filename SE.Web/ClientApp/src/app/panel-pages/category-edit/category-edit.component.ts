@@ -30,7 +30,7 @@ export class CategoryEditComponent implements OnInit {
     this.route.params.subscribe(params => {
       let categoryId = params['categoryId'];
       this.categoryUpdateForm.get('id').setValue(categoryId);
-      this.baseService.getById<CategoryModel>("Category/GetCategoryById?categoryId=", categoryId).subscribe(categoryModel => {
+      this.baseService.get<CategoryModel>("Category/GetCategoryById?categoryId=", categoryId).subscribe(categoryModel => {
         this.categoryUpdateForm.patchValue(categoryModel);
         this.acdcLoadingService.hideLoading();
       });
@@ -42,11 +42,7 @@ export class CategoryEditComponent implements OnInit {
       this.categoryUpdateForm.value).subscribe(data => {
         this.toastr.success('Kategori oluşturuldu.', 'Başarılı!');
         this.router.navigate(['/panel/kategori-listesi']);
-      },
-        (error: HttpErrorResponse) => {
-          this.toastr.success(error.error, 'Başarısız!');
-          this.acdcLoadingService.hideLoading();
-        });
+      });
   }
 }
 

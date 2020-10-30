@@ -35,13 +35,9 @@ export class UserRoleEditComponent implements OnInit {
   onChangeUserRole() {
     this.baseService.post("Account/UpdateUserRole",
       { userId: this.userId, roles: this.selectedRoles }).subscribe(data => {
-        this.toastr.success('Güncelleme işlemi gerçekleşti.', 'Başarılı!');
+        this.toastr.success(data.message, 'Başarılı!');
         this.router.navigate(['/panel/kullanici-listesi']);
-      },
-        (error: HttpErrorResponse) => {
-          this.toastr.success(error.error, 'Başarısız!');
-          this.acdcLoadingService.hideLoading();
-        });
+      });
   }
 }
 

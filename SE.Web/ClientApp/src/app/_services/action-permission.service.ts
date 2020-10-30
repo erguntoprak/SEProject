@@ -18,7 +18,7 @@ export class ActionPermissionService {
     hasPermission = (actionName: string) => {
         let isPermission = false;
         const roles = this.actionPermissionMap[actionName];
-        this.authService.currentUserValue.value.roles.forEach(item => {
+        this.authService.currentUser.value.roles.forEach(item => {
             if (roles.includes(item)) {
                 isPermission = true;
             }

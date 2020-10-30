@@ -21,7 +21,7 @@ export class EducationContactFormListComponent implements OnInit {
   }
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.baseService.getByName<EducationContactFormListModel[]>("Education/GetEducationContactFormListModelBySeoUrl?seoUrl=", params['name']).subscribe(educationContactFormList => {
+      this.baseService.get<EducationContactFormListModel[]>("Education/GetEducationContactFormListModelBySeoUrl?seoUrl=", params['name']).subscribe(educationContactFormList => {
         this.educationContactFormList = educationContactFormList;
       });
     });

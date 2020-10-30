@@ -30,7 +30,7 @@ export class AttributeCategoryEditComponent implements OnInit {
     this.route.params.subscribe(params => {
       let attributeCategoryId = params['attributeCategoryId'];
       this.attributeCategoryUpdateForm.get('id').setValue(attributeCategoryId);
-      this.baseService.getById<CategoryModel>("AttributeCategory/GetAttributeCategoryById?attributeCategoryId=", attributeCategoryId).subscribe(attributeCategoryModel => {
+      this.baseService.get<CategoryModel>("AttributeCategory/GetAttributeCategoryById?attributeCategoryId=", attributeCategoryId).subscribe(attributeCategoryModel => {
         this.attributeCategoryUpdateForm.patchValue(attributeCategoryModel);
         this.acdcLoadingService.hideLoading();
       });
@@ -42,11 +42,7 @@ export class AttributeCategoryEditComponent implements OnInit {
       this.attributeCategoryUpdateForm.value).subscribe(data => {
         this.toastr.success('Özellik Kategori Güncellendi.', 'Başarılı!');
         this.router.navigate(['/panel/ozellik-kategori-listesi']);
-      },
-        (error: HttpErrorResponse) => {
-          this.toastr.success(error.error, 'Başarısız!');
-          this.acdcLoadingService.hideLoading();
-        });
+      });
   }
 }
 

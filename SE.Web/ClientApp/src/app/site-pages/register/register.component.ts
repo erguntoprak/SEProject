@@ -56,13 +56,7 @@ export class RegisterComponent implements OnInit {
       this.router.navigate(['/giris']);
       this.toastr.success('Kayıt olma işlemi yapıldı. E-posta onayı yapıldıktan sonra sizinle iletişime geçilecektir.', 'Başarılı!');
       this.acdcLoadingService.hideLoading();
-
-    },
-      (error: HttpErrorResponse) => {
-        this.errorList.push(error.error);
-        this.errorList = [...this.errorList];
-        this.acdcLoadingService.hideLoading();
-      });
+    });
 
   }
 }

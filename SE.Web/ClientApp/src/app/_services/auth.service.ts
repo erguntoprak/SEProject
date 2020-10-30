@@ -12,7 +12,7 @@ export class AuthService {
   constructor(private baseService:BaseService,private router:Router){
     this.currentUserSubject = new BehaviorSubject<UserLoginModel>(JSON.parse(localStorage.getItem('currentUser')));
   }
-  public get currentUserValue(){
+  public get currentUser(){
     return this.currentUserSubject;
   }
   login(loginModel:LoginModel){

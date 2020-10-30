@@ -33,7 +33,7 @@ export class AttributeEditComponent implements OnInit {
     this.route.params.subscribe(params => {
       let attributeId = params['attributeId'];
       this.attributeUpdateForm.get('id').setValue(attributeId);
-      this.baseService.getById<CategoryModel>("Attribute/GetAttributeById?attributeId=", attributeId).subscribe(attributeModel => {
+      this.baseService.get<CategoryModel>("Attribute/GetAttributeById?attributeId=", attributeId).subscribe(attributeModel => {
         this.baseService.getAll<AttributeCategoryModel[]>("AttributeCategory/GetAllAttributeCategoryList").subscribe(attributeCategoryList => {
           this.attributeCategoryList = attributeCategoryList;
           this.attributeUpdateForm.patchValue(attributeModel);
@@ -47,11 +47,7 @@ export class AttributeEditComponent implements OnInit {
       this.attributeUpdateForm.value).subscribe(data => {
         this.toastr.success('Özellik Güncellendi.', 'Başarılı!');
         this.router.navigate(['/panel/ozellik-listesi']);
-      },
-        (error: HttpErrorResponse) => {
-          this.toastr.success(error.error, 'Başarısız!');
-          this.acdcLoadingService.hideLoading();
-        });
+      });
   }
 }
 

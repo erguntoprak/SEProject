@@ -48,312 +48,205 @@ namespace SE.Web.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginModel loginModel)
         {
-            try
-            {
-                var loginDto = _mapper.Map<LoginDto>(loginModel);
-                var loginResult = await _accountService.LoginAsync(loginDto);
+            var loginDto = _mapper.Map<LoginDto>(loginModel);
+            var result = await _accountService.LoginAsync(loginDto);
 
-                if (loginResult)
+            if (result.Success)
+            {
+                var userDto = await _accountService.GetUserDtoByEmailAsync(loginModel.Email);
+                if (!userDto.Success)
+                    return BadRequest(userDto.Message);
+
+                var claims = new ClaimsIdentity();
+                claims.AddClaim(new Claim(ClaimTypes.NameIdentifier, userDto.Data.Id));
+                claims.AddClaim(new Claim(ClaimTypes.Email, userDto.Data.Email));
+                claims.AddClaim(new Claim(ClaimTypes.Name, $"{userDto.Data.Name} {userDto.Data.Surname}"));
+                foreach (var role in userDto.Data.Roles)
                 {
-
-                    var userDto = await _accountService.GetUserDtoByEmailAsync(loginModel.Email);
-                    var claims = new ClaimsIdentity();
-                    claims.AddClaim(new Claim(ClaimTypes.NameIdentifier, userDto.Id));
-                    claims.AddClaim(new Claim(ClaimTypes.Name, $"{userDto.Name} {userDto.Surname}"));
-                    foreach (var role in userDto.Roles)
-                    {
-                        claims.AddClaim(new Claim(ClaimTypes.Role, $"{role}"));
-                    }
-                    var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSecurityTokenSetting.Key));
-                    var creds = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-                    var tokenHandler = new JwtSecurityTokenHandler();
-                    var tokenDescriptor = new SecurityTokenDescriptor()
-                    {
-                        Subject = claims,
-                        Expires = DateTime.UtcNow.AddDays(2),
-                        SigningCredentials = creds,
-                        Issuer = _jwtSecurityTokenSetting.Issuer,
-                        Audience = _jwtSecurityTokenSetting.Audience
-
-                    };
-
-                    var token = tokenHandler.CreateToken(tokenDescriptor);
-                    var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-
-
-                    UserLoginModel userModel = new UserLoginModel()
-                    {
-                        Name = userDto.Name,
-                        Surname = userDto.Surname,
-                        Email = userDto.Email,
-                        Token = tokenString,
-                        Roles = userDto.Roles.ToList()
-                    };
-                    return Ok(userModel);
+                    claims.AddClaim(new Claim(ClaimTypes.Role, $"{role}"));
                 }
-                else
+                var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSecurityTokenSetting.Key));
+                var creds = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var tokenDescriptor = new SecurityTokenDescriptor()
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest, "Email veya şifre yanlış, lütfen kontrol edip tekrar deneyiniz.");
-                }
-            }
-            catch (ValidationException ex)
-            {
-                return StatusCode(StatusCodes.Status405MethodNotAllowed, ex.Message);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu.Lütfen işlemi daha sonra tekrar deneyiniz.");
-            }
+                    Subject = claims,
+                    Expires = DateTime.UtcNow.AddDays(2),
+                    SigningCredentials = creds,
+                    Issuer = _jwtSecurityTokenSetting.Issuer,
+                    Audience = _jwtSecurityTokenSetting.Audience
 
+                };
+
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+
+                UserLoginModel userModel = new UserLoginModel()
+                {
+                    UserId = userDto.Data.Id,
+                    Name = userDto.Data.Name,
+                    Surname = userDto.Data.Surname,
+                    Email = userDto.Data.Email,
+                    Token = tokenString,
+                    Roles = userDto.Data.Roles.ToList()
+                };
+                return Ok(userModel);
+            }
+            return BadRequest(result);
         }
 
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel registerModel)
         {
-            try
-            {
-
-                var registerDto = _mapper.Map<RegisterDto>(registerModel);
-                var registerResult = await _accountService.RegisterAsync(registerDto);
-                if (registerResult != false)
-                {
-                    return Ok();
-                }
-                return StatusCode(StatusCodes.Status400BadRequest, "Bilinmeyen bir hata oluştu.Lütfen işlemi daha sonra tekrar deneyiniz.");
-            }
-            catch (ValidationException ex)
-            {
-                return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu.Lütfen işlemi daha sonra tekrar deneyiniz.");
-            }
+            var registerDto = _mapper.Map<RegisterDto>(registerModel);
+            var result = await _accountService.RegisterAsync(registerDto);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
         }
+
         [HttpPost("ResendEmailConfirmation")]
         public async Task<IActionResult> ResendEmailConfirmation([FromBody] string email)
         {
-            try
-            {
-                await _accountService.ResendEmailConfirmation(email);
-                return Ok();
-            }
-            catch (ArgumentException ex)
-            {
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu.Lütfen işlemi daha sonra tekrar deneyiniz.");
-            }
+            var result = await _accountService.ResendEmailConfirmationAsync(email);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
         }
-
         [HttpPost("EmailConfirmation")]
         public async Task<IActionResult> EmailConfirmation([FromBody] EmailConfirmation emailConfirmation)
         {
-            try
-            {
-                var emailConfirmationDto = _mapper.Map<EmailConfirmationDto>(emailConfirmation);
-                var resultMessage = await _accountService.EmailConfirmation(emailConfirmationDto);
-                return StatusCode(StatusCodes.Status200OK, new { emailConfirmationSuccessMessage = resultMessage });
-            }
-            catch (ArgumentException ex)
-            {
-                return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu.Lütfen işlemi daha sonra tekrar deneyiniz.");
-            }
+            var emailConfirmationDto = _mapper.Map<EmailConfirmationDto>(emailConfirmation);
+            var result = await _accountService.EmailConfirmationAsync(emailConfirmationDto);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
         }
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpGet("GetAllUserList")]
         public async Task<IActionResult> GetAllUserList()
         {
-            try
-            {
-                var userList = await _accountService.GetAllUserList();
-                var userListModel = _mapper.Map<List<UserListModel>>(userList);
-                return Ok(userListModel);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu.Lütfen işlemi daha sonra tekrar deneyiniz.");
-            }
+            var result = await _accountService.GetAllUserListAsync();
+            if (result.Success)
+                return Ok(_mapper.Map<List<UserListModel>>(result.Data));
+            return BadRequest(result);
+
         }
-        
+
         [Authorize(Policy = "AdminPolicy")]
         [HttpGet("GetAllRoleList")]
         public async Task<IActionResult> GetAllRoleList()
         {
-            try
-            {
-                var roleList = await _accountService.GetAllRoleList();
-                var roleListModel = _mapper.Map<List<RoleModel>>(roleList);
-                return Ok(roleListModel);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu.Lütfen işlemi daha sonra tekrar deneyiniz.");
-            }
+            var result = await _accountService.GetAllRoleListAsync();
+            if (result.Success)
+                return Ok(_mapper.Map<List<RoleModel>>(result.Data));
+            return BadRequest(result);
         }
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost("UpdateUserRole")]
-        public async Task<IActionResult> UpdateUserRole([FromBody]RoleUpdateModel updateRoleModel)
+        public async Task<IActionResult> UpdateUserRole([FromBody] RoleUpdateModel updateRoleModel)
         {
-            try
-            {
-                await _accountService.UpdateUserRole(updateRoleModel.UserId, updateRoleModel.Roles);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu.Lütfen işlemi daha sonra tekrar deneyiniz.");
-            }
+            var result = await _accountService.UpdateUserRoleAsync(updateRoleModel.UserId, updateRoleModel.Roles);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
         }
-        
-        
+
+
         [HttpPost("UpdateEmailConfirmation")]
         public async Task<IActionResult> UpdateEmailConfirmation([FromBody] EmailConfirmationUpdateModel emailConfirmationUpdateModel)
         {
-            try
-            {
-                await _accountService.UpdateEmailConfirmation(emailConfirmationUpdateModel.UserId, emailConfirmationUpdateModel.EmailConfirmation);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu.Lütfen işlemi daha sonra tekrar deneyiniz.");
-            }
+            var result = await _accountService.UpdateEmailConfirmationAsync(emailConfirmationUpdateModel.UserId, emailConfirmationUpdateModel.EmailConfirmation);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
         }
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost("UpdateUserActivate")]
         public async Task<IActionResult> UpdateUserActivate([FromBody] UserActivateModel userActivateModel)
         {
-            try
-            {
-                await _accountService.UpdateUserActivate(userActivateModel.UserId, userActivateModel.IsActive);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu.Lütfen işlemi daha sonra tekrar deneyiniz.");
-            }
+            var result = await _accountService.UpdateUserActivateAsync(userActivateModel.UserId, userActivateModel.IsActive);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
         }
 
         [Authorize(Policy = "UserPolicy")]
         [HttpPost("UpdateUser")]
-        public async Task<IActionResult> UpdateUser([FromBody]UserUpdateModel userUpdateModel)
+        public async Task<IActionResult> UpdateUser([FromBody] UserUpdateModel userUpdateModel)
         {
-            try
-            {
-                var userUpdateDto = _mapper.Map<UserUpdateDto>(userUpdateModel);
-                await _accountService.UpdateUser(userUpdateDto);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu.Lütfen işlemi daha sonra tekrar deneyiniz.");
-            }
+            var userUpdateDto = _mapper.Map<UserUpdateDto>(userUpdateModel);
+            var result = await _accountService.UpdateUserAsync(userUpdateDto);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
         }
 
-        
+
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost("DeleteUser")]
         public async Task<IActionResult> DeleteUser([FromBody] string userId)
         {
-            try
-            {
-                await _accountService.DeleteUser(userId);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu.Lütfen işlemi daha sonra tekrar deneyiniz.");
-            }
+            var result = await _accountService.DeleteUserAsync(userId);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
         }
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost("UpdateUserPassword")]
         public async Task<IActionResult> UpdateUserPassword([FromBody] UserPasswordUpdateModel userPasswordUpdateModel)
         {
-            try
-            {
-                var userPasswordUpdateDto = _mapper.Map<UserPasswordUpdateDto>(userPasswordUpdateModel);
-                await _accountService.UpdateUserPassword(userPasswordUpdateDto);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu.Lütfen işlemi daha sonra tekrar deneyiniz.");
-            }
+            var userPasswordUpdateDto = _mapper.Map<UserPasswordUpdateDto>(userPasswordUpdateModel);
+            var result = await _accountService.UpdateUserPasswordAsync(userPasswordUpdateDto);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
         }
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpGet("GetUserById")]
-        public async Task<IActionResult> GetUserById([FromQuery]string userId)
+        public async Task<IActionResult> GetUserById([FromQuery] string userId)
         {
-            try
-            {
-                var userModel = _mapper.Map<UserModel>(await _accountService.GetUserDtoByIdAsync(userId));
-                return Ok(userModel);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu.Lütfen işlemi daha sonra tekrar deneyiniz.");
-            }
+            var result = await _accountService.GetUserDtoByIdAsync(userId);
+            if (result.Success)
+                return Ok(_mapper.Map<UserModel>(result.Data));
+            return BadRequest(result);
+
+
         }
 
         [Authorize(Policy = "UserPolicy")]
         [HttpGet("GetUserByEmail")]
         public async Task<IActionResult> GetUserByEmail([FromQuery] string email)
         {
-            try
-            {
-                var userModel = _mapper.Map<UserModel>(await _accountService.GetUserDtoByEmailAsync(email));
-                return Ok(userModel);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu.Lütfen işlemi daha sonra tekrar deneyiniz.");
-            }
+            var result = await _accountService.GetUserDtoByEmailAsync(email);
+            if (result.Success)
+                return Ok(_mapper.Map<UserModel>(result.Data));
+            return BadRequest(result);
         }
-
 
         [HttpPost("ForgotPassword")]
         public async Task<IActionResult> ForgotPassword([FromBody] string email)
         {
-            try
-            {
-                await _accountService.ForgotPassword(email);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu.Lütfen işlemi daha sonra tekrar deneyiniz.");
-            }
+            var result = await _accountService.ForgotPasswordAsync(email);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
         }
 
         [HttpPost("ResetPassword")]
         public async Task<IActionResult> ResetPassword(ResetPasswordModel resetPasswordModel)
         {
-            try
-            {
-                var resetPasswordDto = _mapper.Map<ResetPasswordDto>(resetPasswordModel);
-                await _accountService.ResetPassword(resetPasswordDto);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bilinmeyen bir hata oluştu.Lütfen işlemi daha sonra tekrar deneyiniz.");
-            }
+            var resetPasswordDto = _mapper.Map<ResetPasswordDto>(resetPasswordModel);
+            var result = await _accountService.ResetPasswordAsync(resetPasswordDto);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
         }
 
 

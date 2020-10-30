@@ -161,35 +161,43 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        loadChildren: () => import('./site-pages/home/home.module').then(m => m.HomeModule)
+        loadChildren: () => import('./site-pages/home/home.module').then(m => m.HomeModule),
+        data: { breadcrumb: 'Home' }
       },
       {
         path: 'giris-yap',
-        loadChildren: () => import('./site-pages/login/login.module').then(m => m.LoginModule)
+        loadChildren: () => import('./site-pages/login/login.module').then(m => m.LoginModule),
+        data: { breadcrumb: 'Home' }
       },
       {
         path: 'kayit-ol',
-        loadChildren: () => import('./site-pages/register/register.module').then(m => m.RegisterModule)
+        loadChildren: () => import('./site-pages/register/register.module').then(m => m.RegisterModule),
+        data: { breadcrumb: 'Home' }
       },
       {
         path: 'iletisim',
-        loadChildren: () => import('./site-pages/contact/contact.module').then(m => m.ContactModule)
+        loadChildren: () => import('./site-pages/contact/contact.module').then(m => m.ContactModule),
+        data: { breadcrumb: 'Home' }
       },
       {
         path: 'e-posta-onay-yeniden-gonder',
-        loadChildren: () => import('./site-pages/e-mail-confirmation/e-mail-confirmation.module').then(m => m.EmailConfirmationModule)
+        loadChildren: () => import('./site-pages/e-mail-confirmation/e-mail-confirmation.module').then(m => m.EmailConfirmationModule),
+        data: { breadcrumb: 'Home' }
       },
       {
         path: 'e-posta-onay',
-        loadChildren: () => import('./site-pages/e-mail-confirmation-message/e-mail-confirmation-message.module').then(m => m.EmailConfirmationMessageModule)
+        loadChildren: () => import('./site-pages/e-mail-confirmation-message/e-mail-confirmation-message.module').then(m => m.EmailConfirmationMessageModule),
+        data: { breadcrumb: 'Home' }
       },
       {
         path: 'sifreyi-unuttum',
-        loadChildren: () => import('./site-pages/user-forgot-password/user-forgot-password.module').then(m => m.UserForgotPasswordModule)
+        loadChildren: () => import('./site-pages/user-forgot-password/user-forgot-password.module').then(m => m.UserForgotPasswordModule),
+        data: { breadcrumb: 'Home' }
       },
       {
         path: 'sifre-sifirla',
-        loadChildren: () => import('./site-pages/user-reset-password/user-reset-password.module').then(m => m.UserResetPasswordModule)
+        loadChildren: () => import('./site-pages/user-reset-password/user-reset-password.module').then(m => m.UserResetPasswordModule),
+        data: { breadcrumb: 'Home' }
       },
       {
         path: 'egitim-kurumu/:district/:category/:name',
@@ -197,19 +205,23 @@ const routes: Routes = [
       },
       {
         path: 'blog/:name',
-        loadChildren: () => import('./site-pages/blog-detail/blog-detail.module').then(m => m.BlogDetailModule)
+        loadChildren: () => import('./site-pages/blog-detail/blog-detail.module').then(m => m.BlogDetailModule),
+        data: { breadcrumb: 'Home' }
       },
       {
         path: 'bloglar/:userName',
-        loadChildren: () => import('./site-pages/blog-view-list/blog-view-list.module').then(m => m.BlogViewListModule)
+        loadChildren: () => import('./site-pages/blog-view-list/blog-view-list.module').then(m => m.BlogViewListModule),
+        data: { breadcrumb: 'Home' }
       },
       {
         path: 'bloglar',
-        loadChildren: () => import('./site-pages/blog-view-list/blog-view-list.module').then(m => m.BlogViewListModule)
+        loadChildren: () => import('./site-pages/blog-view-list/blog-view-list.module').then(m => m.BlogViewListModule),
+        data: { breadcrumb: 'Home' }
       },
       {
         path: 'egitim-kurumlari/:category',
-        loadChildren: () => import('./site-pages/education-view-list/education-view-list.module').then(m => m.EducationViewListModule)
+        loadChildren: () => import('./site-pages/education-view-list/education-view-list.module').then(m => m.EducationViewListModule),
+        data: { breadcrumb: 'Home' }
       },
       {
         path: "**",

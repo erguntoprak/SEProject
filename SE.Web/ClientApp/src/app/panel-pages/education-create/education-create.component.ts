@@ -127,7 +127,7 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
     }
 
     this.baseService.post("Education/AddEducation", this.educationForm.value).subscribe(educationId => {
-      this.baseService.getById<ImageModel[]>("Education/GetEducationImagesByEducationId?educationId=", educationId).subscribe(imageModel => {
+      this.baseService.get<ImageModel[]>("Education/GetEducationImagesByEducationId?educationId=", educationId).subscribe(imageModel => {
         this.savedImageList = imageModel;
         this.nextStepFourControl = false;
         this.nextStepFiveControl = true;
@@ -304,7 +304,7 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
     enableToolbar: true,
     showToolbar: true,
     placeholder: 'Buraya metin giriniz...',
-    defaultParagraphSeparator: 'p',
+    defaultParagraphSeparator: '',
     defaultFontName: '',
     defaultFontSize: '',
     fonts: [
