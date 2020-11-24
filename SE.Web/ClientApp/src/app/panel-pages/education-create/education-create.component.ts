@@ -1,17 +1,15 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
-import { v4 as uuid } from 'uuid';
 import { BaseService } from '../../shared/base.service';
 import { KeyValueModel, CategoryAttributeListModel, CategoryModel, AddressModel, CityModel, DistrictModel, ImageModel } from '../../shared/models';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AcdcLoadingService } from 'acdc-loading';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import * as _ from 'lodash';
 import { ActionPermissionService } from 'src/app/_services/action-permission.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'se-education-create',
@@ -19,6 +17,7 @@ import { ActionPermissionService } from 'src/app/_services/action-permission.ser
 })
 export class EducationCreateComponent implements OnInit, AfterViewInit {
 
+  apiUrl = environment.apiUrl;
   educationForm: FormGroup;
   errorList = [];
   imageUploadErrorMessage = [];
@@ -42,6 +41,8 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
   nextStepFourControl: boolean = false;
   nextStepFourValidation: boolean = false;
   nextStepFiveControl: boolean = false;
+  fileCount: number = 0;
+  formData: FormData;
 
   constructor(public actionPermissionService: ActionPermissionService, private formBuilder: FormBuilder, private baseService: BaseService, private router: Router, private toastr: ToastrService, private acdcLoadingService: AcdcLoadingService, private sanitizer: DomSanitizer) { }
 
@@ -56,7 +57,6 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
         }
       ),
       attributes: this.formBuilder.array([]),
-      images: this.formBuilder.array([]),
       addressInformation: this.formBuilder.group(
         {
           address: ['', Validators.required],
@@ -126,20 +126,21 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.baseService.post("Education/AddEducation", this.educationForm.value).subscribe(educationId => {
-      this.baseService.get<ImageModel[]>("Education/GetEducationImagesByEducationId?educationId=", educationId).subscribe(imageModel => {
-        this.savedImageList = imageModel;
-        this.nextStepFourControl = false;
-        this.nextStepFiveControl = true;
-        this.acdcLoadingService.hideLoading();
-      });
-    },
-      (error: HttpErrorResponse) => {
-        this.errorList = this.errorList.concat(error.error);
-        window.scroll(0, 0);
-        this.nextStepFourControl = false;
-        this.nextStepOneControl = true;
-        this.acdcLoadingService.hideLoading();
+    this.baseService.post("Education/AddEducation", this.educationForm.value)
+      .subscribe(educationId => {
+        this.toastr.success('Eğitim kurumu kaydedildi. Görsellerin kayıt edilebilmesi için Lütfen Bekleyiniz..', 'Başarılı!',{
+          timeOut: 5000,
+        });
+        if (this.formData) {
+          this.baseService.postFormData(`Education/UploadEducationImage/${educationId}`, this.formData).subscribe(response => {
+            this.baseService.get<ImageModel[]>("Education/GetEducationImagesByEducationId?educationId=", educationId).subscribe(imageModel => {
+              this.savedImageList = imageModel;
+              this.nextStepFourControl = false;
+              this.nextStepFiveControl = true;
+              this.acdcLoadingService.hideLoading();
+            });
+          });
+        }
       });
   }
   saveSelectedFirsImage() {
@@ -171,7 +172,7 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
 
   //steps
   nextStepOneClick() {
-    if (this.educationForm.controls.generalInformation.status == 'VALID' && this.urlImages.length > 0) {
+    if (this.educationForm.controls.generalInformation.status == 'VALID' && this.fileCount>0) {
       window.scroll(0, 0);
       this.nextStepOneControl = false;
       this.nextStepTwoControl = true;
@@ -209,59 +210,26 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
     this.nextStepThreeControl = true;
     this.nextStepFourControl = false;
   }
-
-  //remove selected image
-  removeImage(id, value) {
-    const images = <FormArray>this.educationForm.controls.images;
-    this.urlImages = this.urlImages.filter(el => el.key !== id);
-    var deleteImage = document.getElementById(id);
-    deleteImage.remove();
-    let index = images.controls.findIndex(x => x.value == value)
-    images.removeAt(index);
-  }
   selectFirstVisibleImage(imageModel: ImageModel) {
     this.selectedImageModel = imageModel;
   }
+
   //select image
   onSelectFile(event) {
-    this.imageUploadErrorMessage = [];
-    const max_size = 1024000;
-
-    if (event.target.files.length > 20) {
-      this.imageUploadErrorMessage.push('En fazla 20 görsele izin verilmektedir.');
-      this.imageUploadErrorMessage = [...this.imageUploadErrorMessage];
-      return;
-    }
-    const images = <FormArray>this.educationForm.controls.images;
+    const files: FileList = event.target.files;
+    this.fileCount = 0;
+    this.formData = new FormData();
     const allowed_types = ['image/png', 'image/jpeg'];
+    this.imageUploadErrorMessage = [];
 
-    if (event.target.files && event.target.files[0]) {
-      for (let i = 0; i < event.target.files.length; i++) {
-        if (!_.includes(allowed_types, event.target.files[i].type)) {
-          this.imageUploadErrorMessage.push('Sadece ( JPG | PNG ) uzantılar kabul edilmektedir.');
-          this.imageUploadErrorMessage = [...this.imageUploadErrorMessage];
-        }
-        else {
-          if (event.target.files[i].size >= max_size) {
-            this.imageUploadErrorMessage.push(event.target.files[i].name + ' adlı görsel 1 MB değerinden büyüktür. 1 MB değerinden küçük veya eşit olmalıdır.');
-            this.imageUploadErrorMessage = [...this.imageUploadErrorMessage];
-          }
-          else {
-            var reader = new FileReader();
-            reader.onload = (event: any) => {
-              if (this.urlImages.length > 19) {
-                this.imageUploadErrorMessage.push('En fazla 20 görsele izin verilmektedir.');
-                this.imageUploadErrorMessage = [...this.imageUploadErrorMessage];
-              }
-              else {
-                this.urlImages.push({ key: uuid(), value: event.target.result });
-                images.push(new FormControl(event.target.result));
-              }
-            }
-            reader.readAsDataURL(event.target.files[i]);
-        }
-        
-        }        
+    for (let i = 0; i < files.length; i++) {
+      if (!_.includes(allowed_types, event.target.files[i].type)) {
+        this.imageUploadErrorMessage.push('Sadece ( JPG | PNG ) uzantılar kabul edilmektedir.');
+        this.imageUploadErrorMessage = [...this.imageUploadErrorMessage];
+      }
+      else{
+        this.formData.append(files.item(i).name, files.item(i));
+        this.fileCount++;
       }
     }
   }
@@ -277,8 +245,8 @@ export class EducationCreateComponent implements OnInit, AfterViewInit {
   }
   //Dropdown selectedId change attributes
   educationTypeOnChange(event) {
-    var categoryId = event.target.value.split(": ");
-    this.baseService.getAll<CategoryAttributeListModel[]>("Attribute/GetAllAttributeByEducationCategoryId?categoryId=" + categoryId[1]).subscribe(attributeList => {
+    var categoryId = +event.target.value;
+    this.baseService.getAll<CategoryAttributeListModel[]>("Attribute/GetAllAttributeByEducationCategoryId?categoryId=" + categoryId).subscribe(attributeList => {
       this.attributeList = attributeList;
     });
   }

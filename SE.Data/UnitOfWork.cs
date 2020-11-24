@@ -3,6 +3,7 @@ using SE.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SE.Data
 {
@@ -171,7 +172,30 @@ namespace SE.Data
             {
                 throw;
             }
+        }
+        public async Task SaveChangesAsync()
+        {
 
+            try
+            {
+                using (var transaction = _dbContext.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        await _dbContext.SaveChangesAsync();
+                        transaction.Commit();
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
+            }
+            catch
+            {
+                throw;
+            }
 
         }
 

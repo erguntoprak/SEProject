@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseService } from '../../shared/base.service';
-import * as _ from 'lodash';
 import { AcdcLoadingService } from 'acdc-loading';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BlogUpdateModel, BlogItemModel } from '../../shared/models';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'se-blog-edit',
@@ -31,10 +31,11 @@ export class BlogEditComponent implements OnInit {
       this.acdcLoadingService.showLoading();
       this.baseService.get<BlogUpdateModel>("Blog/GetBlogUpdateBySeoUrl?seoUrl=", params['name']).subscribe(blogUpdateModel => {
         this.blogUpdateForm.patchValue(blogUpdateModel);
-        this.firstVisibleImageName = `https://localhost:44362/images/blog/${blogUpdateModel.firstVisibleImageName}_300x180.jpg`
+        
+        this.firstVisibleImageName = `${environment.apiUrl}/images/blog/${blogUpdateModel.firstVisibleImageName}_300x180.jpg`
         blogUpdateModel.blogItems.forEach(blogItem => {
           this.addExistingBlogItem(blogItem);
-          this.blogItemList.push(`https://localhost:44362/images/blog/${blogItem.imageName}_1000x600.jpg`)
+          this.blogItemList.push(`${environment.apiUrl}/images/blog/${blogItem.imageName}_1000x600.jpg`)
         });
         this.acdcLoadingService.hideLoading();
       })

@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { CategoryModel, EducationListModel, DistrictModel, AddressModel, SearchResult, EducationSearchResult } from '../../shared/models';
 import { BaseService } from '../../shared/base.service';
+import { environment } from 'src/environments/environment';
 declare var $: any;
 @Component({
   selector: 'app-home',
@@ -10,6 +11,7 @@ declare var $: any;
 })
 export class HomeComponent implements OnInit, AfterViewInit {
 
+  apiUrl = environment.apiUrl;
   searchForm: FormGroup;
   categories: CategoryModel[];
   educationList: EducationListModel[];

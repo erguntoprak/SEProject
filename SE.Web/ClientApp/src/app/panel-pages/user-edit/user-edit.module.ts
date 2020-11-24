@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
+import { OnlyAlphabetDirective } from 'src/app/_helpers/only-alphabet.directive';
 
 export let options: Partial<IConfig> | (() => Partial<IConfig>);
 const routes: Routes = [

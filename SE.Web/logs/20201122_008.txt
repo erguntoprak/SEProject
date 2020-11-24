@@ -1,0 +1,1 @@
+2020-11-22 00:40:51.764 +03:00 [Information] {"FullName":"AccountService","MethodName":"RegisterAsync","Parameters":[{"Name":"registerDto","Value":{"Name":"Ela Su","Surname":"Toprak","Email":"toprakelasu@gmail.com","Phone":"5454545454","Password":"ergun123l"},"Type":"RegisterDto"}],"UserEmail":"izmiregitimkurumlari@gmail.com"}

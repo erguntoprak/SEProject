@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -27,57 +28,68 @@ namespace SE.Web.Controllers
             _mapper = mapper;
         }
         [HttpGet("GetAllAttributeByEducationCategoryId")]
-        public IActionResult GetAllAttributeByEducationCategoryId(int categoryId)
+        public async Task<IActionResult> GetAllAttributeByEducationCategoryId(int categoryId)
         {
-            var categoryAttributeListModel = _mapper.Map<List<CategoryAttributeListModel>>(_attributeService.GetAllAttributeByEducationCategoryId(categoryId));
-            return Ok(categoryAttributeListModel);
+            var result = await _attributeService.GetAllAttributeByEducationCategoryIdAsync(categoryId);
+            if (result.Success)
+                return Ok(_mapper.Map<List<CategoryAttributeListModel>>(result.Data));
+
+            return BadRequest(result);
         }
 
         [HttpGet("GetAllAttributeList")]
-        public IActionResult GetAllAttributeList()
+        public async Task<IActionResult> GetAllAttributeList()
         {
-            var attributeListModel = _mapper.Map<List<AttributeListModel>>(_attributeService.GetAllAttributeList());
-            return Ok(attributeListModel);
+            var result = await _attributeService.GetAllAttributeListAsync();
+            if (result.Success)
+                return Ok(_mapper.Map<List<AttributeListModel>>(result.Data));
+
+            return BadRequest(result);
         }
 
         [HttpGet("GetAttributeById")]
-        public IActionResult GetAttributeById([FromQuery] int attributeId)
+        public async Task<IActionResult> GetAttributeById([FromQuery] int attributeId)
         {
-            var attributeModel = _mapper.Map<AttributeModel>(_attributeService.GetAttributeById(attributeId));
-            return Ok(attributeModel);
+            var result = await _attributeService.GetAttributeByIdAsync(attributeId);
+            if (result.Success)
+                return Ok(_mapper.Map<AttributeModel>(result.Data));
+
+            return BadRequest(result);
         }
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost("InsertAttribute")]
-        public IActionResult InsertAttribute([FromBody] AttributeModel attributeModel)
+        public async Task<IActionResult> InsertAttribute([FromBody] AttributeModel attributeModel)
         {
             var attributeDto = _mapper.Map<AttributeDto>(attributeModel);
-            _attributeService.InsertAttribute(attributeDto);
-            return Ok();
+            var result = await _attributeService.InsertAttributeAsync(attributeDto);
+            if (result.Success)
+                return Ok(result);
+
+            return BadRequest(result);
         }
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost("UpdateAttribute")]
-        public IActionResult UpdateAttribute([FromBody] AttributeModel attributeModel)
+        public async Task<IActionResult> UpdateAttribute([FromBody] AttributeModel attributeModel)
         {
             var attributeDto = _mapper.Map<AttributeDto>(attributeModel);
-            _attributeService.UpdateAttribute(attributeDto);
-            return Ok();
+            var result = await _attributeService.UpdateAttributeAsync(attributeDto);
+            if (result.Success)
+                return Ok(result);
+
+            return BadRequest(result);
         }
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost("DeleteAttribute")]
-        public IActionResult DeleteAttribute([FromBody] int attributeId)
+        public async Task<IActionResult> DeleteAttribute([FromBody] int attributeId)
         {
-            try
-            {
-                _attributeService.DeleteAttribute(attributeId);
-                return Ok();
-            }
-            catch (DbUpdateException ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bu kaydı silemezsin. Silmek için bağlı olduğu diğer kayıtların silinmesi gerekiyor.");
-            }
+
+            var result = await _attributeService.DeleteAttributeAsync(attributeId);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest();
         }
 
     }

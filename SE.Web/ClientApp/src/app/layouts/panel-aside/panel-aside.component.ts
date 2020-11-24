@@ -30,7 +30,7 @@ export class PanelAsideComponent implements OnInit {
         title: 'EĞİTİM',
         key:'education',
         isVisible:this.isUser || this.isAdmin,
-        navigationItems: [{ name: 'Eğitim Listesi', routeUrl: '/panel/egitimler', icon: 'bx bx-list-check', key: 'education-list', isVisible: this.isUser || this.isAdmin },
+        navigationItems: [{ name: 'Eğitim Kurumları', routeUrl: '/panel/egitimler', icon: 'bx bx-list-check', key: 'education-list', isVisible: this.isUser || this.isAdmin },
         { name: 'Eğitim Ekle', routeUrl: '/panel/egitim-ekle', icon: 'bx bx-list-plus', key: 'education-add', isVisible: this.isUser || this.isAdmin }]
       },
       {
@@ -47,7 +47,10 @@ export class PanelAsideComponent implements OnInit {
         navigationItems: [{ name: 'Kullanıcı İşlemleri', routeUrl: '/panel/kullanici-listesi', icon: 'bx bx-grid-alt', key: 'user-list', isVisible: this.isAdmin },
         { name: 'Kategori İşlemleri', routeUrl: '/panel/kategori-listesi', icon: 'bx bx-grid-alt', key: 'category-list', isVisible: this.isAdmin },
         { name: 'Özellik Kategori İşlemleri', routeUrl: '/panel/ozellik-kategori-listesi', icon: 'bx bx-grid-alt', key: 'category-list', isVisible: this.isAdmin },
-        { name: 'Özellik İşlemleri', routeUrl: '/panel/ozellik-listesi', icon: 'bx bx-grid-alt', key: 'attribute-list', isVisible: this.isAdmin }]
+        { name: 'Özellik İşlemleri', routeUrl: '/panel/ozellik-listesi', icon: 'bx bx-grid-alt', key: 'attribute-list', isVisible: this.isAdmin },
+        { name: 'Eğitim Kurumu İşlemleri', routeUrl: '/panel/egitim-islemleri', icon: 'bx bx-grid-alt', key: 'education-operation-list', isVisible: this.isAdmin },
+        { name: 'Blog İşlemleri', routeUrl: '/panel/blog-islemleri', icon: 'bx bx-grid-alt', key: 'blog-operation-list', isVisible: this.isAdmin }
+      ]
       }
     ]
   }

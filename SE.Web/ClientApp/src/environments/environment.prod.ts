@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
+  production: true,
+  apiUrl: '',
+  baseUrl: 'https://www.izmiregitimkurumlari.com'
 };

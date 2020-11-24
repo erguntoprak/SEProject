@@ -1,0 +1,1 @@
+2020-11-22 20:40:37.247 +03:00 [Information] {"FullName":"AccountService","MethodName":"RegisterAsync","Parameters":[{"Name":"registerDto","Value":{"Name":"test","Surname":"sfsf","Email":"setrofsoftware@gmail.com","Phone":"4545454545","Password":"123456"},"Type":"RegisterDto"}],"UserEmail":"video.35.cosmos@gmail.com"}

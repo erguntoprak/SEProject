@@ -9,7 +9,6 @@ namespace SE.Web.Model.Education
     {
         public EducationGeneralInformationModel GeneralInformation { get; set; }
         public int[] Attributes { get; set; }
-        public string[] Images { get; set; }
         public string UserId { get; set; }
         public List<EducationQuestionModel> Questions { get; set; }
         public EducationAddressModel AddressInformation { get; set; }

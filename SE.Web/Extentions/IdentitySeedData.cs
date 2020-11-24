@@ -17,18 +17,18 @@ namespace SE.Web.Extentions
 
         public static void SeedUsers (UserManager<User> userManager)
         {
-            if (userManager.FindByEmailAsync("login@izmiregitimkurumlari.com").Result == null)
+            if (userManager.FindByEmailAsync("izmiregitimkurumlari@gmail.com").Result == null)
             {
                 User user = new User();
                 user.UserName = "erguntoprak";
                 user.FirsName = "Ergün";
                 user.LastName = "Toprak";
-                user.Email = "login@izmiregitimkurumlari.com";
+                user.Email = "izmiregitimkurumlari@gmail.com";
                 user.EmailConfirmed = true;
                 user.IsActive = true;
                 user.PhoneNumber = "5543187924";
                 IdentityResult result = userManager.CreateAsync
-                (user, "ersap*2435").Result;
+                (user, "erSap*24").Result;
                 if (result.Succeeded)
                 {
                     userManager.AddToRoleAsync(user, "Admin").Wait();

@@ -23,11 +23,6 @@
     <div class="row">
       <div class="col-lg-9 pr-0">
         <div class="contact_form">
-          <div *ngIf="errorList">
-            <span class="not-valid" *ngFor="let error of errorList">
-              {{error}}
-            </span>
-          </div>
           <form [formGroup]="emailConfirmationForm" *ngIf="emailConfirmationFormDiv" (ngSubmit)="onEmailConfirmationFormSubmit()">
             <div class="row">
               <div class="col-lg-6">

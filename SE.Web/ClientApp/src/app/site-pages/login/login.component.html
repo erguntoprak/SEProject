@@ -4,15 +4,7 @@
     <div class="row">
       <div class="col-lg-7">
         <div class="login_info">
-          <h2 class="f_p f_700 f_size_40 t_color3 mb_20">Giriş Yap</h2>
-          <div *ngIf="errorList">
-            <span class="not-valid" *ngFor="let error of errorList">
-              {{error}}
-            </span>
-            <span *ngIf="resendEmailConfirmation" class="not-valid">
-              E-postanıza mail gelmediğini düşünüyorsanız, lüften <a routerLink="/e-posta-onay-yeniden-gonder">tıklayınız.</a> 
-            </span>
-          </div>
+          <h2 class="f_p f_700 f_size_40 t_color3 mb_20">Eğitim Kurumu Giriş Yap</h2>
           <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()" class="login-form">
             <div class="form-group text_box">
               <label class="f_p text_c f_400">E-posta</label>

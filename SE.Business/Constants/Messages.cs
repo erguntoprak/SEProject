@@ -8,7 +8,7 @@ namespace SE.Business.Constants
     {
         public static string CouldNotBeVerifyCid => "Kimlik No Doğrulamadı.";
         public static string YouNeedToVerifyYourEmailAddress => "E-posta adresinizi doğrulamanız gerekiyor, lütfen e-postanıza gelen bağlantıya tıklayın.";
-        public static string AccountIsNotActive => "Üzgünüz, bu hesap aktif değil. Lütfen iletişime geçin.";
+        public static string AccountIsNotActive => "Üzgünüz, bu hesap aktif değil. Tarafınıza en kısa sürede dönüş sağlanacaktır. Bir sorun olduğunu düşünüyorsanız, lütfen iletişime geçin.";
         public static string SuccessfulLogin => "Başarılı giriş yapıldı.";
         public static string SuccessfulRegister => "Başarılı kayıt yapıldı.";
         public static string UserNotFound => "Kullanıcı Bulunamadı.";
@@ -23,6 +23,7 @@ namespace SE.Business.Constants
         public static string NotUpdated => "Güncelleme başarısız.";
         public static string EmailSended => "E-posta gönderildi.";
         public static string EmailUsedBefore => "E-posta adresi daha önce kullanılmış.";
+        public static string UserNameUsedBefore => "Kullanıcı adı daha önce kullanılmış.";
         public static string EmailAlreadyConfirmed => "E-posta adresiniz zaten onaylanmış.";
         public static string EmailConfirmed => "E-posta adresiniz onaylandı.";
         public static string EmailNotConfirmed => "E-posta adresiniz onaylanmadı.";

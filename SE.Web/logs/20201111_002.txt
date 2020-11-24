@@ -1,0 +1,2 @@
+2020-11-11 18:25:15.709 +03:00 [Information] {"FullName":"CategoryService","MethodName":"GetAllCategoryList","Parameters":[],"UserEmail":"ergun.35.toprak@gmail.com"}
+2020-11-11 18:28:48.689 +03:00 [Error] {"ExceptionMessage":"Value cannot be null.","FullName":"EducationService","MethodName":"GetEducationDetailDtoBySeoUrl","Parameters":[{"Name":"seoUrl","Value":"ozel-pakkan-okullari-ilkokulu","Type":"String"}],"UserEmail":"ergun.35.toprak@gmail.com"}

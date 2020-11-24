@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseService } from '../../shared/base.service';
 import { AcdcLoadingService } from 'acdc-loading';
-import { ActivatedRoute, Router } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { MyErrorStateMatcher } from '../../_helpers/input-error-state-matcher';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
@@ -31,11 +30,7 @@ export class AttributeCategoryCreateComponent implements OnInit {
       this.attributeCategoryInsertForm.value).subscribe(data => {
         this.toastr.success('Özellik Kategori oluşturuldu.', 'Başarılı!');
         this.router.navigate(['/panel/ozellik-kategori-listesi']);
-      },
-        (error: HttpErrorResponse) => {
-          this.toastr.success(error.error, 'Başarısız!');
-          this.acdcLoadingService.hideLoading();
-        });
+      });
   }
 }
 

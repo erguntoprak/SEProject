@@ -1,0 +1,1 @@
+2020-11-22 20:43:08.923 +03:00 [Information] {"FullName":"AccountService","MethodName":"ForgotPasswordAsync","Parameters":[{"Name":"email","Value":"setrofsoftware@gmail.com","Type":"String"}],"UserEmail":"setrofsoftware@gmail.com"}

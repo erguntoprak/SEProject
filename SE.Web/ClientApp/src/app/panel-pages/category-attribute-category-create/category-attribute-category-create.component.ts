@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseService } from '../../shared/base.service';
 import { AttributeCategoryModel } from '../../shared/models';
-import * as _ from 'lodash';
 import { AcdcLoadingService } from 'acdc-loading';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 

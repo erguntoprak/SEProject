@@ -17,7 +17,6 @@ namespace SE.Core.DTO
         public string Address { get; set; }
         public string ImageUrl { get; set; }
         public string SeoUrl { get; set; }
-
-
+        public bool IsActive { get; set; }
     }
 }

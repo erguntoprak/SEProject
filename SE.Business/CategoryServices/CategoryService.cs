@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using SE.Business.Constants;
 using SE.Business.Helpers;
 using SE.Core.Aspects.Autofac.Caching;
 using SE.Core.Aspects.Autofac.Logging;
 using SE.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using SE.Core.DTO;
 using SE.Core.Entities;
+using SE.Core.Utilities.Results;
 using SE.Data;
 
 namespace SE.Business.CategoryServices
@@ -20,91 +23,70 @@ namespace SE.Business.CategoryServices
             _unitOfWork = unitOfWork;
         }
 
-        public void DeleteCategory(int categoryId)
+        [CacheRemoveAspect("Get")]
+        public async Task<IResult> DeleteCategoryAsync(int categoryId)
         {
-            try
-            {
-                var category = _unitOfWork.CategoryRepository.GetById(categoryId);
-                _unitOfWork.CategoryRepository.Delete(category);
-                _unitOfWork.SaveChanges();
-            }
-            catch
-            {
-                throw;
-            }
+
+            var category = await _unitOfWork.CategoryRepository.GetByIdAsync(categoryId);
+            if (category == null)
+                return new ErrorResult(Messages.ObjectIsNull);
+
+            _unitOfWork.CategoryRepository.Delete(category);
+            await _unitOfWork.SaveChangesAsync();
+            return new SuccessResult(Messages.Deleted);
         }
+
         [CacheAspect]
-        [LogAspect(typeof(FileLogger))]
-        public List<CategoryDto> GetAllCategoryList()
+        public async Task<IDataResult<IEnumerable<CategoryDto>>> GetAllCategoryListAsync()
         {
-            try
-            {
-                var categoryList = _unitOfWork.CategoryRepository.Table.Select(d => new CategoryDto { Name = d.Name, Id = d.Id, SeoUrl = UrlHelper.FriendlyUrl(d.Name) }).ToList();
-                return categoryList;
-            }
-            catch
-            {
-                throw;
-            }
+            var categoryList = await _unitOfWork.CategoryRepository.Table.AsNoTracking().Select(d => new CategoryDto { Name = d.Name, Id = d.Id, SeoUrl = UrlHelper.FriendlyUrl(d.Name) }).ToListAsync();
+
+            return new SuccessDataResult<IEnumerable<CategoryDto>>(categoryList);
         }
 
-        public CategoryDto GetCategoryById(int categoryId)
+        public async Task<IDataResult<CategoryDto>> GetCategoryByIdAsync(int categoryId)
         {
-            try
-            {
-                var categoryDto = _unitOfWork.CategoryRepository.Table.Where(d => d.Id == categoryId).Select(d => new CategoryDto
-                {
-                    Id = d.Id,
-                    Name = d.Name,
-                    SeoUrl = d.SeoUrl
-                }).FirstOrDefault();
 
-                if (categoryDto != null)
-                {
-                    return categoryDto;
-                }
-                else
-                {
-                    throw new Exception();
-                }
-            }
-            catch
+            var categoryDto = await _unitOfWork.CategoryRepository.Table.Where(d => d.Id == categoryId).Select(d => new CategoryDto
             {
-                throw;
-            }
+                Id = d.Id,
+                Name = d.Name,
+                SeoUrl = d.SeoUrl
+            }).FirstOrDefaultAsync();
+
+            if (categoryDto == null)
+                return new ErrorDataResult<CategoryDto>(Messages.ObjectIsNull);
+
+            return new SuccessDataResult<CategoryDto>(categoryDto);
         }
 
-        public void InsertCategory(CategoryDto categoryDto)
+        [CacheRemoveAspect("Get")]
+        public async Task<IResult> InsertCategoryAsync(CategoryDto categoryDto)
         {
-            try
+
+            var category = new Category
             {
-                var category = new Category
-                {
-                    Name = categoryDto.Name,
-                    SeoUrl = UrlHelper.FriendlyUrl(categoryDto.Name)
-                };
-                _unitOfWork.CategoryRepository.Insert(category);
-                _unitOfWork.SaveChanges();
-            }
-            catch
-            {
-                throw;
-            }
+                Name = categoryDto.Name,
+                SeoUrl = UrlHelper.FriendlyUrl(categoryDto.Name)
+            };
+            _unitOfWork.CategoryRepository.Insert(category);
+            await _unitOfWork.SaveChangesAsync();
+
+            return new SuccessResult(Messages.Added);
         }
 
-        public void UpdateCategory(CategoryDto categoryDto)
+        [CacheRemoveAspect("Get")]
+        public async Task<IResult> UpdateCategoryAsync(CategoryDto categoryDto)
         {
-            try
-            {
-                var category = _unitOfWork.CategoryRepository.GetById(categoryDto.Id);
-                category.Name = categoryDto.Name;
-                category.SeoUrl = UrlHelper.FriendlyUrl(categoryDto.Name);
-                _unitOfWork.SaveChanges();
-            }
-            catch
-            {
-                throw;
-            }
+            var category = await _unitOfWork.CategoryRepository.GetByIdAsync(categoryDto.Id);
+            if (category == null)
+                return new ErrorResult(Messages.ObjectIsNull);
+
+            category.Name = categoryDto.Name;
+            category.SeoUrl = UrlHelper.FriendlyUrl(categoryDto.Name);
+            await _unitOfWork.SaveChangesAsync();
+
+            return new SuccessResult(Messages.Updated);
         }
     }
 }

@@ -14159,7 +14159,6 @@ p {
   }
 
 .blog_content {
-  background-color: white;
   -webkit-box-shadow: 0px 2px 4px 0px rgba(12, 0, 46, 0.06);
   box-shadow: 0px 2px 4px 0px rgba(12, 0, 46, 0.06);
   padding: 30px 47px 42px 50px;
@@ -14167,6 +14166,7 @@ p {
 }
 
 .blog-view-list .blog_content {
+  background: #fff;
   padding: 10px;
   height: 180px;
 }
@@ -25144,7 +25144,7 @@ a .h_head:hover {
       }
 
 .new_footer_top {
-  padding: 120px 0px 270px;
+  padding: 0px 0px 270px;
   position: relative;
 }
 
@@ -25263,7 +25263,7 @@ a .h_head:hover {
   margin-bottom: 5px;
   font-weight: 500;
   display: inline-block;
-  width: 240px;
+  width: 270px;
 }
 
 .contact-form {

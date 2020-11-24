@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SE.Data
 {
@@ -20,9 +21,7 @@ namespace SE.Data
         IRepository<AttributeEducation> AttributeEducationRepository { get; }
         IRepository<EducationContactForm> EducationContactFormRepository { get; }
         IRepository<Blog> BlogRepository { get; }
-
-
-
         void SaveChanges();
+        Task SaveChangesAsync();
     }
 }

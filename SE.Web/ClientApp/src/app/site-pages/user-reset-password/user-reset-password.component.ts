@@ -2,7 +2,6 @@ import { Component, OnInit, NgZone } from '@angular/core';
 import { BaseService } from '../../shared/base.service';
 import { AcdcLoadingService } from 'acdc-loading';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { HttpErrorResponse } from '@angular/common/http';
 import { MustMatch } from '../../_helpers/must-match.validator';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -55,12 +54,7 @@ export class UserResetPasswordComponent implements OnInit {
       setTimeout(() => {
         this.router.navigate(['/giris-yap']);
       }, 5000);
-    },
-      (error: HttpErrorResponse) => {
-        this.errorList.push(error.error);
-        this.errorList = [...this.errorList];
-        this.acdcLoadingService.hideLoading();
-      }
+    }
     );
 
   }

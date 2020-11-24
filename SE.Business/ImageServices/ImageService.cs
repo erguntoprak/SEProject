@@ -1,8 +1,12 @@
-﻿using SE.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using SE.Business.Constants;
+using SE.Core.Utilities.Results;
+using SE.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SE.Business.ImageServices
 {
@@ -15,35 +19,22 @@ namespace SE.Business.ImageServices
             _unitOfWork = unitOfWork;
         }
 
-        public void DeleteImageByImageUrl(string imageUrl)
+        public async Task<IResult> DeleteImageByImageUrlAsync(string imageUrl)
         {
-            try
-            {
-                var image = _unitOfWork.ImageRepository.Table.FirstOrDefault(d => d.ImageUrl == imageUrl);
-                if (image != null)
-                {
-                    _unitOfWork.ImageRepository.Delete(image);
-                    _unitOfWork.SaveChanges();
-                }
-            }
-            catch
-            {
+            var image = await _unitOfWork.ImageRepository.Table.FirstOrDefaultAsync(d => d.ImageUrl == imageUrl);
+            if (image == null)
+                return new ErrorResult(Messages.ObjectIsNull);
 
-                throw;
-            }
+            _unitOfWork.ImageRepository.Delete(image);
+            await _unitOfWork.SaveChangesAsync();
+
+            return new SuccessResult(Messages.Deleted);
         }
 
-        public List<string> GetImagesByEducationId(int educationId)
+        public async Task<IDataResult<IEnumerable<string>>> GetImagesByEducationIdAsync(int educationId)
         {
-            try
-            {
-                var images = _unitOfWork.ImageRepository.Table.Where(d => d.EducationId == educationId).Select(d => d.ImageUrl).ToList();
-                return images;
-            }
-            catch
-            {
-                throw;
-            }
+            var images = await _unitOfWork.ImageRepository.Table.Where(d => d.EducationId == educationId).Select(d => d.ImageUrl).ToListAsync();
+            return new SuccessDataResult<IEnumerable<string>>(images);
         }
     }
 }

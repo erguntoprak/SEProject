@@ -7,8 +7,10 @@ namespace SE.Business.EmailSenders
 {
     public static class EmailMessages
     {
-        public static string GetEmailConfirmationHtml(string confirmationLink)
+
+        public static string GetEmailConfirmationHtml(string confirmationLink, string apiUrl)
         {
+            string srcLogo = apiUrl + "/images/izmir-egitim-kurumlari.png";
             var emailConfirmationHtml = @"<!doctype html>
 <html xmlns='http://www.w3.org/1999/xhtml'>
 
@@ -258,7 +260,7 @@ namespace SE.Business.EmailSenders
           <tr>
             <td width='100%' style='text-align:left; padding:20px 0 10px 0;'>
               <a href='https://www.izmiregitimkurumlari.com'>
-                <img src='https://i.ibb.co/Kbty44w/izmir-egitim-kurumlari.png' width='200' height='36' border='0'  style='width:200px; height:36px;' />
+                <img src='" + srcLogo + @"' width='200' height='36' border='0'  style='width:200px; height:36px;' />
               </a>
             </td>
             <td width='66%' valign='middle' style=' text-align: right; padding-top: 12px; vertical-align: middle;'></td>
@@ -300,7 +302,7 @@ namespace SE.Business.EmailSenders
                               <table border='0' cellspacing='0' cellpadding='0' width='100%'>
                                 <tr>
                                   <td style='-webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px;'>
-                                    <a href='"+ confirmationLink +@"' target='_blank' style='display:inline-block; color: #fff; font-weight: 400; border-left: 15px solid; border-right: 15px solid; border-top: 12px solid; border-bottom: 12px solid; font-size: 17px; text-decoration: none; text-align: center; -webkit-text-size-adjust: none; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px;  background-color: #7ad108; border-color: #7ad108;'
+                                    <a href='" + confirmationLink +@"' target='_blank' style='display:inline-block; color: #fff; font-weight: 400; border-left: 15px solid; border-right: 15px solid; border-top: 12px solid; border-bottom: 12px solid; font-size: 17px; text-decoration: none; text-align: center; -webkit-text-size-adjust: none; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px;  background-color: #7ad108; border-color: #7ad108;'
                                       class='btn'> <span style='padding-left: 5px; padding-right: 5px;'>
                                 E-posta Onayla
                             </span>
@@ -315,7 +317,7 @@ namespace SE.Business.EmailSenders
                         <p style='color: #666666; font-weight: 400; font-size: 15px; line-height: 21px;  ' class=''>E-posta adresinizi İzmir Eğitim Kurumları ile doğrulama girişiminde bulunmadıysanız, lütfen bu e-postayı silin.</p>
                         <p style='color: #666666; font-weight: 400; font-size: 17px; line-height: 24px;  margin-bottom: 6px; margin-top: 24px;' class=''>Teşekkürler,</p>
                         <a href='https://www.izmiregitimkurumlari.com'>
-                          <img src='https://i.ibb.co/Kbty44w/izmir-egitim-kurumlari.png' width='200' height='36'  style='border: 0;' width='200' height='36' />
+                          <img src='" + srcLogo + @"' width='200' height='36'  style='border: 0;' width='200' height='36' />
                         </a>
                       </td>
                     </tr>
@@ -366,10 +368,10 @@ namespace SE.Business.EmailSenders
                   <!-- <td width='auto' height='' style='display: inline-block; line-height: 11px; padding-left: 10px;' align='center' valign='middle' class='col-nav-items' colspan='1'>
                     <table border='0' cellpadding='0' cellspacing='0' width='100%'>
                       <a style='text-decoration: none; color: #0f90ba;  display: inline-block; height: 22px; vertical-align: middle; margin-left: 5px;' href='' class=''>
-                        <img src='https://cdn.evbstatic.com/s3-s3/marketing/emails/images/icons/facebook.png' title='Facebook' alt='Facebook' border='0' width='22' height='22' class='' />
+                        <img src='' title='Facebook' alt='Facebook' border='0' width='22' height='22' class='' />
                       </a>
                       <a style='text-decoration: none; color: #0f90ba;  display: inline-block; height: 22px; vertical-align: middle; margin-left: 5px;' href='' class=''>
-                        <img src='https://cdn.evbstatic.com/s3-s3/marketing/emails/images/icons/twitter.png' title='Twitter' alt='Twitter' border='0' width='22' height='22' class='' />
+                        <img src='' title='Twitter' alt='Twitter' border='0' width='22' height='22' class='' />
                       </a>
                     </table>
                   </td> -->
@@ -415,8 +417,9 @@ namespace SE.Business.EmailSenders
             return emailConfirmationHtml;
         }
 
-        public static string GetForgotPasswordHtml(string passwordResetLink)
+        public static string GetForgotPasswordHtml(string passwordResetLink, string apiUrl)
         {
+            string srcLogo = apiUrl + "/images/izmir-egitim-kurumlari.png";
             var passwordResetLinkHtml = @"<!doctype html>
 <html xmlns='http://www.w3.org/1999/xhtml'>
 
@@ -666,7 +669,7 @@ namespace SE.Business.EmailSenders
           <tr>
             <td width='100%' style='text-align:left; padding:20px 0 10px 0;'>
               <a href='https://www.izmiregitimkurumlari.com'>
-                <img src='https://i.ibb.co/Kbty44w/izmir-egitim-kurumlari.png' width='200' height='36' border='0'  style='width:200px; height:36px;' />
+                <img src='" + srcLogo + @"' width='200' height='36' border='0'  style='width:200px; height:36px;' />
               </a>
             </td>
             <td width='66%' valign='middle' style=' text-align: right; padding-top: 12px; vertical-align: middle;'></td>
@@ -725,7 +728,7 @@ tıklayınız.</p>
                         <p style='color: #666666; font-weight: 400; font-size: 15px; line-height: 21px;  ' class=''>E-posta adresinizi İzmir Eğitim Kurumları ile şifre sıfırlama girişiminde bulunmadıysanız, lütfen bu e-postayı silin.</p>
                         <p style='color: #666666; font-weight: 400; font-size: 17px; line-height: 24px;  margin-bottom: 6px; margin-top: 24px;' class=''>Teşekkürler,</p>
                         <a href='https://www.izmiregitimkurumlari.com'>
-                          <img src='https://i.ibb.co/Kbty44w/izmir-egitim-kurumlari.png' width='200' height='36'  style='border: 0;' width='200' height='36' />
+                          <img src='" + srcLogo + @"' width='200' height='36'  style='border: 0;' width='200' height='36' />
                         </a>
                       </td>
                     </tr>
@@ -776,10 +779,10 @@ tıklayınız.</p>
                   <!-- <td width='auto' height='' style='display: inline-block; line-height: 11px; padding-left: 10px;' align='center' valign='middle' class='col-nav-items' colspan='1'>
                     <table border='0' cellpadding='0' cellspacing='0' width='100%'>
                       <a style='text-decoration: none; color: #0f90ba;  display: inline-block; height: 22px; vertical-align: middle; margin-left: 5px;' href='' class=''>
-                        <img src='https://cdn.evbstatic.com/s3-s3/marketing/emails/images/icons/facebook.png' title='Facebook' alt='Facebook' border='0' width='22' height='22' class='' />
+                        <img src='' title='Facebook' alt='Facebook' border='0' width='22' height='22' class='' />
                       </a>
                       <a style='text-decoration: none; color: #0f90ba;  display: inline-block; height: 22px; vertical-align: middle; margin-left: 5px;' href='' class=''>
-                        <img src='https://cdn.evbstatic.com/s3-s3/marketing/emails/images/icons/twitter.png' title='Twitter' alt='Twitter' border='0' width='22' height='22' class='' />
+                        <img src='' title='Twitter' alt='Twitter' border='0' width='22' height='22' class='' />
                       </a>
                     </table>
                   </td> -->

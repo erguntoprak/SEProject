@@ -25,33 +25,26 @@ export class AuthInterceptorService implements HttpInterceptor {
     return this.authService.currentUserSubject.pipe(
       take(1),
       exhaustMap(user => {
-        let headers = new HttpHeaders();
-        headers = headers.set('Content-Type', 'application/json');
-        headers = headers.set('Access-Control-Allow-Origin', 'http://localhost:4200');
-
-        if (!user) {
-          const modifiedReq = req.clone({
-            url: `https://localhost:44362/api/${req.url}`,
-            headers: headers
+        let modifiedReq;
+        if (user) {
+          modifiedReq = req.clone({
+            headers: req.headers.set('Authorization', `Bearer ${user.token}`),
           });
-          return next.handle(modifiedReq);
         }
-        headers = headers.set('Authorization', `Bearer ${user.token}`);
-        const modifiedReq = req.clone({
-          url: `https://localhost:44362/api/${req.url}`,
-          headers: headers
-        });
+        else {
+          modifiedReq = req;
+        }
         return next.handle(modifiedReq).pipe(
           catchError((error: HttpErrorResponse) => {
             switch (error.status) {
               case 400:
-                  Swal.fire({
-                    icon: 'error',
-                    title: 'Başarısız!',
-                    text: error.error.message
-                  });
-                  this.acdcLoadingService.hideLoading();
-                  break;
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Başarısız!',
+                  text: error.error.message
+                });
+                this.acdcLoadingService.hideLoading();
+                break;
               case 404:      //login
                 this.router.navigateByUrl("/giris-yap");
                 this.acdcLoadingService.hideLoading();
@@ -62,6 +55,14 @@ export class AuthInterceptorService implements HttpInterceptor {
                 break;
               case 403:     //forbidden
                 this.router.navigateByUrl("/giris-yap");
+                this.acdcLoadingService.hideLoading();
+                break;
+              case 500:
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Başarısız!',
+                  text: "Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin."
+                });
                 this.acdcLoadingService.hideLoading();
                 break;
             }

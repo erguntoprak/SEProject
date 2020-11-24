@@ -7,5 +7,6 @@ namespace SE.Business.Infrastructure.ConfigurationManager
     public class Configuration
     {
         public string BaseUrl { get; set; }
+        public string ApiUrl { get; set; }
     }
 }

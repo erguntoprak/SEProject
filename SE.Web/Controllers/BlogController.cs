@@ -35,42 +35,105 @@ namespace SE.Web.Controllers
 
         [Authorize(Policy = "UserPolicy")]
         [HttpPost("InsertBlog")]
-        public IActionResult InsertBlog([FromBody] BlogInsertModel blogInsertModel)
+        public async Task<IActionResult> InsertBlog([FromBody] BlogInsertModel blogInsertModel)
         {
-            try
+            var blogInsertDto = _mapper.Map<BlogInsertDto>(blogInsertModel);
+            blogInsertDto.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            blogInsertDto.CreateTime = DateTime.Now;
+            blogInsertDto.UpdateTime = DateTime.Now;
+
+
+            string smallImageName = $"{UrlHelper.FriendlyUrl(blogInsertDto.Title)}-{Guid.NewGuid().ToString().Substring(0, 5)}";
+            string smallImageBase64Data = blogInsertDto.FirstVisibleImageName.Split(',')[1];
+            var smallImageBytes = Convert.FromBase64String(smallImageBase64Data);
+            string filedir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "blog");
+
+            if (smallImageBytes.Length > 0)
             {
-                var blogInsertDto = _mapper.Map<BlogInsertDto>(blogInsertModel);
-                blogInsertDto.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                blogInsertDto.CreateTime = DateTime.Now;
-                blogInsertDto.UpdateTime = DateTime.Now;
+                var smallImage = Image.FromStream(new MemoryStream(smallImageBytes));
+                var smallScaleImage = ImageResize.ScaleAndCrop(smallImage, 300, 180);
+                string smallFile = Path.Combine(filedir, smallImageName + "_300x180.jpg");
+                smallScaleImage.SaveAs(smallFile);
+                blogInsertDto.FirstVisibleImageName = smallImageName;
+            }
 
-
-                string smallImageName = $"{UrlHelper.FriendlyUrl(blogInsertDto.Title)}-{Guid.NewGuid().ToString().Substring(0, 5)}";
-                string smallImageBase64Data = blogInsertDto.FirstVisibleImageName.Split(',')[1];
-                var smallImageBytes = Convert.FromBase64String(smallImageBase64Data);
-                string filedir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "blog");
-
-                if (smallImageBytes.Length > 0)
+            for (int i = 0; i < blogInsertDto.BlogItems.Count; i++)
+            {
+                if (blogInsertDto.BlogItems[i].ImageName == "" && blogInsertDto.BlogItems[i].Description == "")
                 {
-                    var smallImage = Image.FromStream(new MemoryStream(smallImageBytes));
-                    var smallScaleImage = ImageResize.ScaleAndCrop(smallImage, 300, 180);
-                    string smallFile = Path.Combine(filedir, smallImageName + "_300x180.jpg");
-                    smallScaleImage.SaveAs(smallFile);
-                    blogInsertDto.FirstVisibleImageName = smallImageName;
+                    blogInsertDto.BlogItems.Remove(blogInsertDto.BlogItems[i]);
                 }
-
-                for (int i = 0; i < blogInsertDto.BlogItems.Count; i++)
+            }
+            foreach (var blogItem in blogInsertDto.BlogItems)
+            {
+                if (blogItem.ImageName != "" && blogItem.ImageName.StartsWith("data:image"))
                 {
-                    if (blogInsertDto.BlogItems[i].ImageName == "" && blogInsertDto.BlogItems[i].Description == "")
+                    string imageName = $"{UrlHelper.FriendlyUrl(blogInsertDto.Title)}-{Guid.NewGuid().ToString().Substring(0, 5)}";
+                    string base64Data = blogItem.ImageName.Split(',')[1];
+                    var bytes = Convert.FromBase64String(base64Data);
+
+                    if (bytes.Length > 0)
                     {
-                        blogInsertDto.BlogItems.Remove(blogInsertDto.BlogItems[i]);
+                        var bigImage = Image.FromStream(new MemoryStream(bytes));
+                        var bigScaleImage = ImageResize.ScaleAndCrop(bigImage, 1000, 600);
+                        string bigFile = Path.Combine(filedir, imageName + "_1000x600.jpg");
+                        bigScaleImage.SaveAs(bigFile);
+                        blogItem.ImageName = imageName;
                     }
                 }
-                foreach (var blogItem in blogInsertDto.BlogItems)
+            }
+            var result = await _blogService.InsertBlogAsync(blogInsertDto);
+            if (result.Success)
+                return Ok(result.Data);
+
+            return BadRequest(result);
+        }
+
+        [Authorize(Policy = "UserPolicy")]
+        [HttpPost("UpdateBlog")]
+        public async Task<IActionResult> UpdateBlog([FromBody] BlogUpdateModel blogUpdateModel)
+        {
+
+            var blogUpdateDto = _mapper.Map<BlogUpdateDto>(blogUpdateModel);
+            blogUpdateDto.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var blogDetail = await _blogService.GetBlogDetailByIdAsync(blogUpdateDto.Id);
+
+            var existingBlogDetailModel = _mapper.Map<BlogDetailModel>(blogDetail.Data);
+
+            string filedir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "blog");
+
+            if (blogUpdateDto.FirstVisibleImageName.StartsWith("data:image"))
+            {
+                string existingfirstVisibleImage = Path.Combine(filedir, existingBlogDetailModel.FirstVisibleImageName + "_300x180.jpg");
+                if (System.IO.File.Exists(existingfirstVisibleImage))
+                {
+                    System.IO.File.Delete(existingfirstVisibleImage);
+                    System.GC.Collect();
+                    System.GC.WaitForPendingFinalizers();
+                }
+                string firstVisibleImageName = $"{UrlHelper.FriendlyUrl(blogUpdateDto.Title)}-{Guid.NewGuid().ToString().Substring(0, 5)}.jpg";
+                string base64Data = blogUpdateDto.FirstVisibleImageName.Split(',')[1];
+                var bytes = Convert.FromBase64String(base64Data);
+
+                if (bytes.Length > 0)
+                {
+                    var firstVisibleImage = Image.FromStream(new MemoryStream(bytes));
+                    var firstVisibleImageScale = ImageResize.ScaleAndCrop(firstVisibleImage, 300, 180);
+                    string firstVisibleImageFile = Path.Combine(filedir, firstVisibleImageName + "_300x180.jpg");
+                    firstVisibleImageScale.SaveAs(firstVisibleImageFile);
+                    blogUpdateDto.FirstVisibleImageName = firstVisibleImageName;
+                }
+            }
+
+
+            foreach (var blogItem in blogUpdateDto.BlogItems)
+            {
+                if (!existingBlogDetailModel.BlogItems.Any(d => d.ImageName == blogItem.ImageName))
                 {
                     if (blogItem.ImageName != "" && blogItem.ImageName.StartsWith("data:image"))
                     {
-                        string imageName = $"{UrlHelper.FriendlyUrl(blogInsertDto.Title)}-{Guid.NewGuid().ToString().Substring(0, 5)}";
+                        string imageName = $"{UrlHelper.FriendlyUrl(blogUpdateDto.Title)}-{Guid.NewGuid().ToString().Substring(0, 5)}";
                         string base64Data = blogItem.ImageName.Split(',')[1];
                         var bytes = Convert.FromBase64String(base64Data);
 
@@ -84,185 +147,143 @@ namespace SE.Web.Controllers
                         }
                     }
                 }
-                int blogId = _blogService.InsertBlog(blogInsertDto);
-                return Ok(blogId);
             }
-            catch (ValidationException ex)
+
+            foreach (var blogItem in existingBlogDetailModel.BlogItems)
             {
-                return StatusCode(StatusCodes.Status400BadRequest, ex.Errors.Select(d => d.ErrorMessage));
-            }
-        }
-
-        [Authorize(Policy = "UserPolicy")]
-        [HttpPost("UpdateBlog")]
-        public IActionResult UpdateBlog([FromBody] BlogUpdateModel blogUpdateModel)
-        {
-            try
-            {
-                var blogUpdateDto = _mapper.Map<BlogUpdateDto>(blogUpdateModel);
-                blogUpdateDto.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                var existingBlogDetailModel = _mapper.Map<BlogDetailModel>(_blogService.GetBlogDetailById(blogUpdateDto.Id));
-
-                string filedir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "blog");
-
-                if (blogUpdateDto.FirstVisibleImageName.StartsWith("data:image"))
+                if (!blogUpdateDto.BlogItems.Any(d => d.ImageName == blogItem.ImageName) && blogItem.ImageName != "")
                 {
-                    string existingfirstVisibleImage = Path.Combine(filedir, existingBlogDetailModel.FirstVisibleImageName + "_300x180.jpg");
-                    if (System.IO.File.Exists(existingfirstVisibleImage))
+                    string existingBlogItemImage = Path.Combine(filedir, blogItem.ImageName + "_1000x600.jpg");
+                    if (System.IO.File.Exists(existingBlogItemImage))
                     {
-                        System.IO.File.Delete(existingfirstVisibleImage);
+                        System.IO.File.Delete(existingBlogItemImage);
                         System.GC.Collect();
                         System.GC.WaitForPendingFinalizers();
                     }
-                    string firstVisibleImageName = $"{UrlHelper.FriendlyUrl(blogUpdateDto.Title)}-{Guid.NewGuid().ToString().Substring(0, 5)}.jpg";
-                    string base64Data = blogUpdateDto.FirstVisibleImageName.Split(',')[1];
-                    var bytes = Convert.FromBase64String(base64Data);
-
-                    if (bytes.Length > 0)
-                    {
-                        var firstVisibleImage = Image.FromStream(new MemoryStream(bytes));
-                        var firstVisibleImageScale = ImageResize.ScaleAndCrop(firstVisibleImage, 300, 180);
-                        string firstVisibleImageFile = Path.Combine(filedir, firstVisibleImageName + "_300x180.jpg");
-                        firstVisibleImageScale.SaveAs(firstVisibleImageFile);
-                        blogUpdateDto.FirstVisibleImageName = firstVisibleImageName;
-                    }
                 }
-
-
-                foreach (var blogItem in blogUpdateDto.BlogItems)
-                {
-                    if (!existingBlogDetailModel.BlogItems.Any(d => d.ImageName == blogItem.ImageName))
-                    {
-                        if (blogItem.ImageName != "" && blogItem.ImageName.StartsWith("data:image"))
-                        {
-                            string imageName = $"{UrlHelper.FriendlyUrl(blogUpdateDto.Title)}-{Guid.NewGuid().ToString().Substring(0, 5)}";
-                            string base64Data = blogItem.ImageName.Split(',')[1];
-                            var bytes = Convert.FromBase64String(base64Data);
-
-                            if (bytes.Length > 0)
-                            {
-                                var bigImage = Image.FromStream(new MemoryStream(bytes));
-                                var bigScaleImage = ImageResize.ScaleAndCrop(bigImage, 1000, 600);
-                                string bigFile = Path.Combine(filedir, imageName + "_1000x600.jpg");
-                                bigScaleImage.SaveAs(bigFile);
-                                blogItem.ImageName = imageName;
-                            }
-                        }
-                    }
-                }
-
-                foreach (var blogItem in existingBlogDetailModel.BlogItems)
-                {
-                    if (!blogUpdateDto.BlogItems.Any(d => d.ImageName == blogItem.ImageName) && blogItem.ImageName != "")
-                    {
-                        string existingBlogItemImage = Path.Combine(filedir, blogItem.ImageName + "_1000x600.jpg");
-                        if (System.IO.File.Exists(existingBlogItemImage))
-                        {
-                            System.IO.File.Delete(existingBlogItemImage);
-                            System.GC.Collect();
-                            System.GC.WaitForPendingFinalizers();
-                        }
-                    }
-                }
-
-                for (int i = 0; i < blogUpdateDto.BlogItems.Count; i++)
-                {
-                    if (blogUpdateDto.BlogItems[i].ImageName == "" && blogUpdateDto.BlogItems[i].Description == "")
-                    {
-                        blogUpdateDto.BlogItems.Remove(blogUpdateDto.BlogItems[i]);
-                    }
-                }
-                _blogService.UpdateBlog(blogUpdateDto);
-                return Ok();
-
             }
-            catch (ValidationException ex)
+
+            for (int i = 0; i < blogUpdateDto.BlogItems.Count; i++)
             {
-                return StatusCode(StatusCodes.Status400BadRequest, ex.Errors.Select(d => d.ErrorMessage));
+                if (blogUpdateDto.BlogItems[i].ImageName == "" && blogUpdateDto.BlogItems[i].Description == "")
+                {
+                    blogUpdateDto.BlogItems.Remove(blogUpdateDto.BlogItems[i]);
+                }
             }
+
+            var result = await _blogService.UpdateBlogAsync(blogUpdateDto);
+            if (result.Success)
+                return Ok(result.Data);
+            return BadRequest(result);
+
         }
         [HttpGet("GetAllBlogListByUserId")]
-        public IActionResult GetAllBlogListByUserId()
+        public async Task<IActionResult> GetAllBlogListByUserId()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var blogListModel = _mapper.Map<List<BlogListModel>>(_blogService.GetAllBlogListByUserId(userId));
-            return Ok(blogListModel);
+            var result = await _blogService.GetAllBlogListByUserIdAsync(userId);
+            if (result.Success)
+                return Ok(_mapper.Map<List<BlogListModel>>(result.Data));
+
+            return BadRequest(result);
         }
 
         [HttpGet("GetAllBlogListByUserName")]
-        public IActionResult GetAllBlogListByUserName(string userName)
+        public async Task<IActionResult> GetAllBlogListByUserName(string userName)
         {
-            var blogListModel = _mapper.Map<List<BlogListModel>>(_blogService.GetAllBlogListByUserName(userName));
-            return Ok(blogListModel);
+            var result = await _blogService.GetAllBlogListByUserNameAsync(userName);
+            if (result.Success)
+                return Ok(_mapper.Map<List<BlogListModel>>(result.Data));
+
+            return BadRequest(result);
         }
         [HttpGet("GetAllBlogList")]
-        public IActionResult GetAllBlogList()
+        public async Task<IActionResult> GetAllBlogList()
         {
-            var blogListModel = _mapper.Map<List<BlogListModel>>(_blogService.GetAllBlogList());
-            return Ok(blogListModel);
+            var result = await _blogService.GetAllBlogListAsync();
+            if (result.Success)
+                return Ok(_mapper.Map<List<BlogListModel>>(result.Data));
+
+            return BadRequest(result);
+        }
+        [HttpGet("GetAllBlogViewList")]
+        public async Task<IActionResult> GetAllBlogViewList()
+        {
+            var result = await _blogService.GetAllBlogViewListAsync();
+            if (result.Success)
+                return Ok(_mapper.Map<List<BlogListModel>>(result.Data));
+
+            return BadRequest(result);
         }
 
         [HttpGet("GetBlogDetailBySeoUrl")]
-        public IActionResult GetBlogDetailBySeoUrl(string seoUrl)
+        public async Task<IActionResult> GetBlogDetailBySeoUrl(string seoUrl)
         {
-            var blogDetailModel = _mapper.Map<BlogDetailModel>(_blogService.GetBlogDetailBySeoUrl(seoUrl));
-            return Ok(blogDetailModel);
+            var result = await _blogService.GetBlogDetailBySeoUrlAsync(seoUrl);
+            if (result.Success)
+                return Ok(_mapper.Map<BlogDetailModel>(result.Data));
+
+            return BadRequest(result);
         }
 
         [Authorize(Policy = "UserPolicy")]
         [HttpGet("GetBlogUpdateBySeoUrl")]
-        public IActionResult GetBlogUpdateBySeoUrl(string seoUrl)
+        public async Task<IActionResult> GetBlogUpdateBySeoUrl(string seoUrl)
         {
-            try
-            {
-                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var blogUpdateModel = _mapper.Map<BlogUpdateModel>(_blogService.GetBlogUpdateBySeoUrl(seoUrl, userId));
-                return Ok(blogUpdateModel);
-            }
-            catch (ArgumentNullException ex)
-            {
-                return StatusCode(StatusCodes.Status404NotFound);
-            }
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = await _blogService.GetBlogUpdateBySeoUrlAsync(seoUrl, userId);
+            if (result.Success)
+                return Ok(_mapper.Map<BlogUpdateModel>(result.Data));
+
+            return BadRequest(result);
         }
 
         [Authorize(Policy = "UserPolicy")]
         [HttpDelete("DeleteBlog")]
-        public IActionResult DeleteBlog(int blogId)
+        public async Task<IActionResult> DeleteBlog(int blogId)
         {
-            try
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var blogDetail = await _blogService.GetBlogDetailByIdAsync(blogId);
+            var blogDetailModel = _mapper.Map<BlogDetailModel>(blogDetail.Data);
+            string filedir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "blog");
+
+            var smallImageFile = Path.Combine(filedir, blogDetailModel.FirstVisibleImageName + "_300x180.jpg");
+
+            if (System.IO.File.Exists(smallImageFile))
             {
-                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var blogDetailModel = _mapper.Map<BlogDetailModel>(_blogService.GetBlogDetailById(blogId));
-                string filedir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "blog");
+                System.IO.File.Delete(smallImageFile);
+                System.GC.Collect();
+                System.GC.WaitForPendingFinalizers();
+            }
 
-                var smallImageFile = Path.Combine(filedir, blogDetailModel.FirstVisibleImageName + "_300x180.jpg");
+            foreach (var blogItem in blogDetailModel.BlogItems)
+            {
+                string bigImageFile = Path.Combine(filedir, blogItem.ImageName + "_1000x600.jpg");
 
-                if (System.IO.File.Exists(smallImageFile))
+                if (System.IO.File.Exists(bigImageFile))
                 {
-                    System.IO.File.Delete(smallImageFile);
+                    System.IO.File.Delete(bigImageFile);
                     System.GC.Collect();
                     System.GC.WaitForPendingFinalizers();
                 }
-
-                foreach (var blogItem in blogDetailModel.BlogItems)
-                {
-                    string bigImageFile = Path.Combine(filedir, blogItem.ImageName + "_1000x600.jpg");
-
-                    if (System.IO.File.Exists(bigImageFile))
-                    {
-                        System.IO.File.Delete(bigImageFile);
-                        System.GC.Collect();
-                        System.GC.WaitForPendingFinalizers();
-                    }
-                }
-                _blogService.DeleteBlog(blogId, userId);
-                return Ok();
             }
-            catch (ArgumentNullException ex)
-            {
-                return StatusCode(StatusCodes.Status404NotFound);
-            }
+            var result = await _blogService.DeleteBlogAsync(blogId, userId);
+
+            if (result.Success)
+                return Ok(result);
+
+            return BadRequest(result);
         }
+
+        [Authorize(Policy = "AdminPolicy")]
+        [HttpPost("UpdateBlogActivate")]
+        public async Task<IActionResult> UpdateBlogActivate([FromBody] BlogActivateModel blogActivateModel)
+        {
+            var result = await _blogService.UpdateBlogActivateAsync(blogActivateModel.BlogId, blogActivateModel.IsActive);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
+        }
+
     }
 }

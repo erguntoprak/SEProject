@@ -11,6 +11,7 @@ namespace SE.Core.DTO
         public string UserSeoUrl { get; set; }
         public string SeoUrl { get; set; }
         public string UserName { get; set; }
+        public bool IsActive { get; set; }
         public string FirstVisibleImageName { get; set; }
         public DateTime CreateTime { get; set; }
     }

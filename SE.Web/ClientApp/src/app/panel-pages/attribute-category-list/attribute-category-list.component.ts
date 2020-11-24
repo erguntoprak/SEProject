@@ -1,9 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { BaseService } from '../../shared/base.service';
-import { BlogListModel, UserListModel, CategoryModel, AttributeCategoryModel } from '../../shared/models';
+import { AttributeCategoryModel } from '../../shared/models';
 import Swal from 'sweetalert2';
-import { HttpErrorResponse } from '@angular/common/http';
-import * as _ from 'lodash';
 import { AcdcLoadingService } from 'acdc-loading';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -39,6 +37,7 @@ export class AttributeCategoryListComponent implements OnInit {
     this.baseService.getAll<AttributeCategoryModel[]>("AttributeCategory/GetAllAttributeCategoryList").subscribe(attributeCategoryList => {
       this.dataSource = new MatTableDataSource(attributeCategoryList);
       this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
       this.acdcLoadingService.hideLoading();
     });
   }

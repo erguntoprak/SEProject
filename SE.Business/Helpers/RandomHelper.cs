@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SE.Business.Helpers
 {
@@ -9,24 +10,28 @@ namespace SE.Business.Helpers
     {
         private static Random Rand = null;
 
-        public static List<T> RandomList<T>(
+        public static Task<List<T>> RandomListAsync<T>(
             this T[] list, int num_values)
         {
-            if (Rand == null) Rand = new Random();
-
-            if (num_values >= list.Length)
-                num_values = list.Length;
-
-            List<T> tmpList = new List<T>(list);
-            List<T> newList = new List<T>();
-
-            while (newList.Count < num_values && tmpList.Count > 0)
+            Task<List<T>> task = Task.Run(() =>
             {
-                int index = Rand.Next(0, tmpList.Count);
-                newList.Add(tmpList[index]);
-                tmpList.RemoveAt(index);
-            }
-            return newList;
+                if (Rand == null) Rand = new Random();
+
+                if (num_values >= list.Length)
+                    num_values = list.Length;
+
+                List<T> tmpList = new List<T>(list);
+                List<T> newList = new List<T>();
+
+                while (newList.Count < num_values && tmpList.Count > 0)
+                {
+                    int index = Rand.Next(0, tmpList.Count);
+                    newList.Add(tmpList[index]);
+                    tmpList.RemoveAt(index);
+                }
+                return newList;
+            });
+            return task;
         }
     }
 }

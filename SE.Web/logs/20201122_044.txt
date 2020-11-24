@@ -1,0 +1,1 @@
+2020-11-22 01:59:56.646 +03:00 [Information] {"FullName":"AccountService","MethodName":"LoginAsync","Parameters":[{"Name":"loginDto","Value":{"Email":"ergun.35.toprak@gmail.com","Password":"ersap1l1"},"Type":"LoginDto"}],"UserEmail":"ergun.35.toprak@gmail.com"}

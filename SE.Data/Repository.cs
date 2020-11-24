@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SE.Data
 {
-    public class Repository<TEntity>:IRepository<TEntity> where TEntity:BaseEntity
+    public class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
     {
         private readonly DbContext _context;
 
@@ -17,34 +18,32 @@ namespace SE.Data
             _context = context;
         }
 
-        protected string GetFullErrorTextAndRollbackEntityChanges(DbUpdateException exception)
-        {
-            if (_context is DbContext dbContext)
-            {
-                var entries = dbContext.ChangeTracker.Entries().Where(e => e.State == EntityState.Added || e.State == EntityState.Modified)
-                    .ToList();
-                entries.ForEach(entry => entry.State = EntityState.Unchanged);
-            }
-            return exception.ToString();
-        }
         private DbSet<TEntity> _entities;
 
         public TEntity GetById(object id)
         {
             return Entities.Find(id);
         }
+        public async Task<TEntity> GetByIdAsync(object id)
+        {
+            return await Entities.FindAsync(id);
+        }
+        public IEnumerable<TEntity> GetList(Expression<Func<TEntity, bool>> expression = null)
+        {
+            return expression == null ? Entities.AsNoTracking() : Entities.Where(expression).AsNoTracking();
+        }
+
+        public async Task<IEnumerable<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> expression = null)
+        {
+            return expression == null ? await Entities.ToListAsync() :
+                 await Entities.Where(expression).ToListAsync();
+        }
         public void Delete(TEntity entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
-            try
-            {
-                Entities.Remove(entity);
-            }
-            catch (DbUpdateException exception)
-            {
-                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(exception), exception);
-            }
+
+            Entities.Remove(entity);
         }
 
         public void Delete(IEnumerable<TEntity> entities)
@@ -55,21 +54,12 @@ namespace SE.Data
             Entities.RemoveRange(entities);
         }
 
-
-
         public void Insert(TEntity entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            try
-            {
-                Entities.Add(entity);
-            }
-            catch (DbUpdateException exception)
-            {
-                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(exception), exception);
-            }
+            Entities.Add(entity);
         }
 
         public void Update(TEntity entity)
@@ -77,15 +67,7 @@ namespace SE.Data
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            try
-            {
-                Entities.Update(entity);
-            }
-            catch (DbUpdateException exception)
-            {
-                //ensure that the detailed error text is saved in the Log
-                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(exception), exception);
-            }
+            Entities.Update(entity);
         }
 
         public IQueryable<TEntity> Include(Expression<Func<TEntity, object>>[] includes)

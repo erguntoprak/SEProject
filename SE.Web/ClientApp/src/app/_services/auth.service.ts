@@ -2,7 +2,6 @@ import { Router } from '@angular/router';
 import { BaseService } from './../shared/base.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, throwError } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
 import { LoginModel, RegisterModel, UserLoginModel } from '../shared/models';
 import { map } from 'rxjs/operators';
 @Injectable({ providedIn: 'root' })

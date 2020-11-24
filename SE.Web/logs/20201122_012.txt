@@ -1,0 +1,1 @@
+2020-11-22 00:53:27.291 +03:00 [Information] {"FullName":"AccountService","MethodName":"RegisterAsync","Parameters":[{"Name":"registerDto","Value":{"Name":"sdfsdfsd","Surname":"sdfsdf","Email":"setrofsoftware@gmail.com","Phone":"4354545454","Password":"ergun123l"},"Type":"RegisterDto"}],"UserEmail":"izmiregitimkurumlari@gmail.com"}

@@ -1,0 +1,2 @@
+2020-11-22 12:30:18.190 +03:00 [Information] {"FullName":"AccountService","MethodName":"GetUserDtoByEmailAsync","Parameters":[{"Name":"email","Value":"video.35.cosmos@gmail.com","Type":"String"}],"UserEmail":"izmiregitimkurumlari@gmail.com"}
+2020-11-22 12:45:07.862 +03:00 [Information] {"FullName":"AccountService","MethodName":"RegisterAsync","Parameters":[{"Name":"registerDto","Value":{"Name":"fsdf","Surname":"sfasdf","Email":"setrofsoftware@gmail.com","Phone":"4534534535","Password":"123456"},"Type":"RegisterDto"}],"UserEmail":"video.35.cosmos@gmail.com"}

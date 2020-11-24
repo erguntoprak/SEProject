@@ -30,11 +30,11 @@ namespace SE.Web.Controllers
         public async Task<IActionResult> GetAllAttributeCategoryList()
         {
             var result = await _attributeCategoryService.GetAllAttributeCategoryListAsync();
-            if(result.Success)
+            if (result.Success)
                 return Ok(_mapper.Map<List<AttributeCategoryModel>>(result.Data));
 
             return BadRequest(result);
-            
+
         }
 
         [HttpGet("GetAttributeCategoryById")]
@@ -49,51 +49,54 @@ namespace SE.Web.Controllers
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost("InsertAttributeCategory")]
-        public IActionResult InsertAttributeCategory([FromBody] AttributeCategoryModel attributeCategoryModel)
+        public async Task<IActionResult> InsertAttributeCategory([FromBody] AttributeCategoryModel attributeCategoryModel)
         {
             var attributeCategoryDto = _mapper.Map<AttributeCategoryDto>(attributeCategoryModel);
-            _attributeCategoryService.InsertAttributeCategory(attributeCategoryDto);
-            return Ok();
+            var result = await _attributeCategoryService.InsertAttributeCategoryAsync(attributeCategoryDto);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
         }
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost("UpdateAttributeCategory")]
-        public IActionResult UpdateAttributeCategory([FromBody] AttributeCategoryModel attributeCategoryModel)
+        public async Task<IActionResult> UpdateAttributeCategory([FromBody] AttributeCategoryModel attributeCategoryModel)
         {
             var attributeCategoryDto = _mapper.Map<AttributeCategoryDto>(attributeCategoryModel);
-            _attributeCategoryService.UpdateAttributeCategory(attributeCategoryDto);
-            return Ok();
+            var result = await _attributeCategoryService.UpdateAttributeCategoryAsync(attributeCategoryDto);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
         }
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost("DeleteAttributeCategory")]
-        public IActionResult DeleteAttributeCategory([FromBody] int attributeCategoryId)
+        public async Task<IActionResult> DeleteAttributeCategory([FromBody] int attributeCategoryId)
         {
-            try
-            {
-                _attributeCategoryService.DeleteAttributeCategory(attributeCategoryId);
-                return Ok();
-            }
-            catch (DbUpdateException ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Bu kaydı silemezsin. Silmek için bağlı olduğu diğer kayıtların silinmesi gerekiyor.");
-            }
+            var result = await _attributeCategoryService.DeleteAttributeCategoryAsync(attributeCategoryId);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
         }
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost("InsertCategoryAttributeCategory")]
-        public IActionResult InsertCategoryAttributeCategory([FromBody] CategoryAttributeCategoryInsertModel categoryAttributeCategoryInsertModel)
+        public async Task<IActionResult> InsertCategoryAttributeCategory([FromBody] CategoryAttributeCategoryInsertModel categoryAttributeCategoryInsertModel)
         {
             var categoryAttributeCategoryInsertDto = _mapper.Map<CategoryAttributeCategoryInsertDto>(categoryAttributeCategoryInsertModel);
-            _attributeCategoryService.InsertCategoryAttributeCategory(categoryAttributeCategoryInsertDto);
-            return Ok();
+            var result = await _attributeCategoryService.InsertCategoryAttributeCategoryAsync(categoryAttributeCategoryInsertDto);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
         }
 
         [HttpGet("GetAttributeCategoryIdsByCategoryId")]
-        public IActionResult GetAttributeCategoryIdsByCategoryId(int categoryId)
+        public async Task<IActionResult> GetAttributeCategoryIdsByCategoryId(int categoryId)
         {
-            var attributeCategoryIds = _attributeCategoryService.GetAttributeCategoryIdsByCategoryId(categoryId);
-            return Ok(attributeCategoryIds);
+            var result = await _attributeCategoryService.GetAttributeCategoryIdsByCategoryIdAsync(categoryId);
+            if (result.Success)
+                return Ok(result.Data);
+            return BadRequest(result);
         }
     }
 }

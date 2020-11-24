@@ -6,7 +6,6 @@ import { UserModel } from 'src/app/shared/models';
 import { AuthService } from 'src/app/_services/auth.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MyErrorStateMatcher } from 'src/app/_helpers/input-error-state-matcher';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'se-user-profil',
@@ -22,7 +21,8 @@ export class UserProfilComponent implements OnInit {
 
   ngOnInit() {
     this.userUpdateForm = this.formBuilder.group({
-      userId: [null, Validators.required],
+      userId: [null,  Validators.required],
+      userName: [null, Validators.required],
       email: [null, [Validators.required, Validators.email]],
       phoneNumber: [null, Validators.required],
       name: [null, Validators.required],

@@ -10,13 +10,13 @@
 
     <!-- Set this to true if you enable server-side prerendering -->
     <BuildServerSideRenderer>false</BuildServerSideRenderer>
+    <UserSecretsId>64ec259a-c843-47c8-aff3-6f73f3fa1e5f</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.0.2" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="9.2.0" />
-    <PackageReference Include="LazZiya.ImageResize" Version="3.0.0" />
     <PackageReference Include="MailKit" Version="2.4.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.1" />
@@ -43,6 +43,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\images\izmir-egitim-kurumlari.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SE.Business\SE.Business.csproj" />
     <ProjectReference Include="..\SE.Core\SE.Core.csproj" />
     <ProjectReference Include="..\SE.Data\SE.Data.csproj" />
@@ -55,6 +59,7 @@
 
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
+    <None Include="wwwroot\images\izmir-egitim-kurumlari.png" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

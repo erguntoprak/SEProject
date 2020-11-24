@@ -29,8 +29,10 @@ namespace SE.Business.Infrastructure.Autofac
         protected override void Load(ContainerBuilder builder)
         {
 
-            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>();
+            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
             builder.RegisterType<EntitiesDbContext>().As<DbContext>().InstancePerLifetimeScope();
+            builder.RegisterType<EmailSender>().As<IEmailService>().InstancePerLifetimeScope();
+
 
 
             builder.RegisterType<AttributeService>().As<IAttributeService>().InstancePerLifetimeScope().EnableInterfaceInterceptors(new ProxyGenerationOptions()
@@ -53,10 +55,7 @@ namespace SE.Business.Infrastructure.Autofac
             {
                 Selector = new AspectInterceptorSelector()
             });
-            builder.RegisterType<EmailSender>().As<IEmailService>().InstancePerLifetimeScope().EnableInterfaceInterceptors(new ProxyGenerationOptions()
-            {
-                Selector = new AspectInterceptorSelector()
-            });
+            
             builder.RegisterType<ImageService>().As<IImageService>().InstancePerLifetimeScope().EnableInterfaceInterceptors(new ProxyGenerationOptions()
             {
                 Selector = new AspectInterceptorSelector()

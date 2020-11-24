@@ -1,0 +1,2 @@
+2020-11-16 02:24:06.904 +03:00 [Information] {"FullName":"AccountService","MethodName":"GetUserDtoByIdAsync","Parameters":[{"Name":"userId","Value":"4259c402-b716-4932-9faa-2e2eff4da788","Type":"String"}],"UserEmail":"ergun.35.toprak@gmail.com"}
+2020-11-16 17:49:23.251 +03:00 [Information] {"FullName":"CategoryService","MethodName":"GetAllCategoryList","Parameters":[],"UserEmail":"ergun.35.toprak@gmail.com"}

@@ -36,136 +36,6 @@
                         </span>
                       </a>
                     </li>
-                    <li *ngFor="let category of categories;let i=index" class="nav-item">
-                      <a routerLink="/egitim-kurumlari/{{category.seoUrl}}" class="item">
-                        <span class="img">
-                          <img src="assets/img/egitim-kurumu-{{i}}.png" alt="{{category.name}}">
-                        </span>
-                        <span class="text">
-                          {{category.name}}
-                        </span>
-                      </a>
-                    </li>
-                    <li *ngFor="let category of categories;let i=index" class="nav-item">
-                      <a routerLink="/egitim-kurumlari/{{category.seoUrl}}" class="item">
-                        <span class="img">
-                          <img src="assets/img/egitim-kurumu-{{i}}.png" alt="{{category.name}}">
-                        </span>
-                        <span class="text">
-                          {{category.name}}
-                        </span>
-                      </a>
-                    </li>
-                    <li *ngFor="let category of categories;let i=index" class="nav-item">
-                      <a routerLink="/egitim-kurumlari/{{category.seoUrl}}" class="item">
-                        <span class="img">
-                          <img src="assets/img/egitim-kurumu-{{i}}.png" alt="{{category.name}}">
-                        </span>
-                        <span class="text">
-                          {{category.name}}
-                        </span>
-                      </a>
-                    </li>
-                    <li *ngFor="let category of categories;let i=index" class="nav-item">
-                      <a routerLink="/egitim-kurumlari/{{category.seoUrl}}" class="item">
-                        <span class="img">
-                          <img src="assets/img/egitim-kurumu-{{i}}.png" alt="{{category.name}}">
-                        </span>
-                        <span class="text">
-                          {{category.name}}
-                        </span>
-                      </a>
-                    </li>
-                    <li *ngFor="let category of categories;let i=index" class="nav-item">
-                      <a routerLink="/egitim-kurumlari/{{category.seoUrl}}" class="item">
-                        <span class="img">
-                          <img src="assets/img/egitim-kurumu-{{i}}.png" alt="{{category.name}}">
-                        </span>
-                        <span class="text">
-                          {{category.name}}
-                        </span>
-                      </a>
-                    </li>
-                    <li *ngFor="let category of categories;let i=index" class="nav-item">
-                      <a routerLink="/egitim-kurumlari/{{category.seoUrl}}" class="item">
-                        <span class="img">
-                          <img src="assets/img/egitim-kurumu-{{i}}.png" alt="{{category.name}}">
-                        </span>
-                        <span class="text">
-                          {{category.name}}
-                        </span>
-                      </a>
-                    </li>
-                    <li *ngFor="let category of categories;let i=index" class="nav-item">
-                      <a routerLink="/egitim-kurumlari/{{category.seoUrl}}" class="item">
-                        <span class="img">
-                          <img src="assets/img/egitim-kurumu-{{i}}.png" alt="{{category.name}}">
-                        </span>
-                        <span class="text">
-                          {{category.name}}
-                        </span>
-                      </a>
-                    </li>
-                    <li *ngFor="let category of categories;let i=index" class="nav-item">
-                      <a routerLink="/egitim-kurumlari/{{category.seoUrl}}" class="item">
-                        <span class="img">
-                          <img src="assets/img/egitim-kurumu-{{i}}.png" alt="{{category.name}}">
-                        </span>
-                        <span class="text">
-                          {{category.name}}
-                        </span>
-                      </a>
-                    </li>
-                    <li *ngFor="let category of categories;let i=index" class="nav-item">
-                      <a routerLink="/egitim-kurumlari/{{category.seoUrl}}" class="item">
-                        <span class="img">
-                          <img src="assets/img/egitim-kurumu-{{i}}.png" alt="{{category.name}}">
-                        </span>
-                        <span class="text">
-                          {{category.name}}
-                        </span>
-                      </a>
-                    </li>
-                    <li *ngFor="let category of categories;let i=index" class="nav-item">
-                      <a routerLink="/egitim-kurumlari/{{category.seoUrl}}" class="item">
-                        <span class="img">
-                          <img src="assets/img/egitim-kurumu-{{i}}.png" alt="{{category.name}}">
-                        </span>
-                        <span class="text">
-                          {{category.name}}
-                        </span>
-                      </a>
-                    </li>
-                    <li *ngFor="let category of categories;let i=index" class="nav-item">
-                      <a routerLink="/egitim-kurumlari/{{category.seoUrl}}" class="item">
-                        <span class="img">
-                          <img src="assets/img/egitim-kurumu-{{i}}.png" alt="{{category.name}}">
-                        </span>
-                        <span class="text">
-                          {{category.name}}
-                        </span>
-                      </a>
-                    </li>
-                    <li *ngFor="let category of categories;let i=index" class="nav-item">
-                      <a routerLink="/egitim-kurumlari/{{category.seoUrl}}" class="item">
-                        <span class="img">
-                          <img src="assets/img/egitim-kurumu-{{i}}.png" alt="{{category.name}}">
-                        </span>
-                        <span class="text">
-                          {{category.name}}
-                        </span>
-                      </a>
-                    </li>
-                    <li *ngFor="let category of categories;let i=index" class="nav-item">
-                      <a routerLink="/egitim-kurumlari/{{category.seoUrl}}" class="item">
-                        <span class="img">
-                          <img src="assets/img/egitim-kurumu-{{i}}.png" alt="{{category.name}}">
-                        </span>
-                        <span class="text">
-                          {{category.name}}
-                        </span>
-                      </a>
-                    </li>
                   </ul>
                 </li>
               </ul>
@@ -176,6 +46,9 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" routerLink="/iletisim">İletişim</a>
+          </li>
+          <li *ngIf="isUser" class="nav-item">
+            <a class="nav-link" routerLink="/panel">Panel</a>
           </li>
         </ul>
         <a class="btn_get btn_hover" routerLink="/giris-yap">Giriş Yap veya Kaydol</a>

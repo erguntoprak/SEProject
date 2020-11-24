@@ -152,6 +152,18 @@ const routes: Routes = [
         loadChildren: () => import('./panel-pages/attribute-edit/attribute-edit.module').then(m => m.AttributeEditModule),
         canLoad: [AuthGuard],
         data: {roles:[Roles.Admin]}
+      },
+      {
+        path: 'egitim-islemleri',
+        loadChildren: () => import('./panel-pages/education-operation-list/education-operation-list.module').then(m => m.EducationOperationListModule),
+        canLoad: [AuthGuard],
+        data: {roles:[Roles.Admin]}
+      },
+      {
+        path: 'blog-islemleri',
+        loadChildren: () => import('./panel-pages/blog-operation-list/blog-operation-list.module').then(m => m.BlogOperationListModule),
+        canLoad: [AuthGuard],
+        data: {roles:[Roles.Admin]}
       }
     ]
   },

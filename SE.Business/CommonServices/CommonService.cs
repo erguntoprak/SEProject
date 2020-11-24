@@ -30,7 +30,7 @@ namespace SE.Business.CommonServices
             dashboardDataDto.BlogTotalCount = (await _unitOfWork.BlogRepository.Table.Where(d => d.UserId == d.UserId).ToListAsync()).Count;
 
             var educationIds = educationList.Select(d => d.Id);
-            dashboardDataDto.ContactFormCount = (await _unitOfWork.EducationContactFormRepository.Table.Where(d=> educationIds.Contains(d.Id)).ToListAsync()).Count;
+            dashboardDataDto.ContactFormCount = (await _unitOfWork.EducationContactFormRepository.Table.Where(d=> educationIds.Contains(d.EducationId)).ToListAsync()).Count;
 
             return new SuccessDataResult<DashboardDataDto>(dashboardDataDto);
         }

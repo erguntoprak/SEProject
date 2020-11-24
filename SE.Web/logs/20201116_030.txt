@@ -1,0 +1,1 @@
+2020-11-16 18:08:25.021 +03:00 [Information] {"FullName":"AccountService","MethodName":"GetAllUserListAsync","Parameters":[],"UserEmail":"ergun.35.toprak@gmail.com"}

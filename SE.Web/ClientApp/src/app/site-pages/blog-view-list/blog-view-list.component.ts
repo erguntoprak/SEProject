@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseService } from '../../shared/base.service';
-import * as _ from 'lodash';
 import { AcdcLoadingService } from 'acdc-loading';
 import { ActivatedRoute } from '@angular/router';
 import { BlogListModel } from '../../shared/models';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'se-blog-view-list',
   templateUrl: './blog-view-list.component.html'
 })
 export class BlogViewListComponent implements OnInit {
-
+  
+  apiUrl = environment.apiUrl;
   blogListModel: BlogListModel;
 
   constructor(private baseService: BaseService, private acdcLoadingService: AcdcLoadingService, private route: ActivatedRoute) {
@@ -27,7 +28,7 @@ export class BlogViewListComponent implements OnInit {
         });
       }
       else {
-        this.baseService.getAll<BlogListModel>("Blog/GetAllBlogList").subscribe(data => {
+        this.baseService.getAll<BlogListModel>("Blog/GetAllBlogViewList").subscribe(data => {
           this.blogListModel = data;
           this.acdcLoadingService.hideLoading();
         });

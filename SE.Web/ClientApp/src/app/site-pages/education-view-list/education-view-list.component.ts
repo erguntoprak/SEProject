@@ -1,12 +1,10 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ViewChildren } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChildren } from '@angular/core';
 import { BaseService } from '../../shared/base.service';
-import * as _ from 'lodash';
 import { AcdcLoadingService } from 'acdc-loading';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { CategoryModel, DistrictModel, AddressModel, CategoryAttributeListModel, FilterModel, EducationListModel, EducationFilterListModel } from '../../shared/models';
-import { FormControl, FormArray } from '@angular/forms';
-import { Observable, forkJoin } from 'rxjs';
-import { Location } from '@angular/common';
+import { forkJoin } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 declare var $: any;
 
@@ -18,6 +16,7 @@ declare var $: any;
 })
 export class EducationViewListComponent implements OnInit, AfterViewInit {
 
+  apiUrl = environment.apiUrl;
   @ViewChildren('filteredItems') filteredItems;
   categories: CategoryModel[] = [];
   districtList: DistrictModel[] = [];
@@ -34,7 +33,7 @@ export class EducationViewListComponent implements OnInit, AfterViewInit {
   educationViewItemCount = 12;
   pageNumber: number = 1;
 
-  constructor(private baseService: BaseService, private acdcLoadingService: AcdcLoadingService, private route: ActivatedRoute, private router: Router, private location: Location) {
+  constructor(private baseService: BaseService, private acdcLoadingService: AcdcLoadingService, private route: ActivatedRoute, private router: Router) {
 
   }
   ngOnInit(): void {
@@ -183,8 +182,9 @@ export class EducationViewListComponent implements OnInit, AfterViewInit {
     }
     this.navigateFilterUrl();
   }
-  changeeducationViewItemCount() {
+  changeeducationViewItemCount(event) {
     this.pageNumber = 1;
+    this.educationViewItemCount = +event.target.value;;
   }
   getSelectedAttributeName(attributeId: number) {
     let attributeName: string;

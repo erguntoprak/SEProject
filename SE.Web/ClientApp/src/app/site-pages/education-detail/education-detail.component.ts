@@ -7,6 +7,7 @@ import { AcdcLoadingService } from 'acdc-loading';
 import { DomSanitizer } from '@angular/platform-browser';
 import 'hammerjs';
 import { NgxGalleryOptions, NgxGalleryImage} from 'ngx-gallery-9';
+import { environment } from 'src/environments/environment';
 
 declare var $: any;
 @Component({
@@ -53,21 +54,20 @@ export class EducationDetailComponent implements OnInit, AfterViewInit {
     this.route.params.subscribe(params => {
       this.baseService.get("Education/GetEducationDetailModelBySeoUrl?seoUrl=", params['name']).subscribe(data => {
         this.educationDetailModel = data;
-        console.log(this.educationDetailModel);
         if (this.educationDetailModel.socialInformation.mapCode != '') {
           this.educationDetailModel.socialInformation.mapCode = this.sanitizer.bypassSecurityTrustHtml(this.educationDetailModel.socialInformation.mapCode);
         }
         this.educationDetailModel.socialInformation.youtubeVideoOne = this.educationDetailModel.socialInformation.youtubeVideoOne.split("watch?v=")[1];
         this.educationDetailModel.socialInformation.youtubeVideoTwo = this.educationDetailModel.socialInformation.youtubeVideoTwo.split("watch?v=")[1]
         this.educationDetailModel.blogList.map(blog => {
-          blog.firstVisibleImageName = `https://localhost:44362/images/blog/${blog.firstVisibleImageName}_300x180.jpg`
+          blog.firstVisibleImageName = `${environment.apiUrl}/images/blog/${blog.firstVisibleImageName}_300x180.jpg`
         });
 
         this.educationDetailModel.images.forEach(image => {
           this.galleryImages.push({
-            small: `https://localhost:44362/images/${image}_1000x600.jpg`,
-            medium: `https://localhost:44362/images/${image}_1000x600.jpg`,
-            big:`https://localhost:44362/images/${image}_1000x600.jpg`
+            small: `${environment.apiUrl}/images/${image}_1000x600.jpg`,
+            medium: `${environment.apiUrl}/images/${image}_1000x600.jpg`,
+            big:`${environment.apiUrl}/images/${image}_1000x600.jpg`
           });
         });
 

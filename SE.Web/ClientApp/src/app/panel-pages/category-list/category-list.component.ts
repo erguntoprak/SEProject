@@ -1,9 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { BaseService } from '../../shared/base.service';
-import { BlogListModel, UserListModel, CategoryModel } from '../../shared/models';
+import { UserListModel, CategoryModel } from '../../shared/models';
 import Swal from 'sweetalert2';
-import { HttpErrorResponse } from '@angular/common/http';
-import * as _ from 'lodash';
 import { AcdcLoadingService } from 'acdc-loading';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -40,6 +38,7 @@ export class CategoryListComponent implements OnInit {
     this.baseService.getAll<CategoryModel[]>("Category/GetAllCategoryList").subscribe(categoryList => {
       this.dataSource = new MatTableDataSource(categoryList);
       this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
       this.acdcLoadingService.hideLoading();
     });
   }

@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-lg-12 blog_single_info">
         <div class="blog_list_item blog_list_item_two" *ngFor="let blogItem of blogDetailModel.blogItems; let i = index; ">
-          <img class="img-fluid" *ngIf="blogItem.imageName != ''" src="https://localhost:44362/images/blog/{{blogItem.imageName}}_1000x600.jpg" alt="">
+          <img class="img-fluid" *ngIf="blogItem.imageName != ''" src="{{apiUrl}}/images/blog/{{blogItem.imageName}}_1000x600.jpg" alt="">
           <h1 *ngIf="i==0" class="f_p f_size_30 l_height45 f_500 t_color mt_30 mb-0">{{blogDetailModel.title}}</h1>
           <span *ngIf="i==0">{{blogDetailModel.author}} - {{blogDetailModel.createTime}}</span>
           <div *ngIf="blogItem.description != ''" class="blog_content">

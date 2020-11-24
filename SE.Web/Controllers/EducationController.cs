@@ -11,11 +11,9 @@ using LazZiya.ImageResize;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SE.Business.CategoryServices;
 using SE.Business.EducationServices;
-using SE.Business.Helpers;
 using SE.Business.ImageServices;
 using SE.Core.DTO;
 using SE.Web.Model.Education;
@@ -41,351 +39,296 @@ namespace SE.Web.Controllers
         }
         [Authorize(Policy = "UserPolicy")]
         [HttpPost("AddEducation")]
-        [DisableRequestSizeLimit]
-        public IActionResult AddEducation([FromBody]EducationInsertModel educationInsertModel)
+        public async Task<IActionResult> AddEducation([FromBody] EducationInsertModel educationInsertModel)
         {
-            try
-            {
-                for (int i = 0; i < educationInsertModel.Images.Length; i++)
-                {
-                    string imageName = $"{UrlHelper.FriendlyUrl(educationInsertModel.GeneralInformation.EducationName)}-{Guid.NewGuid().ToString().Substring(0, 5)}";
-                    string base64Data = educationInsertModel.Images[i].Split(',')[1];
-                    var bytes = Convert.FromBase64String(base64Data);
-                    string filedir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
 
-                    if (bytes.Length > 0)
-                    {
-                        var bigImage = Image.FromStream(new MemoryStream(bytes));
-                        var bigScaleImage = ImageResize.ScaleAndCrop(bigImage, 1000, 600);
-                        string bigFile = Path.Combine(filedir, imageName + "_1000x600.jpg");
-                        bigScaleImage.SaveAs(bigFile);
-                        educationInsertModel.Images[i] = imageName;
-                    }
-                }
-                educationInsertModel.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var educationInsertDto = _mapper.Map<EducationInsertDto>(educationInsertModel);
-                int educationId = _educationService.InsertEducation(educationInsertDto);
-                return Ok(educationId);
-            }
-            catch (ValidationException ex)
-            {
-                return StatusCode(StatusCodes.Status400BadRequest, ex.Errors.Select(d => d.ErrorMessage));
-            }
+            educationInsertModel.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var educationInsertDto = _mapper.Map<EducationInsertDto>(educationInsertModel);
+            var result = await _educationService.InsertEducationAsync(educationInsertDto);
+            if (result.Success)
+                return Ok(result.Data);
+
+            return BadRequest(result);
         }
 
         [Authorize(Policy = "UserPolicy")]
-        [HttpGet("GetAllEducationListByUserId")]
-        public IActionResult GetAllEducationListByUserId()
+        [HttpPost("UploadEducationImage/{educationId}")]
+        [RequestFormLimits(MultipartBodyLengthLimit = 409715200)]
+        [RequestSizeLimit(409715200)]
+        public async Task<IActionResult> UploadEducationImage([FromRoute] int educationId)
         {
-                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var educationListModel = _mapper.Map<List<EducationListModel>>(_educationService.GetAllEducationListByUserId(userId));
-                return Ok(educationListModel);
+            EducationUploadImageDto educationUploadImageDto = new EducationUploadImageDto();
+            educationUploadImageDto.EducationId = educationId;
+            educationUploadImageDto.UploadImages = Request.Form.Files;
+            educationUploadImageDto.Path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+            var result = await _educationService.UploadEducationImageAsync(educationUploadImageDto);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
+        }
+        [Authorize(Policy = "UserPolicy")]
+        [HttpGet("GetAllEducationListByUserId")]
+        public async Task<IActionResult> GetAllEducationListByUserId()
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = await _educationService.GetAllEducationListByUserIdAsync(userId);
+            if (result.Success)
+                return Ok(_mapper.Map<List<EducationListModel>>(result.Data));
+
+            return BadRequest(result);
         }
 
         [Authorize(Policy = "UserPolicy")]
         [HttpGet("GetEducationUpdateModelBySeoUrl")]
-        public IActionResult GetEducationUpdateModelBySeoUrl(string seoUrl)
+        public async Task<IActionResult> GetEducationUpdateModelBySeoUrl(string seoUrl)
         {
-            try
-            {
-                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var educationUpdateModel = _mapper.Map<EducationUpdateModel>(_educationService.GetEducationUpdateDtoBySeoUrl(seoUrl, userId));
-                return Ok(educationUpdateModel);
-            }
-            catch (ArgumentNullException ex)
-            {
-                return StatusCode(StatusCodes.Status404NotFound);
-            }
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = await _educationService.GetEducationUpdateDtoBySeoUrlAsync(seoUrl, userId);
+            if (result.Success)
+                return Ok(_mapper.Map<EducationUpdateModel>(result.Data));
+
+            return BadRequest(result);
         }
 
         [HttpGet("GetEducationDetailModelBySeoUrl")]
-        public IActionResult GetEducationDetailModelBySeoUrl(string seoUrl)
+        public async Task<IActionResult> GetEducationDetailModelBySeoUrl(string seoUrl)
         {
-            try
-            {
-                var educationDetailModel = _mapper.Map<EducationDetailModel>(_educationService.GetEducationDetailDtoBySeoUrl(seoUrl));
-                return Ok(educationDetailModel);
-            }
-            catch (ArgumentNullException ex)
-            {
-                return StatusCode(StatusCodes.Status404NotFound);
-            }
+            var result = await _educationService.GetEducationDetailDtoBySeoUrlAsync(seoUrl);
+            if (result.Success)
+                return Ok(_mapper.Map<EducationDetailModel>(result.Data));
+            return NotFound(result);
         }
 
         [Authorize(Policy = "UserPolicy")]
         [HttpPost("UpdateEducation")]
-        public IActionResult UpdateEducation([FromBody]EducationUpdateModel educationUpdateModel)
+        public async Task<IActionResult> UpdateEducation([FromBody] EducationUpdateModel educationUpdateModel)
         {
-            try
+            var existingImages = await _imageService.GetImagesByEducationIdAsync(educationUpdateModel.GeneralInformation.Id);
+
+            if (existingImages != null && educationUpdateModel.Images != null)
             {
-                if (User.FindFirstValue(ClaimTypes.NameIdentifier) != educationUpdateModel.UserId)
+                foreach (var imageUrl in existingImages.Data)
                 {
-                    return StatusCode(StatusCodes.Status404NotFound);
-                }
-                var existingImages = _imageService.GetImagesByEducationId(educationUpdateModel.GeneralInformation.Id);
-                if (existingImages != null && educationUpdateModel.Images != null)
-                {
-
-                    foreach (var imageUrl in existingImages)
+                    if (!educationUpdateModel.Images.Contains(imageUrl))
                     {
-                        if (!educationUpdateModel.Images.Contains(imageUrl))
-                        {
-                            string filedir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
-                            string bigFile = Path.Combine(filedir, imageUrl + "_1000x600.jpg");
+                        string filedir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+                        string bigFile = Path.Combine(filedir, imageUrl + "_1000x600.jpg");
 
-                            if (System.IO.File.Exists(bigFile))
+                        if (System.IO.File.Exists(bigFile))
+                        {
+                            string smallFile = Path.Combine(filedir, imageUrl + "_300x180.jpg");
+                            if (System.IO.File.Exists(smallFile))
                             {
-                                string smallFile = Path.Combine(filedir, imageUrl + "_300x180.jpg");
-                                if (System.IO.File.Exists(smallFile))
-                                {
-                                    System.IO.File.Delete(smallFile);
-                                }
-                                System.GC.Collect();
-                                System.GC.WaitForPendingFinalizers();
-                                System.IO.File.Delete(bigFile);
-                                _imageService.DeleteImageByImageUrl(imageUrl);
+                                System.IO.File.Delete(smallFile);
                             }
+                            System.GC.Collect();
+                            System.GC.WaitForPendingFinalizers();
+                            System.IO.File.Delete(bigFile);
+                            await _imageService.DeleteImageByImageUrlAsync(imageUrl);
                         }
                     }
-                    var newImageList = new List<string>();
-                    foreach (var image in educationUpdateModel.Images)
-                    {
-                        if (image.StartsWith("data:image"))
-                        {
-                            string imageName = $"{UrlHelper.FriendlyUrl(educationUpdateModel.GeneralInformation.EducationName)}-{Guid.NewGuid().ToString().Substring(0, 5)}.jpg";
-                            string base64Data = image.Split(',')[1];
-                            var bytes = Convert.FromBase64String(base64Data);
-                            string filedir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
-
-                            if (bytes.Length > 0)
-                            {
-                                var bigImage = Image.FromStream(new MemoryStream(bytes));
-                                var bigScaleImage = ImageResize.ScaleAndCrop(bigImage, 1000, 600);
-                                string bigFile = Path.Combine(filedir, imageName + "_1000x600.jpg");
-                                bigScaleImage.SaveAs(bigFile);
-                                newImageList.Add(imageName);
-                            }
-                        }
-                    }
-                    educationUpdateModel.Images = newImageList.ToArray();
                 }
+            }
 
-                var educationUpdateDto = _mapper.Map<EducationUpdateDto>(educationUpdateModel);
-                int educationId = _educationService.UpdateEducation(educationUpdateDto);
-                return Ok(educationId);
+            var educationUpdateDto = _mapper.Map<EducationUpdateDto>(educationUpdateModel);
+            var result = await _educationService.UpdateEducationAsync(educationUpdateDto);
+            if (result.Success)
+                return Ok(result.Data);
 
-            }
-            catch (ArgumentNullException ex)
-            {
-                return StatusCode(StatusCodes.Status404NotFound);
-            }
-            catch (ValidationException ex)
-            {
-                return StatusCode(StatusCodes.Status400BadRequest, ex.Errors.Select(d => d.ErrorMessage));
-            }
+            return BadRequest(result);
         }
 
 
         [Authorize(Policy = "UserPolicy")]
         [HttpDelete("DeleteEducation")]
-        public IActionResult DeleteEducation(int educationId)
+        public async Task<IActionResult> DeleteEducation(int educationId)
         {
-            try
-            {
-                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var educationImages = _mapper.Map<List<ImageModel>>(_educationService.GetAllEducationImageDtoByEducationId(educationId));
-                string filedir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var educationImages = await _educationService.GetAllEducationImageDtoByEducationIdAsync(educationId);
 
-                foreach (var image in educationImages)
+            var educationImageModels = _mapper.Map<List<ImageModel>>(educationImages.Data);
+            string filedir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+
+            foreach (var image in educationImageModels)
+            {
+                string bigFile = Path.Combine(filedir, image.ImageUrl + "_1000x600.jpg");
+
+                if (System.IO.File.Exists(bigFile))
                 {
-                    string bigFile = Path.Combine(filedir, image.ImageUrl + "_1000x600.jpg");
-
-                    if (System.IO.File.Exists(bigFile))
+                    string smallFile = Path.Combine(filedir, image.ImageUrl + "_300x180.jpg");
+                    if (System.IO.File.Exists(smallFile))
                     {
-                        string smallFile = Path.Combine(filedir, image.ImageUrl + "_300x180.jpg");
-                        if (System.IO.File.Exists(smallFile))
-                        {
-                            System.IO.File.Delete(smallFile);
-                            System.GC.Collect();
-                            System.GC.WaitForPendingFinalizers();
-                        }
-                        System.IO.File.Delete(bigFile);
+                        System.IO.File.Delete(smallFile);
+                        System.GC.Collect();
+                        System.GC.WaitForPendingFinalizers();
                     }
+                    System.IO.File.Delete(bigFile);
                 }
-                _educationService.DeleteEducation(educationId, userId);
-                return Ok();
             }
-            catch (ArgumentNullException ex)
-            {
-                return StatusCode(StatusCodes.Status404NotFound);
-            }
+
+            var result = await _educationService.DeleteEducationAsync(educationId, userId);
+            if (result.Success)
+                return Ok(result);
+
+            return BadRequest(result);
         }
 
         [HttpGet("GetAllEducationListByRandomCategoryId")]
-        public IActionResult GetAllEducationListByRandomCategoryId()
+        public async Task<IActionResult> GetAllEducationListByRandomCategoryId()
         {
-            try
-            {
-                var categoryIds = _categoryService.GetAllCategoryList().Select(d => d.Id).ToArray();
-                Random random = new Random();
-                int randomCategoryId = 1; //categoryIds[random.Next(categoryIds.Length)];
-                var educationListModel = _mapper.Map<List<EducationListModel>>(_educationService.GetAllEducationListByCategoryIdAndDistrictId(randomCategoryId,0));
-                return Ok(educationListModel);
-            }
-            catch (ArgumentNullException ex)
-            {
-                return StatusCode(StatusCodes.Status404NotFound);
-            }
+            var categoryList = await _categoryService.GetAllCategoryListAsync();
+            var categoryIds = categoryList.Data.Select(d => d.Id).ToArray();
+            Random random = new Random();
+            int randomCategoryId = categoryIds[random.Next(categoryIds.Length)];
+            var result = await _educationService.GetAllEducationListByCategoryIdAndDistrictIdAsync(randomCategoryId, 0);
+            if (result.Success)
+                return Ok(_mapper.Map<List<EducationListModel>>(result.Data));
+
+            return BadRequest(result);
+        }
+
+        [Authorize(Policy = "AdminPolicy")]
+        [HttpGet("GetAllEducationList")]
+        public async Task<IActionResult> GetAllEducationList()
+        {
+            var result = await _educationService.GetAllEducationListAsync();
+            if (result.Success)
+                return Ok(_mapper.Map<List<EducationListModel>>(result.Data));
+            return BadRequest(result);
         }
 
 
         [HttpGet("GetAllEducationListByCategoryIdAndDistrictId")]
-        public IActionResult GetAllEducationListByCategoryIdAndDistrictId(int categoryId, int districtId)
+        public async Task<IActionResult> GetAllEducationListByCategoryIdAndDistrictId(int categoryId, int districtId)
         {
-            try
-            {
-                var educationListModel = _mapper.Map<List<EducationListModel>>(_educationService.GetAllEducationListByCategoryIdAndDistrictId(categoryId, districtId));
-                return Ok(educationListModel);
-            }
-            catch (ArgumentNullException ex)
-            {
-                return StatusCode(StatusCodes.Status404NotFound);
-            }
+
+            var result = await _educationService.GetAllEducationListByCategoryIdAndDistrictIdAsync(categoryId, districtId);
+            if (result.Success)
+                return Ok(_mapper.Map<List<EducationListModel>>(result.Data));
+
+            return BadRequest(result);
         }
 
         [HttpGet("GetAllEducationListByFilter")]
-        public IActionResult GetAllEducationListByFilter([FromQuery]FilterModel filterModel)
+        public async Task<IActionResult> GetAllEducationListByFilter([FromQuery] FilterModel filterModel)
         {
-            try
-            {
-                var filterDto = _mapper.Map<FilterDto>(filterModel);
 
-                var educationListModel = _mapper.Map<List<EducationFilterListModel>>(_educationService.GetAllEducationListByFilter(filterDto));
-                return Ok(educationListModel);
-            }
-            catch (ArgumentNullException ex)
-            {
-                return StatusCode(StatusCodes.Status404NotFound);
-            }
+            var filterDto = _mapper.Map<FilterDto>(filterModel);
+            var result = await _educationService.GetAllEducationListByFilterAsync(filterDto);
+            if (result.Success)
+                return Ok(_mapper.Map<List<EducationFilterListModel>>(result.Data));
+
+            return BadRequest(result);
         }
 
 
         [HttpGet("GetEducationImagesByEducationId")]
-        public IActionResult GetEducationImagesByEducationId(int educationId)
+        public async Task<IActionResult> GetEducationImagesByEducationId(int educationId)
         {
-            try
-            {
-                var educationImages = _mapper.Map<List<ImageModel>>(_educationService.GetAllEducationImageDtoByEducationId(educationId));
-                return Ok(educationImages);
-            }
-            catch (ArgumentNullException ex)
-            {
-                return StatusCode(StatusCodes.Status404NotFound);
-            }
+            var result = await _educationService.GetAllEducationImageDtoByEducationIdAsync(educationId);
+            if (result.Success)
+                return Ok(_mapper.Map<List<ImageModel>>(result.Data));
+
+            return BadRequest(result);
         }
 
         [Authorize(Policy = "UserPolicy")]
         [HttpPost("InsertFirstVisibleImage")]
-        public IActionResult InsertFirstVisibleImage([FromBody]ImageModel imageModel)
+        public async Task<IActionResult> InsertFirstVisibleImage([FromBody] ImageModel imageModel)
         {
-            try
-            {
-                var imageDto = _mapper.Map<ImageDto>(imageModel);
-                _educationService.InsertFirstVisibleImage(imageDto);
-                string filedir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
-                string bigFile = Path.Combine(filedir, imageModel.ImageUrl + "_1000x600.jpg");
-                string smallFile = Path.Combine(filedir, imageModel.ImageUrl + "_300x180.jpg");
-                var bigImage = Image.FromFile(bigFile);
-                var bigScaleImage = ImageResize.ScaleAndCrop(bigImage, 300, 180);
-                bigScaleImage.SaveAs(smallFile);
-                return Ok();
-            }
-            catch (ArgumentNullException ex)
-            {
-                return StatusCode(StatusCodes.Status404NotFound);
-            }
+
+            var imageDto = _mapper.Map<ImageDto>(imageModel);
+            var result = await _educationService.InsertFirstVisibleImageAsync(imageDto);
+            string filedir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+            string bigFile = Path.Combine(filedir, imageModel.ImageUrl + "_1000x600.jpg");
+            string smallFile = Path.Combine(filedir, imageModel.ImageUrl + "_300x180.jpg");
+            var bigImage = Image.FromFile(bigFile);
+            var bigScaleImage = ImageResize.ScaleAndCrop(bigImage, 300, 180);
+            bigScaleImage.SaveAs(smallFile);
+
+            if (result.Success)
+                return Ok(result);
+
+            return BadRequest(result);
         }
 
         [Authorize(Policy = "UserPolicy")]
         [HttpPost("UpdateFirstVisibleImage")]
-        public IActionResult UpdateFirstVisibleImage([FromBody]ImageModel imageModel)
+        public async Task<IActionResult> UpdateFirstVisibleImage([FromBody] ImageModel imageModel)
         {
-            try
+
+            string filedir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+            string bigFile = Path.Combine(filedir, imageModel.ImageUrl + "_1000x600.jpg");
+            string smallFile = Path.Combine(filedir, imageModel.ImageUrl + "_300x180.jpg");
+
+            var educationImages = await _educationService.GetAllEducationImageDtoByEducationIdAsync(imageModel.EducationId);
+            var educationImageModels = _mapper.Map<List<ImageModel>>(educationImages.Data);
+
+            foreach (var image in educationImageModels)
             {
-                string filedir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
-                string bigFile = Path.Combine(filedir, imageModel.ImageUrl + "_1000x600.jpg");
-                string smallFile = Path.Combine(filedir, imageModel.ImageUrl + "_300x180.jpg");
-
-                var educationImages = _mapper.Map<List<ImageModel>>(_educationService.GetAllEducationImageDtoByEducationId(imageModel.EducationId));
-
-                foreach (var image in educationImages)
+                string existingSmallFile = Path.Combine(filedir, image.ImageUrl + "_300x180.jpg");
+                if (System.IO.File.Exists(existingSmallFile))
                 {
-                    string existingSmallFile = Path.Combine(filedir, image.ImageUrl + "_300x180.jpg");
-                    if (System.IO.File.Exists(existingSmallFile))
-                    {
-                        System.IO.File.Delete(existingSmallFile);
-                        System.GC.Collect();
-                        System.GC.WaitForPendingFinalizers();
-                    }
+                    System.IO.File.Delete(existingSmallFile);
+                    System.GC.Collect();
+                    System.GC.WaitForPendingFinalizers();
                 }
+            }
 
-                var imageDto = _mapper.Map<ImageDto>(imageModel);
-                _educationService.UpdateFirstVisibleImage(imageDto);
-                var bigImage = Image.FromFile(bigFile);
-                var bigScaleImage = ImageResize.ScaleAndCrop(bigImage, 300, 180);
-                bigScaleImage.SaveAs(smallFile);
-                return Ok();
-            }
-            catch (ArgumentNullException ex)
-            {
-                return StatusCode(StatusCodes.Status404NotFound);
-            }
+            var imageDto = _mapper.Map<ImageDto>(imageModel);
+            var result = await _educationService.UpdateFirstVisibleImageAsync(imageDto);
+            var bigImage = Image.FromFile(bigFile);
+            var bigScaleImage = ImageResize.ScaleAndCrop(bigImage, 300, 180);
+            bigScaleImage.SaveAs(smallFile);
+
+            if (result.Success)
+                return Ok(result);
+
+            return BadRequest(result);
         }
 
         [HttpPost("InsertContactForm")]
-        public IActionResult InsertContactForm([FromBody]EducationContactFormInsertModel educationContactFormInsertModel)
+        public async Task<IActionResult> InsertContactForm([FromBody] EducationContactFormInsertModel educationContactFormInsertModel)
         {
-            try
-            {
-                educationContactFormInsertModel.CreateDateTime = DateTime.Now;
-                var educationContactFormDto = _mapper.Map<EducationContactFormInsertDto>(educationContactFormInsertModel);
-                _educationService.InsertEducationContactForm(educationContactFormDto);
-                return Ok();
-            }
-            catch (ArgumentNullException ex)
-            {
-                return StatusCode(StatusCodes.Status404NotFound);
-            }
+            educationContactFormInsertModel.CreateDateTime = DateTime.Now;
+            var educationContactFormDto = _mapper.Map<EducationContactFormInsertDto>(educationContactFormInsertModel);
+            var result = await _educationService.InsertEducationContactFormAsync(educationContactFormDto);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
         }
 
         [Authorize(Policy = "UserPolicy")]
         [HttpGet("GetEducationContactFormListModelBySeoUrl")]
-        public IActionResult GetEducationContactFormListModelBySeoUrl(string seoUrl)
+        public async Task<IActionResult> GetEducationContactFormListModelBySeoUrl(string seoUrl)
         {
-            try
-            {
-                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var educationUpdateModel = _mapper.Map<List<EducationContactFormListModel>>(_educationService.GetEducationContactFormListDtoBySeoUrl(seoUrl, userId));
-                return Ok(educationUpdateModel);
-            }
-            catch (ArgumentNullException ex)
-            {
-                return StatusCode(StatusCodes.Status404NotFound);
-            }
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = await _educationService.GetEducationContactFormListDtoBySeoUrlAsync(seoUrl, userId);
+            if (result.Success)
+                return Ok(_mapper.Map<List<EducationContactFormListModel>>(result.Data));
+
+            return BadRequest(result);
         }
 
         [HttpGet("GetAllSearchEducationList")]
-        public IActionResult GetAllSearchEducationList()
+        public async Task<IActionResult> GetAllSearchEducationList()
         {
-            try
-            {
-                var searchEducationModel = _mapper.Map<SearchEducationModel[]>(_educationService.GetAllSearchEducationList());
-                return Ok(searchEducationModel);
-            }
-            catch (ArgumentNullException ex)
-            {
-                return StatusCode(StatusCodes.Status404NotFound);
-            }
+            var result = await _educationService.GetAllSearchEducationListAsync();
+            if (result.Success)
+                return Ok(_mapper.Map<List<SearchEducationModel>>(result.Data));
+
+            return BadRequest(result);
         }
+
+        [Authorize(Policy = "AdminPolicy")]
+        [HttpPost("UpdateEducationActivate")]
+        public async Task<IActionResult> UpdateEducationActivate([FromBody] EducationActivateModel educationActivateModel)
+        {
+            var result = await _educationService.UpdateEducationActivateAsync(educationActivateModel.EducationId, educationActivateModel.IsActive);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
+        }
+
     }
 }

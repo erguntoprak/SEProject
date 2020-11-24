@@ -1,0 +1,1 @@
+2020-11-21 23:53:10.690 +03:00 [Information] {"FullName":"AccountService","MethodName":"LoginAsync","Parameters":[{"Name":"loginDto","Value":{"Email":"dsfasdf@gmail.com","Password":"dfasdfasf"},"Type":"LoginDto"}],"UserEmail":"izmiregitimkurumlari@gmail.com"}

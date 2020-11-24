@@ -224,6 +224,9 @@ namespace SE.Web.Migrations
                     b.Property<string>("FirstVisibleImageName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("SeoUrl")
                         .HasColumnType("nvarchar(max)");
 
@@ -383,6 +386,9 @@ namespace SE.Web.Migrations
 
                     b.Property<string>("InstagramAccountUrl")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("MapCode")
                         .HasColumnType("nvarchar(max)");

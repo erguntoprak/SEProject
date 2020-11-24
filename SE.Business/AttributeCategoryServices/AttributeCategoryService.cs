@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SE.Business.Constants;
+using SE.Core.Aspects.Autofac.Caching;
 using SE.Core.DTO;
 using SE.Core.Entities;
 using SE.Core.Utilities.Results;
@@ -19,37 +20,30 @@ namespace SE.Business.AttributeCategoryServices
         {
             _unitOfWork = unitOfWork;
         }
-        public void DeleteAttributeCategory(int attributeCategoryId)
+
+        [CacheRemoveAspect("Get")]
+        public async Task<IResult> DeleteAttributeCategoryAsync(int attributeCategoryId)
         {
-            try
-            {
-                var attributeCategory = _unitOfWork.AttributeCategoryRepository.GetById(attributeCategoryId);
-                _unitOfWork.AttributeCategoryRepository.Delete(attributeCategory);
-                _unitOfWork.SaveChanges();
-            }
-            catch
-            {
-                throw;
-            }
+            var attributeCategory = await _unitOfWork.AttributeCategoryRepository.GetByIdAsync(attributeCategoryId);
+            if (attributeCategory == null)
+                return new ErrorResult(Messages.ObjectIsNull);
+
+            _unitOfWork.AttributeCategoryRepository.Delete(attributeCategory);
+            await _unitOfWork.SaveChangesAsync();
+            return new SuccessResult(Messages.Deleted);
         }
 
+        [CacheAspect]
         public async Task<IDataResult<IEnumerable<AttributeCategoryDto>>> GetAllAttributeCategoryListAsync()
         {
             var attributeCategoryList = await _unitOfWork.AttributeCategoryRepository.Table.Select(d => new AttributeCategoryDto { Name = d.Name, Id = d.Id }).ToListAsync();
             return new SuccessDataResult<IEnumerable<AttributeCategoryDto>>(attributeCategoryList);
         }
 
-        public int[] GetAttributeCategoryIdsByCategoryId(int categoryId)
+        public async Task<IDataResult<int[]>> GetAttributeCategoryIdsByCategoryIdAsync(int categoryId)
         {
-            try
-            {
-                var attributeCategoryIds = _unitOfWork.CategoryAttributeCategoryRepository.Table.Where(d => d.CategoryId == categoryId).Select(d => d.AttributeCategoryId).ToArray();
-                return attributeCategoryIds;
-            }
-            catch
-            {
-                throw;
-            }
+            var attributeCategoryIds = await _unitOfWork.CategoryAttributeCategoryRepository.Table.Where(d => d.CategoryId == categoryId).Select(d => d.AttributeCategoryId).ToArrayAsync();
+            return new SuccessDataResult<int[]>(attributeCategoryIds);
         }
 
         public async Task<IDataResult<AttributeCategoryDto>> GetAttributeCategoryByIdAsync(int attributeCategoryId)
@@ -66,55 +60,40 @@ namespace SE.Business.AttributeCategoryServices
             return new SuccessDataResult<AttributeCategoryDto>(attributeCategoryDto);
         }
 
-        public void InsertAttributeCategory(AttributeCategoryDto attributeCategoryDto)
+        [CacheRemoveAspect("Get")]
+        public async Task<IResult> InsertAttributeCategoryAsync(AttributeCategoryDto attributeCategoryDto)
         {
-            try
+            var attributeCategory = new AttributeCategory
             {
-                var attributeCategory = new AttributeCategory
-                {
-                    Name = attributeCategoryDto.Name
-                };
-                _unitOfWork.AttributeCategoryRepository.Insert(attributeCategory);
-                _unitOfWork.SaveChanges();
-            }
-            catch
-            {
-                throw;
-            }
+                Name = attributeCategoryDto.Name
+            };
+            _unitOfWork.AttributeCategoryRepository.Insert(attributeCategory);
+            await _unitOfWork.SaveChangesAsync();
+            return new SuccessResult(Messages.Added);
         }
 
-        public void InsertCategoryAttributeCategory(CategoryAttributeCategoryInsertDto categoryAttributeCategoryInsertDto)
+        [CacheRemoveAspect("Get")]
+        public async Task<IResult> InsertCategoryAttributeCategoryAsync(CategoryAttributeCategoryInsertDto categoryAttributeCategoryInsertDto)
         {
-            try
-            {
-                var savedCategoryAttributeCategoryList = _unitOfWork.CategoryAttributeCategoryRepository.Table.Where(d => d.CategoryId == categoryAttributeCategoryInsertDto.CategoryId).ToList();
+            var savedCategoryAttributeCategoryList = await _unitOfWork.CategoryAttributeCategoryRepository.Table.Where(d => d.CategoryId == categoryAttributeCategoryInsertDto.CategoryId).AsNoTracking().ToListAsync();
 
-                _unitOfWork.CategoryAttributeCategoryRepository.Delete(savedCategoryAttributeCategoryList);
+            _unitOfWork.CategoryAttributeCategoryRepository.Delete(savedCategoryAttributeCategoryList);
 
-                foreach (var attributeCategory in categoryAttributeCategoryInsertDto.AttributeCategoryList)
-                {
-                    _unitOfWork.CategoryAttributeCategoryRepository.Insert(new CategoryAttributeCategory { CategoryId = categoryAttributeCategoryInsertDto.CategoryId, AttributeCategoryId = attributeCategory.Id });
-                }
-                _unitOfWork.SaveChanges();
-            }
-            catch
+            foreach (var attributeCategory in categoryAttributeCategoryInsertDto.AttributeCategoryList)
             {
-                throw;
+                _unitOfWork.CategoryAttributeCategoryRepository.Insert(new CategoryAttributeCategory { CategoryId = categoryAttributeCategoryInsertDto.CategoryId, AttributeCategoryId = attributeCategory.Id });
             }
+            await _unitOfWork.SaveChangesAsync();
+            return new SuccessResult(Messages.Added);
         }
 
-        public void UpdateAttributeCategory(AttributeCategoryDto attributeCategoryDto)
+        [CacheRemoveAspect("Get")]
+        public async Task<IResult> UpdateAttributeCategoryAsync(AttributeCategoryDto attributeCategoryDto)
         {
-            try
-            {
-                var attributeCategory = _unitOfWork.AttributeCategoryRepository.GetById(attributeCategoryDto.Id);
-                attributeCategory.Name = attributeCategoryDto.Name;
-                _unitOfWork.SaveChanges();
-            }
-            catch
-            {
-                throw;
-            }
+            var attributeCategory = await _unitOfWork.AttributeCategoryRepository.GetByIdAsync(attributeCategoryDto.Id);
+            attributeCategory.Name = attributeCategoryDto.Name;
+            await _unitOfWork.SaveChangesAsync();
+            return new SuccessResult(Messages.Updated);
         }
     }
 }

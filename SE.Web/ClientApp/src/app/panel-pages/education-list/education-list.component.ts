@@ -1,18 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseService } from '../../shared/base.service';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { EducationListModel } from '../../shared/models';
 import Swal from 'sweetalert2';
-import { HttpErrorResponse } from '@angular/common/http';
-import * as _ from 'lodash';
 import { AcdcLoadingService } from 'acdc-loading';
-
+import { environment } from 'src/environments/environment';
+import * as _ from 'lodash';
 @Component({
   selector: 'se-education-list',
   templateUrl: './education-list.component.html'
 })
 export class EducationListComponent implements OnInit {
 
+  apiUrl = environment.apiUrl;
   educationList: EducationListModel[];
   errorList = [];
 

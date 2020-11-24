@@ -1,0 +1,1 @@
+2020-11-03 00:11:59.454 +03:00 [Information] {"FullName":"AccountService","MethodName":"UpdateUserAsync","Parameters":[{"Name":"userUpdateDto","Value":{"UserId":"6bb8257b-0686-4565-bb34-e176868146fa","Email":"login@izmiregitimkurumlari.com","PhoneNumber":"5543187924","Name":"İzmir","Surname":"Eğitim Kurumları"},"Type":"UserUpdateDto"}],"UserEmail":"ergun.35.toprak@gmail.com"}

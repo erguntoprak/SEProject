@@ -11,11 +11,11 @@ namespace SE.Business.AttributeCategoryServices
     {
         Task<IDataResult<IEnumerable<AttributeCategoryDto>>> GetAllAttributeCategoryListAsync();
         Task<IDataResult<AttributeCategoryDto>> GetAttributeCategoryByIdAsync(int attributeCategoryId);
-        void UpdateAttributeCategory(AttributeCategoryDto attributeCategoryDto);
-        void InsertAttributeCategory(AttributeCategoryDto attributeCategoryDto);
-        void DeleteAttributeCategory(int attributeCategoryId);
-        void InsertCategoryAttributeCategory(CategoryAttributeCategoryInsertDto categoryAttributeCategoryInsertDto);
-        int[] GetAttributeCategoryIdsByCategoryId(int categoryId);
+        Task<IResult> UpdateAttributeCategoryAsync(AttributeCategoryDto attributeCategoryDto);
+        Task<IResult> InsertAttributeCategoryAsync(AttributeCategoryDto attributeCategoryDto);
+        Task<IResult> DeleteAttributeCategoryAsync(int attributeCategoryId);
+        Task<IResult> InsertCategoryAttributeCategoryAsync(CategoryAttributeCategoryInsertDto categoryAttributeCategoryInsertDto);
+        Task<IDataResult<int[]>>  GetAttributeCategoryIdsByCategoryIdAsync(int categoryId);
 
     }
 }

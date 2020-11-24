@@ -1,15 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { BaseService } from '../../shared/base.service';
-import { BlogListModel, UserListModel } from '../../shared/models';
+import { UserListModel } from '../../shared/models';
 import Swal from 'sweetalert2';
-import { HttpErrorResponse } from '@angular/common/http';
-import * as _ from 'lodash';
 import { AcdcLoadingService } from 'acdc-loading';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { UserRoleEditComponent } from '../user-role-edit/user-role-edit.component';
-import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -41,6 +37,7 @@ export class UserListComponent implements OnInit {
     this.baseService.getAll<UserListModel[]>("Account/GetAllUserList").subscribe(userList => {
       this.dataSource = new MatTableDataSource(userList);
       this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
       this.acdcLoadingService.hideLoading();
     });
   }
@@ -64,11 +61,7 @@ export class UserListComponent implements OnInit {
             this.toastr.success('Kullanıcı Silindi.', 'Başarılı!');
             this.getAllUserList();
             this.acdcLoadingService.hideLoading();
-          },
-            (error: HttpErrorResponse) => {
-              this.toastr.success(error.error, 'Başarısız!');
-              this.acdcLoadingService.hideLoading();
-            });
+          });
       }
     })
   }
@@ -91,11 +84,7 @@ export class UserListComponent implements OnInit {
             this.toastr.success(emailConfirmation ? 'E-posta Onaylandı.':'E-posta onayı geri alındı.', 'Başarılı!');
             this.getAllUserList();
             this.acdcLoadingService.hideLoading();
-          },
-            (error: HttpErrorResponse) => {
-              this.toastr.success(error.error, 'Başarısız!');
-              this.acdcLoadingService.hideLoading();
-            });
+          });
       }
     })
   }
@@ -118,11 +107,7 @@ export class UserListComponent implements OnInit {
             this.toastr.success(isActive ? 'Kullanıcı Aktif Edildi.' : 'Kullanıcı Aktif Durumu Geri Alındı.', 'Başarılı!');
             this.getAllUserList();
             this.acdcLoadingService.hideLoading();
-          },
-            (error: HttpErrorResponse) => {
-              this.toastr.success(error.error, 'Başarısız!');
-              this.acdcLoadingService.hideLoading();
-            });
+          });
       }
     })
   }

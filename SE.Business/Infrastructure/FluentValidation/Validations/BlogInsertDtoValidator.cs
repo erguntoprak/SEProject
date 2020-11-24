@@ -10,12 +10,10 @@ namespace SE.Business.Infrastructure.FluentValidation.Validations
     {
         public BlogInsertDtoValidator()
         {
-            RuleSet("all", () =>
-            {
-                RuleFor(x => x.Title).NotNull().WithMessage("Lütfen başlık giriniz.");
-                RuleFor(x => x.UserId).NotNull().WithMessage("Kullanıcı boş geçilemez.");
-                RuleFor(x => x.BlogItems).Must(x => x != null || x.Count >= 1).WithMessage("Lütfen içerik giriniz.");
-            });
+
+            RuleFor(x => x.Title).NotNull().WithMessage("Lütfen başlık giriniz.");
+            RuleFor(x => x.UserId).NotNull().WithMessage("Kullanıcı boş geçilemez.");
+            RuleFor(x => x.BlogItems).Must(x => x != null || x.Count >= 1).WithMessage("Lütfen içerik giriniz.");
         }
     }
 }

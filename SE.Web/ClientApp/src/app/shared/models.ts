@@ -146,6 +146,7 @@ export interface BlogListModel {
   userSeoUrl: string;
   seoUrl: string;
   userName: string;
+  isActive: boolean;
   firstVisibleImageName: string;
   createTime: string;
 }

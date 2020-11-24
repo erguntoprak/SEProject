@@ -31,6 +31,7 @@ namespace SE.Core.Entities
         public string YoutubeAccountUrl { get; set; }
         public string MapCode { get; set; }
         public string SeoUrl { get; set; }
+        public bool IsActive { get; set; }
         public User User { get; set; }
         public Category Category { get; set; }
         public ICollection<AttributeEducation> AttributeEducations { get; set; }

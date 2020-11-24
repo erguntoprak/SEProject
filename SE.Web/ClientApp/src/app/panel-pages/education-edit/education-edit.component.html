@@ -38,18 +38,18 @@
             <angular-editor formControlName="description" [config]="editorConfig"></angular-editor>
           </div>
           <div class="form-group col-md-12">
-            <label>Görseller</label>
+            <label>Kayıtlı Görseller</label>
             <div class="row">
               <div class="col-md-2" style="padding:10px;" *ngFor='let url of urlImages'>
                 <div class="single-place">
                   <span class="remove-button" (click)="removeImage(url.key,url.value)"><i class="bx bxs-no-entry"></i></span>
-                  <img [id]="url.key" class="single-place-image" [src]="url.value">
+                  <img [id]="url.key" class="single-place-image" src="{{apiUrl}}/images/{{url.value}}_1000x600.jpg">
                 </div>
               </div>
             </div>
             <div class="custom-file">
               <input type="file" class="custom-file-input" accept="image/*" multiple (change)="onSelectFile($event)">
-              <label class="custom-file-label">Görsel Seç</label>
+              <label class="custom-file-label"><strong>{{fileCount ? fileCount + ' Görsel Seçildi': 'Görsel Ekle'}}</strong></label>
             </div>
             <span class="not-valid" *ngFor="let errorMessage of imageUploadErrorMessage">
               {{errorMessage}}
@@ -124,7 +124,7 @@
               </div>
             </div>
             <div class="form-group col-md-12">
-              <label>Google Map Kodu</label>
+              <label>Google Map Kodu (Google Map Kodu nasıl eklenir.<strong><a target="_blank" href="https://youtu.be/toZHU21c8uw"> TIKLA)</a></strong></label>
               <textarea formControlName="mapCode" class="form-control" rows="5" placeholder='<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3127.7079022854505!2d27.15847661479587!3d38.37887818494647!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14bbdf4e35873a21%3A0xf7f55c74b3b3b350!2zWsO8YmV5ZGUgSGFuxLFtIEXEn2l0aW0gS3VydW1sYXLEsSBCdWNhIEthbXDDvHPDvA!5e0!3m2!1str!2str!4v1591191775876!5m2!1str!2str" width="600" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>'></textarea>
               <span class="not-valid" *ngIf="nextStepThreeValidation && iframeMapCode == null">
                 Lütfen geçerli Google Map kodu giriniz.
@@ -244,9 +244,6 @@
           </div>
           <div formArrayName="questions">
             <div class="form-row" [formGroupName]="i" *ngFor="let item of getQuestionControl(); let i = index;">
-              <div class="form-group col-md-12">
-                <strong>Cevap bölümünde cevaplarınızı satır satır göstermek için her cümle veya kelime sonuna noktalı virgül ekleyiniz.(';')</strong>
-              </div>
               <div class="form-group col-md-6">
                 <label>Soru</label>
                 <textarea formControlName="question" class="form-control" placeholder="Soru"></textarea>
@@ -270,14 +267,14 @@
     <div [style.display]="nextStepFiveControl ? 'block': 'none'">
       <div class="form-row">
         <div class="form-group col-md-12">
-          <h6>Sayfalarda gösterilecek ilk görselini seçiniz.</h6>
+          <h3>Sayfalarda gösterilecek ilk görselini seçiniz.</h3>
           <span class="not-valid" *ngIf="isSelectFirstVisibleImage">
             Aşağıdaki görsellerden birini seçmeniz gerekiyor.
           </span>
           <div class="row">
             <div class="col-md-2" style="padding:10px;" *ngFor='let image of savedImageList'>
               <div class="single-place">
-                <img [id]="image.id" (click)="selectFirstVisibleImage(image)" class="single-place-image" [ngClass]="{'active': selectedImageModel.id === image.id}" src="https://localhost:44362/images/{{image.imageUrl}}_1000x600.jpg">
+                <img [id]="image.id" (click)="selectFirstVisibleImage(image)" class="single-place-image" [ngClass]="{'active': selectedImageModel.id === image.id}" src="{{apiUrl}}/images/{{image.imageUrl}}_1000x600.jpg">
               </div>
             </div>
           </div>

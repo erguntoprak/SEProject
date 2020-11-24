@@ -1,7 +1,7 @@
 <div id="panel-aside" style="display:none" class="sidemenu-area">
   <div class="sidemenu-header">
-    <a routerLink="/panel/deneme" class="navbar-brand d-flex align-items-center">
-      <img src="assets\img\small-logo.png" alt="image">
+    <a routerLink="/" class="navbar-brand d-flex align-items-center">
+      <img src="assets/img/izmir-egitim-kurumlari.png" alt="logo">
     </a>
 
     <div id="burger-menu" class="burger-menu d-none d-lg-block">
@@ -23,7 +23,7 @@
         <li class="nav-item-title" *ngIf="navigationModel.isVisible">{{navigationModel.title}}</li>
         <ng-container *ngFor="let navigationItem of navigationModel.navigationItems">
           <li class="nav-item" *ngIf="navigationItem.isVisible">
-            <a routerLink="{{navigationItem.routeUrl}}" class="nav-link">
+            <a [routerLink]="navigationItem.routeUrl" class="nav-link">
               <span class="icon"><i class='{{navigationItem.icon}}'></i></span>
               <span class="menu-title">{{navigationItem.name}}</span>
             </a>

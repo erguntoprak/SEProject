@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseService } from '../../shared/base.service';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { EducationListModel, EducationContactFormListModel } from '../../shared/models';
-import Swal from 'sweetalert2';
-import { HttpErrorResponse } from '@angular/common/http';
-import * as _ from 'lodash';
+import { EducationContactFormListModel } from '../../shared/models';
 import { AcdcLoadingService } from 'acdc-loading';
 import { ActivatedRoute } from '@angular/router';
 
@@ -14,7 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class EducationContactFormListComponent implements OnInit {
 
-  educationContactFormList: EducationContactFormListModel[];
+  educationContactFormList: EducationContactFormListModel[] = [];
 
   constructor(private baseService: BaseService, private route: ActivatedRoute, private acdcLoadingService: AcdcLoadingService) {
 

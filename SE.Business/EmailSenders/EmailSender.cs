@@ -77,7 +77,6 @@ namespace SE.Business.EmailSenders
             }
             catch (Exception ex)
             {
-                // TODO: handle exception
                 throw new InvalidOperationException(ex.Message);
             }
         }

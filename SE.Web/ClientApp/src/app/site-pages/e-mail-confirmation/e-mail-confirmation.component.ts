@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseService } from '../../shared/base.service';
-import * as _ from 'lodash';
 import { AcdcLoadingService } from 'acdc-loading';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'se-e-mail-confirmation',
@@ -15,8 +13,6 @@ export class EmailConfirmationComponent implements OnInit {
   submitted = false;
   emailConfirmationFormSuccessMessage = false;
   emailConfirmationFormDiv = true;
-  errorList: string[] = [];
-
 
   constructor(private baseService: BaseService, private formBuilder: FormBuilder, private acdcLoadingService: AcdcLoadingService) {
 
@@ -30,20 +26,14 @@ export class EmailConfirmationComponent implements OnInit {
     this.acdcLoadingService.showLoading();
     this.submitted = true;
     if (this.emailConfirmationForm.invalid) {
+      this.acdcLoadingService.hideLoading();
       return;
     }
     this.baseService.post("Account/ResendEmailConfirmation", this.emailConfirmationForm.get('email').value).subscribe(data => {
-      this.errorList = [];
       this.emailConfirmationFormSuccessMessage = true;
       this.emailConfirmationFormDiv = false;
       this.acdcLoadingService.hideLoading();
-    },
-      (error: HttpErrorResponse) => {
-        this.errorList = [];
-        this.errorList.push(error.error);
-        this.errorList = [...this.errorList];
-        this.acdcLoadingService.hideLoading();
-      }
+    }
     );
 
   }

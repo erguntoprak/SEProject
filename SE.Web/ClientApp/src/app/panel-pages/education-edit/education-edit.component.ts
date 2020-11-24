@@ -3,14 +3,13 @@ import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@ang
 import { v4 as uuid } from 'uuid';
 import { BaseService } from '../../shared/base.service';
 import { KeyValueModel, CategoryAttributeListModel, CategoryModel, AddressModel, CityModel, DistrictModel, ImageModel } from '../../shared/models';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AcdcLoadingService } from 'acdc-loading';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import * as _ from 'lodash';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'se-education-edit',
@@ -18,13 +17,14 @@ import * as _ from 'lodash';
 })
 export class EducationEditComponent implements OnInit, AfterViewInit {
 
+  apiUrl = environment.apiUrl;
   educationForm: FormGroup;
   errorList = [];
   imageUploadErrorMessage = [];
   categories: CategoryModel[];
   savedImageList: ImageModel[];
   educationId: number;
-  selectedImageModel: ImageModel = { id: 0, firstVisible: false, imageUrl: "", title: "",educationId:0};
+  selectedImageModel: ImageModel = { id: 0, firstVisible: false, imageUrl: "", title: "", educationId: 0 };
   isSelectFirstVisibleImage: boolean = false;
   attributeList: CategoryAttributeListModel[];
   existingAttributeIds: number[];
@@ -43,7 +43,8 @@ export class EducationEditComponent implements OnInit, AfterViewInit {
   nextStepFourControl: boolean = false;
   nextStepFourValidation: boolean = false;
   nextStepFiveControl: boolean = false;
-
+  fileCount: number = 0;
+  formData: FormData;
 
 
   constructor(private formBuilder: FormBuilder, private baseService: BaseService, private router: Router, private toastr: ToastrService, private acdcLoadingService: AcdcLoadingService, private route: ActivatedRoute, private sanitizer: DomSanitizer) { }
@@ -100,7 +101,7 @@ export class EducationEditComponent implements OnInit, AfterViewInit {
           addressInformation: educationUpdateModel.addressInformation,
           contactInformation: educationUpdateModel.contactInformation,
           socialInformation: educationUpdateModel.socialInformation,
-          userId:educationUpdateModel.userId
+          userId: educationUpdateModel.userId
         });
         if (educationUpdateModel.socialInformation.mapCode != "") {
           this.iframeMapCode = this.sanitizer.bypassSecurityTrustHtml(educationUpdateModel.socialInformation.mapCode);
@@ -117,7 +118,8 @@ export class EducationEditComponent implements OnInit, AfterViewInit {
         const images = <FormArray>this.educationForm.controls.images;
         educationUpdateModel.images.forEach(image => {
           this.urlImages.push({
-            key: uuid(), value: `https://localhost:44362/images/${image}_1000x600.jpg`});
+            key: uuid(), value: image
+          });
           images.push(new FormControl(image));
         });
         this.existingAttributeIds = educationUpdateModel.attributes;
@@ -171,16 +173,32 @@ export class EducationEditComponent implements OnInit, AfterViewInit {
       return;
     }
     this.baseService.post("Education/UpdateEducation", this.educationForm.value).subscribe(educationId => {
+      this.toastr.success('Eğitim kurumu güncellendi. Görsellerin kayıt edilebilmesi için Lütfen Bekleyiniz..', 'Başarılı!');
       this.educationId = educationId;
-      this.baseService.get<ImageModel[]>("Education/GetEducationImagesByEducationId?educationId=", educationId).subscribe(imageModel => {
-        this.savedImageList = imageModel;
-        if (imageModel.filter(d => d.firstVisible == true)[0] !== undefined) {
-          this.selectedImageModel = imageModel.filter(d => d.firstVisible == true)[0];
-        }
-        this.nextStepFourControl = false;
-        this.nextStepFiveControl = true;
-        this.acdcLoadingService.hideLoading();
-      });
+      if (this.formData) {
+        this.baseService.postFormData(`Education/UploadEducationImage/${educationId}`, this.formData).subscribe(response => {
+          this.baseService.get<ImageModel[]>("Education/GetEducationImagesByEducationId?educationId=", educationId).subscribe(imageModel => {
+            this.savedImageList = imageModel;
+            if (imageModel.filter(d => d.firstVisible == true)[0] !== undefined) {
+              this.selectedImageModel = imageModel.filter(d => d.firstVisible == true)[0];
+            }
+            this.nextStepFourControl = false;
+            this.nextStepFiveControl = true;
+            this.acdcLoadingService.hideLoading();
+          });
+        });
+      }
+      else {
+        this.baseService.get<ImageModel[]>("Education/GetEducationImagesByEducationId?educationId=", educationId).subscribe(imageModel => {
+          this.savedImageList = imageModel;
+          if (imageModel.filter(d => d.firstVisible == true)[0] !== undefined) {
+            this.selectedImageModel = imageModel.filter(d => d.firstVisible == true)[0];
+          }
+          this.nextStepFourControl = false;
+          this.nextStepFiveControl = true;
+          this.acdcLoadingService.hideLoading();
+        });
+      }
     });
   }
   saveSelectedFirsImage() {
@@ -264,51 +282,29 @@ export class EducationEditComponent implements OnInit, AfterViewInit {
     var deleteImage = document.getElementById(id);
     deleteImage.remove();
     let index = images.controls.findIndex(x => x.value == value);
-    images.removeAt(index);
+    if (index != -1) {
+      images.removeAt(index);
+    }
   }
   selectFirstVisibleImage(imageModel: ImageModel) {
     this.selectedImageModel = imageModel;
   }
   //select image
   onSelectFile(event) {
-    this.imageUploadErrorMessage = [];
-    const max_size = 1024000;
-
-    if (event.target.files.length > 20) {
-      this.imageUploadErrorMessage.push('En fazla 20 görsele izin verilmektedir.');
-      this.imageUploadErrorMessage = [...this.imageUploadErrorMessage];
-      return;
-    }
-    const images = <FormArray>this.educationForm.controls.images;
+    const files: FileList = event.target.files;
+    this.fileCount = 0;
+    this.formData = new FormData();
     const allowed_types = ['image/png', 'image/jpeg'];
+    this.imageUploadErrorMessage = [];
 
-    if (event.target.files && event.target.files[0]) {
-      for (let i = 0; i < event.target.files.length; i++) {
-        if (!_.includes(allowed_types, event.target.files[i].type)) {
-          this.imageUploadErrorMessage.push('Sadece ( JPG | PNG ) uzantılar kabul edilmektedir.');
-          this.imageUploadErrorMessage = [...this.imageUploadErrorMessage];
-        }
-        else {
-          if (event.target.files[i].size >= max_size) {
-            this.imageUploadErrorMessage.push(event.target.files[i].name + ' adlı görsel 1 MB değerinden büyüktür. 1 MB değerinden küçük veya eşit olmalıdır.');
-            this.imageUploadErrorMessage = [...this.imageUploadErrorMessage];
-          }
-          else {
-            var reader = new FileReader();
-            reader.onload = (event: any) => {
-              if (this.urlImages.length > 19) {
-                this.imageUploadErrorMessage.push('En fazla 20 görsele izin verilmektedir.');
-                this.imageUploadErrorMessage = [...this.imageUploadErrorMessage];
-              }
-              else {
-                this.urlImages.push({ key: uuid(), value: event.target.result });
-                images.push(new FormControl(event.target.result));
-              }
-            }
-            reader.readAsDataURL(event.target.files[i]);
-          }
-
-        }
+    for (let i = 0; i < files.length; i++) {
+      if (!_.includes(allowed_types, event.target.files[i].type)) {
+        this.imageUploadErrorMessage.push('Sadece ( JPG | PNG ) uzantılar kabul edilmektedir.');
+        this.imageUploadErrorMessage = [...this.imageUploadErrorMessage];
+      }
+      else {
+        this.formData.append(files.item(i).name, files.item(i));
+        this.fileCount++;
       }
     }
   }

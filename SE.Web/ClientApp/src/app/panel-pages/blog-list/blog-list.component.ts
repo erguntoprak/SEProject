@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { BaseService } from '../../shared/base.service';
 import { BlogListModel } from '../../shared/models';
 import Swal from 'sweetalert2';
-import { HttpErrorResponse } from '@angular/common/http';
 import * as _ from 'lodash';
 import { AcdcLoadingService } from 'acdc-loading';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'se-blog-list',
@@ -14,6 +14,7 @@ export class BlogListComponent implements OnInit {
 
   blogList : BlogListModel[];
   errorList = [];
+  apiUrl = environment.apiUrl;
 
   constructor(private baseService: BaseService, private acdcLoadingService: AcdcLoadingService) {
 

@@ -29,32 +29,27 @@ namespace SE.Business.AccountServices
     {
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IValidator<LoginDto> _loginDtoValidator;
-        private readonly IValidator<RegisterDto> _registerDtoValidator;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IEmailService _emailSender;
         private readonly Configuration _configuration;
 
 
 
-        public AccountService(UserManager<User> userManager, IValidator<LoginDto> loginDtoValidator, IValidator<RegisterDto> registerDtoValidator, IHttpContextAccessor httpContextAccessor, IEmailService emailSender, IOptions<Configuration> configuration, RoleManager<IdentityRole> roleManager)
+        public AccountService(UserManager<User> userManager, IEmailService emailSender, IOptions<Configuration> configuration, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
-            _loginDtoValidator = loginDtoValidator;
-            _registerDtoValidator = registerDtoValidator;
-            _httpContextAccessor = httpContextAccessor;
             _emailSender = emailSender;
             _configuration = configuration.Value;
             _roleManager = roleManager;
         }
 
+        [LogAspect(typeof(FileLogger))]
         [ValidationAspect(typeof(LoginDtoValidator), Priority = 1)]
         public async Task<IResult> LoginAsync(LoginDto loginDto)
         {
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
 
             if (user == null)
-                return new ErrorDataResult<UserDto>(Messages.UserNotFound);
+                return new ErrorDataResult<UserDto>(Messages.EmailAndPasswordNotMatch);
 
             var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
 
@@ -65,13 +60,12 @@ namespace SE.Business.AccountServices
                 return new ErrorResult(Messages.YouNeedToVerifyYourEmailAddress);
 
             if (!user.IsActive)
-                return new ErrorResult(Messages.YouNeedToVerifyYourEmailAddress);
+                return new ErrorResult(Messages.AccountIsNotActive);
 
             return new SuccessResult(Messages.SuccessfulLogin);
-
-
-
         }
+
+        [LogAspect(typeof(FileLogger))]
         [ValidationAspect(typeof(RegisterDtoValidator), Priority = 1)]
         public async Task<IResult> RegisterAsync(RegisterDto registerDto)
         {
@@ -97,10 +91,12 @@ namespace SE.Business.AccountServices
             byte[] tokenGeneratedBytes = Encoding.UTF8.GetBytes(confirmationToken);
             var codeEncoded = WebEncoders.Base64UrlEncode(tokenGeneratedBytes);
             var confirmationLink = $"{_configuration.BaseUrl}/e-posta-onay?userId={savedUser.Id}&confirmation-token={codeEncoded}";
-            await _emailSender.SendAsync(savedUser.Email, "E-posta adresinizi onaylayın!", EmailMessages.GetEmailConfirmationHtml(confirmationLink));
+            await _emailSender.SendAsync(savedUser.Email, "E-posta adresinizi onaylayın!", EmailMessages.GetEmailConfirmationHtml(confirmationLink, _configuration.ApiUrl));
 
             return new SuccessResult(Messages.SuccessfulRegister);
         }
+        
+        
         public async Task<IDataResult<UserDto>> GetUserDtoByEmailAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -114,6 +110,7 @@ namespace SE.Business.AccountServices
                 Id = user.Id,
                 Name = user.FirsName,
                 Email = user.Email,
+                UserName = user.UserName,
                 PhoneNumber = user.PhoneNumber,
                 Surname = user.LastName,
                 Roles = roles
@@ -131,6 +128,7 @@ namespace SE.Business.AccountServices
             var userDto = new UserDto
             {
                 Id = user.Id,
+                UserName = user.UserName,
                 Name = user.FirsName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
@@ -220,6 +218,9 @@ namespace SE.Business.AccountServices
 
             if (user.Email != userUpdateDto.Email)
             {
+                if (_userManager.Users.Any(d => d.Email == userUpdateDto.Email))
+                    return new ErrorResult(Messages.EmailUsedBefore);
+
                 user.EmailConfirmed = false;
                 user.Email = userUpdateDto.Email;
                 var resendResult = await ResendEmailConfirmationAsync(userUpdateDto.Email);
@@ -227,6 +228,15 @@ namespace SE.Business.AccountServices
                 if (!resendResult.Success)
                     return new ErrorResult(Messages.NotUpdated);
             }
+
+            if (user.UserName != userUpdateDto.UserName)
+            {
+                if (_userManager.Users.Any(d => d.UserName == userUpdateDto.UserName))
+                    return new ErrorResult(Messages.UserNameUsedBefore);
+
+                user.UserName = userUpdateDto.UserName;
+            }
+
             user.FirsName = userUpdateDto.Name;
             user.LastName = userUpdateDto.Surname;
             user.PhoneNumber = userUpdateDto.PhoneNumber;
@@ -264,6 +274,7 @@ namespace SE.Business.AccountServices
 
             return new SuccessResult(Messages.Updated);
         }
+        [LogAspect(typeof(FileLogger))]
         public async Task<IResult> ForgotPasswordAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -275,10 +286,11 @@ namespace SE.Business.AccountServices
             var codeEncoded = WebEncoders.Base64UrlEncode(tokenGeneratedBytes);
 
             var confirmationLink = $"{_configuration.BaseUrl}/sifre-sifirla?userId={user.Id}&confirmation-token={codeEncoded}";
-            await _emailSender.SendAsync(user.Email, "İzmir Eğitim Kurumları Şifre Sıfırlama Servisi!", EmailMessages.GetForgotPasswordHtml(confirmationLink));
+            await _emailSender.SendAsync(user.Email, "İzmir Eğitim Kurumları Şifre Sıfırlama Servisi!", EmailMessages.GetForgotPasswordHtml(confirmationLink, _configuration.ApiUrl));
 
             return new SuccessResult(Messages.EmailSended);
         }
+        [LogAspect(typeof(FileLogger))]
         public async Task<IResult> ResetPasswordAsync(ResetPasswordDto resetPasswordDto)
         {
             var user = await _userManager.FindByIdAsync(resetPasswordDto.UserId);
@@ -296,6 +308,7 @@ namespace SE.Business.AccountServices
 
             return new SuccessResult(Messages.Updated);
         }
+        [LogAspect(typeof(FileLogger))]
         public async Task<IResult> ResendEmailConfirmationAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -307,10 +320,11 @@ namespace SE.Business.AccountServices
             byte[] tokenGeneratedBytes = Encoding.UTF8.GetBytes(confirmationToken);
             var codeEncoded = WebEncoders.Base64UrlEncode(tokenGeneratedBytes);
             var confirmationLink = $"{_configuration.BaseUrl}/e-posta-onay?userId={user.Id}&confirmation-token={codeEncoded}";
-            await _emailSender.SendAsync(user.Email, "E-posta adresinizi onaylayın!", EmailMessages.GetEmailConfirmationHtml(confirmationLink));
+            await _emailSender.SendAsync(user.Email, "E-posta adresinizi onaylayın!", EmailMessages.GetEmailConfirmationHtml(confirmationLink, _configuration.ApiUrl));
 
             return new SuccessResult(Messages.EmailSended);
         }
+        [LogAspect(typeof(FileLogger))]
         public async Task<IResult> EmailConfirmationAsync(EmailConfirmationDto emailConfirmation)
         {
             var user = await _userManager.FindByIdAsync(emailConfirmation.UserId);

@@ -16,6 +16,7 @@ namespace SE.Core.Entities
         public string SeoUrl { get; set; }
         public DateTime CreateTime { get; set; }
         public DateTime UpdateTime { get; set; }
+        public bool IsActive { get; set; }
         public User User { get; set; }
         public ICollection<BlogItem> BlogItems { get; set; }
 

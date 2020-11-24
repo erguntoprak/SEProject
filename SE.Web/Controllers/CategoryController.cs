@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -24,43 +25,60 @@ namespace SE.Web.Controllers
             _mapper = mapper;
         }
         [HttpGet("GetAllCategoryList")]
-        public IActionResult GetAllCategoryList()
+        public async Task<IActionResult> GetAllCategoryList()
         {
-            var categoryList = _mapper.Map<List<CategoryModel>>(_categoryService.GetAllCategoryList());
-            return Ok(categoryList);
+            var result = await _categoryService.GetAllCategoryListAsync();
+            if (result.Success)
+                return Ok(_mapper.Map<List<CategoryModel>>(result.Data));
+
+            return BadRequest(result);
         }
 
         [HttpGet("GetCategoryById")]
-        public IActionResult GetCategoryById([FromQuery] int categoryId)
+        public async Task<IActionResult> GetCategoryById([FromQuery] int categoryId)
         {
-            var categoryModel = _mapper.Map<CategoryModel>(_categoryService.GetCategoryById(categoryId));
-            return Ok(categoryModel);
+            var result = await _categoryService.GetCategoryByIdAsync(categoryId);
+            if (result.Success)
+                return Ok(_mapper.Map<CategoryModel>(result.Data));
+
+            return BadRequest(result);
         }
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost("InsertCategory")]
-        public IActionResult InsertCategory([FromBody] CategoryModel categoryModel)
+        public async Task<IActionResult> InsertCategory([FromBody] CategoryModel categoryModel)
         {
             var categoryDto = _mapper.Map<CategoryDto>(categoryModel);
-            _categoryService.InsertCategory(categoryDto);
-            return Ok();
+            var result = await _categoryService.InsertCategoryAsync(categoryDto);
+
+            if (result.Success)
+                return Ok(result);
+
+            return BadRequest(result);
         }
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost("UpdateCategory")]
-        public IActionResult UpdateCategory([FromBody] CategoryModel categoryModel)
+        public async Task<IActionResult> UpdateCategory([FromBody] CategoryModel categoryModel)
         {
             var categoryDto = _mapper.Map<CategoryDto>(categoryModel);
-            _categoryService.UpdateCategory(categoryDto);
-            return Ok();
+            var result = await _categoryService.UpdateCategoryAsync(categoryDto);
+
+            if (result.Success)
+                return Ok(result);
+
+            return BadRequest(result);
         }
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost("DeleteCategory")]
-        public IActionResult DeleteCategory([FromBody] int categoryId)
+        public async Task<IActionResult> DeleteCategory([FromBody] int categoryId)
         {
-            _categoryService.DeleteCategory(categoryId);
-            return Ok();
+            var result = await _categoryService.DeleteCategoryAsync(categoryId);
+            if (result.Success)
+                return Ok(result);
+
+            return BadRequest(result);
         }
     }
 }

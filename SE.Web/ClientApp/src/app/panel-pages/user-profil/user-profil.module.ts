@@ -5,6 +5,7 @@ import { MatInputModule } from "@angular/material/input";
 import { MatButtonModule } from '@angular/material/button';
 import { UserProfilComponent } from './user-profil.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { OnlyAlphabetDirective } from 'src/app/_helpers/only-alphabet.directive';
 
 const routes: Routes = [
   {

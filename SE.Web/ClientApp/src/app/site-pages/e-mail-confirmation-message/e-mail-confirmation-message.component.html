@@ -23,11 +23,6 @@
     <div class="row">
       <div class="col-lg-12 pr-0">
         <div class="contact_form">
-          <div *ngIf="errorList">
-            <span class="not-valid" *ngFor="let error of errorList">
-              {{error}}
-            </span>
-          </div>
           <div class="contact-from-success" *ngIf="isEmailConfirmationSuccessMessage">
             <div class="box_alert media box_success">
               <div class="icon"><i class="icon-check"></i></div>

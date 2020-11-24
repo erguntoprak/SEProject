@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseService } from '../../shared/base.service';
-import * as _ from 'lodash';
-import { AcdcLoadingService } from 'acdc-loading';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({

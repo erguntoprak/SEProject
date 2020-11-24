@@ -14,7 +14,7 @@ namespace SE.Core.Aspects.Autofac.Caching
     {
         private readonly int _duration;
         private readonly ICacheManager _cacheManager;
-        public CacheAspect(int duration = 60)
+        public CacheAspect(int duration = 360)
         {
             _duration = duration;
             _cacheManager = ServiceTool.ServiceProvider.GetService<ICacheManager>();

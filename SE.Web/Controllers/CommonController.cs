@@ -30,7 +30,7 @@ namespace SE.Web.Controllers
             _mapper = mapper;
         }
 
-        [Authorize(Policy = "AdminPolicy")]
+        [Authorize(Policy = "UserPolicy")]
         [HttpGet("GetDashboardData")]
         public async Task<IActionResult> GetDashboardData([FromQuery]DashboardFilterModel dashboardFilterModel)
         {

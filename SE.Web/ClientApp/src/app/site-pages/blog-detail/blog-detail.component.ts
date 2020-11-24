@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseService } from '../../shared/base.service';
-import * as _ from 'lodash';
 import { AcdcLoadingService } from 'acdc-loading';
 import { ActivatedRoute } from '@angular/router';
 import { BlogDetailModel } from '../../shared/models';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'se-blog-detail',
@@ -11,6 +11,7 @@ import { BlogDetailModel } from '../../shared/models';
 })
 export class BlogDetailComponent implements OnInit {
 
+  apiUrl = environment.apiUrl;
   blogDetailModel: BlogDetailModel;
 
   constructor(private baseService: BaseService, private acdcLoadingService: AcdcLoadingService, private route: ActivatedRoute) {
@@ -21,9 +22,7 @@ export class BlogDetailComponent implements OnInit {
       this.acdcLoadingService.showLoading();
       this.baseService.get<BlogDetailModel>("Blog/GetBlogDetailBySeoUrl?seoUrl=", params['name']).subscribe(data => {
         this.blogDetailModel = data;
-        console.log(this.blogDetailModel)
         this.acdcLoadingService.hideLoading();
-
       })
     }); 
   }

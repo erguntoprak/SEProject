@@ -58,14 +58,14 @@ namespace SE.Web
             }).AddEntityFrameworkStores<EntitiesDbContext>().AddDefaultTokenProviders();
 
             services.Configure<DataProtectionTokenProviderOptions>(options =>
-                            options.TokenLifespan = TimeSpan.FromDays(1));
+                            options.TokenLifespan = TimeSpan.FromDays(3));
 
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                
+
             }).AddCookie().AddJwtBearer(options =>
                 {
                     options.SaveToken = true;
@@ -78,14 +78,15 @@ namespace SE.Web
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("Token").GetSection("Key").Value))
                     };
                 });
-            string sqlConnection = @"Server =.; Database = EducationDb; Trusted_Connection = True;";
+
+            string sqlConnection = Configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value;
             services.AddDbContext<EntitiesDbContext>(dbcontextoption => dbcontextoption.UseSqlServer(sqlConnection, b => b.MigrationsAssembly("SE.Web")));
             services.AddCors(options =>
             {
                 options.AddPolicy("ApiPolicy",
                                   builder =>
                                   {
-                                      builder.WithOrigins("http://localhost:4200").AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                                      builder.WithOrigins(Configuration.GetSection("Configuration").GetSection("BaseUrl").Value).AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
                                   });
             });
             services.AddDirectoryBrowser();
@@ -111,7 +112,7 @@ namespace SE.Web
                 options.AddPolicy(Policy.User, builder =>
                 {
                     builder.RequireAuthenticatedUser();
-                    builder.RequireRole("User","Admin");
+                    builder.RequireRole("User", "Admin");
                 });
             });
             services.AddMemoryCache();
@@ -124,7 +125,7 @@ namespace SE.Web
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<User> userManager,
-RoleManager<IdentityRole> roleManager)
+RoleManager<IdentityRole> roleManager, EntitiesDbContext entitiesDbContext)
         {
             if (env.IsDevelopment())
             {
@@ -136,19 +137,17 @@ RoleManager<IdentityRole> roleManager)
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
+            SeedData.SeedDataSave(entitiesDbContext);
             IdentitySeedData.SeedData(userManager, roleManager);
             ServiceTool.ServiceProvider = app.ApplicationServices;
             app.ConfigureCustomExceptionMiddleware();
-
             app.UseStaticFiles();
             app.UseRouting();
             app.UseCors("ApiPolicy");
             app.UseAuthentication();
             app.UseDirectoryBrowser(new DirectoryBrowserOptions
             {
-                FileProvider = new PhysicalFileProvider(
-            Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images")),
-                RequestPath = "/MyImages"
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images"))
             });
             app.UseAuthorization();
             app.UseEndpoints(endpoints => endpoints.MapControllers());

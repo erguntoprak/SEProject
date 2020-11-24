@@ -66,6 +66,7 @@ namespace SE.Web.Infrastructure.AutoMapper
             CreateMap<AttributeDto, AttributeModel>().ReverseMap();
             CreateMap<DashboardDataDto, DashboardDataModel>();
             CreateMap<DashboardFilterModel, DashboardFilterDto>();
+            CreateMap<EducationUploadImageModel, EducationUploadImageDto>().ReverseMap();
         }
     }
 }

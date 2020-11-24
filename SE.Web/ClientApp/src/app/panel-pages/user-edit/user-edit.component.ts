@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseService } from '../../shared/base.service';
-import * as _ from 'lodash';
 import { AcdcLoadingService } from 'acdc-loading';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
-import { FormBuilder, FormGroup, Validators, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
-import { ErrorStateMatcher } from '@angular/material/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MyErrorStateMatcher } from '../../_helpers/input-error-state-matcher';
 import { UserModel } from 'src/app/shared/models';
 
@@ -28,6 +25,7 @@ export class UserEditComponent implements OnInit {
     this.acdcLoadingService.showLoading();
     this.userUpdateForm = this.formBuilder.group({
       userId: [null, Validators.required],
+      userName: [null, Validators.required],
       email: [null, [Validators.required, Validators.email]],
       phoneNumber: [null, Validators.required],
       name: [null, Validators.required],
