@@ -3,10 +3,15 @@
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
 EXPOSE 80
+EXPOSE 443  
+
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["SE.Web/SE.Web.csproj", "SE.Web/"]
+COPY ["SE.Business/SE.Business.csproj", "SE.Business/"]
+COPY ["SE.Core/SE.Core.csproj", "SE.Core/"]
+COPY ["SE.Data/SE.Data.csproj", "SE.Data/"]
 RUN dotnet restore "SE.Web/SE.Web.csproj"
 COPY . .
 WORKDIR "/src/SE.Web"
