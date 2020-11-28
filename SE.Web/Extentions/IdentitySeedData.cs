@@ -20,9 +20,9 @@ namespace SE.Web.Extentions
             if (userManager.FindByEmailAsync("izmiregitimkurumlari@gmail.com").Result == null)
             {
                 User user = new User();
-                user.UserName = "erguntoprak";
-                user.FirsName = "Ergün";
-                user.LastName = "Toprak";
+                user.UserName = "izmiregitimkurumlari";
+                user.FirsName = "İzmir Eğitim";
+                user.LastName = "Kurumları";
                 user.Email = "izmiregitimkurumlari@gmail.com";
                 user.EmailConfirmed = true;
                 user.IsActive = true;

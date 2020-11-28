@@ -223,7 +223,7 @@ namespace SE.Web.Controllers
             if (result.Success)
                 return Ok(_mapper.Map<BlogDetailModel>(result.Data));
 
-            return BadRequest(result);
+            return NotFound(result);
         }
 
         [Authorize(Policy = "UserPolicy")]

@@ -8,5 +8,6 @@ namespace SE.Business.Infrastructure.ConfigurationManager
     {
         public string BaseUrl { get; set; }
         public string ApiUrl { get; set; }
+        public string ContactEmail { get; set; }
     }
 }

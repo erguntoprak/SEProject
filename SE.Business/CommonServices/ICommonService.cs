@@ -10,5 +10,6 @@ namespace SE.Business.CommonServices
     public interface ICommonService
     {
         Task<IDataResult<DashboardDataDto>> GetDashboardDataAsync(DashboardFilterDto dashboardFilterDto);
+        Task<IResult> SendContactFormAsync(ContactFormDto contactFormDto);
     }
 }

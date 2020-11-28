@@ -37,8 +37,16 @@ namespace SE.Web.Controllers
             var result = await _commonService.GetDashboardDataAsync(_mapper.Map<DashboardFilterDto>(dashboardFilterModel));
             if (result.Success)
                 return Ok(_mapper.Map<DashboardDataModel>(result.Data));
-            return BadRequest(result.Message);
+            return BadRequest(result);
         }
-
+        [Authorize(Policy = "UserPolicy")]
+        [HttpPost("SendContactForm")]
+        public async Task<IActionResult> SendContactForm([FromBody]ContactFormDto contactFormDto)
+        {
+            var result = await _commonService.SendContactFormAsync(contactFormDto);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
+        }
     }
 }
