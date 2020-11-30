@@ -5,6 +5,7 @@
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
     <UserSecretsId>64ec259a-c843-47c8-aff3-6f73f3fa1e5f</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,6 +36,6 @@
     <Folder Include="wwwroot\images\blog\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="logs\**" CopyToPublishDirectory="PreserveNewest"/>
+    <Content Include="logs\**" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

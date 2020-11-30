@@ -1,0 +1,37 @@
+﻿version: "3.6"
+services:
+  mssqldb:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    container_name: mssqldbcontainer
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "SEjNMf4795LHAhus3E"
+      MSSQL_PID: Express
+    expose:
+      - 1433
+    networks: 
+      - local-bridge
+  
+  netcoreapi:
+    image: .
+    container_name: netcoreapicontainer
+    depends_on:
+      - mssqldb
+    networks: 
+      - local-bridge
+    
+  angularapp:
+    build: ./ClientApp
+    ports: 
+      - 4200:443
+    depends_on:
+      - netcoreapi
+    volumes:
+      - "/app/node_modules"
+      - "./ClientApp:/app"
+    networks: 
+      - local-bridge
+
+networks:
+  local-bridge:
+    driver: bridge
