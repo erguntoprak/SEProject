@@ -1,37 +1,41 @@
 ﻿version: "3.6"
 services:
-  mssqldb:
-    image: mcr.microsoft.com/mssql/server:2017-latest
-    container_name: mssqldbcontainer
+  postgresdb:
+    image: postgres:13.1
+    container_name: postgresdb
+    restart: always
     environment:
-      ACCEPT_EULA: "Y"
-      SA_PASSWORD: "SEjNMf4795LHAhus3E"
-      MSSQL_PID: Express
+      POSTGRES_PASSWORD: "SEjNMf4795LHAhus3E"
     expose:
-      - 1433
+      - 5432
     networks: 
       - local-bridge
   
-  netcoreapi:
-    image: .
-    container_name: netcoreapicontainer
-    depends_on:
-      - mssqldb
-    networks: 
-      - local-bridge
-    
-  angularapp:
-    build: ./ClientApp
-    ports: 
-      - 4200:443
-    depends_on:
-      - netcoreapi
-    volumes:
-      - "/app/node_modules"
-      - "./ClientApp:/app"
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - 80:80
+      - 443:443
     networks: 
       - local-bridge
 
+  seapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: seapi
+    depends_on:
+      - postgresdb
+    volumes:
+      - ./seapi:/app
+    ports:
+      - "5000:80"
+      - "5001:443"
+    networks: 
+      - local-bridge
+    
 networks:
   local-bridge:
     driver: bridge

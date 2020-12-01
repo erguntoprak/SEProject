@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-focal AS build-env
+FROM mcr.microsoft.com/dotnet/core/sdk:5.0-focal AS build-env
 WORKDIR /app
 EXPOSE 443
 
@@ -13,7 +13,7 @@ COPY . ./
 RUN dotnet publish "SE.Web/SE.Web.csproj" -c Release -o /app/publish
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-focal
+FROM mcr.microsoft.com/dotnet/core/aspnet:5.0-focal
 WORKDIR /app
 COPY --from=build-env /app/publish .
 ENTRYPOINT ["dotnet", "SE.Web.dll"]

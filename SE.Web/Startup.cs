@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -76,7 +77,7 @@ namespace SE.Web
                 });
 
             string sqlConnection = Configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value;
-            services.AddDbContext<EntitiesDbContext>(dbcontextoption => dbcontextoption.UseSqlServer(sqlConnection, b => b.MigrationsAssembly("SE.Web")));
+            services.AddDbContext<EntitiesDbContext>(dbcontextoption => dbcontextoption.UseNpgsql(sqlConnection, b => b.MigrationsAssembly("SE.Web")));
             services.AddCors(options =>
             {
                 options.AddPolicy("ApiPolicy",
@@ -123,16 +124,15 @@ namespace SE.Web
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<User> userManager,
 RoleManager<IdentityRole> roleManager, EntitiesDbContext entitiesDbContext)
         {
-            if (env.IsDevelopment())
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                app.UseHsts();
-            }
-            app.UseHttpsRedirection();
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+
             SeedData.SeedDataSave(entitiesDbContext);
             IdentitySeedData.SeedData(userManager, roleManager);
             ServiceTool.ServiceProvider = app.ApplicationServices;
