@@ -10,8 +10,8 @@ using SE.Data;
 namespace SE.Web.Migrations
 {
     [DbContext(typeof(EntitiesDbContext))]
-    [Migration("20201130213828_PostgreSql")]
-    partial class PostgreSql
+    [Migration("20201202084336_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
