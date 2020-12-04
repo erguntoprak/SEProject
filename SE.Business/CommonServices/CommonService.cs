@@ -1,10 +1,7 @@
-﻿using NETCore.MailKit.Core;
-using SE.Core.DTO;
+﻿using SE.Core.DTO;
 using SE.Core.Utilities.Results;
 using SE.Data;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
@@ -19,10 +16,10 @@ namespace SE.Business.CommonServices
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly Configuration _configuration;
-        private readonly IEmailService _emailSender;
+        private readonly IEmailSender _emailSender;
 
 
-        public CommonService(IUnitOfWork unitOfWork, IOptions<Configuration> configuration, IEmailService emailSender)
+        public CommonService(IUnitOfWork unitOfWork, IOptions<Configuration> configuration, IEmailSender emailSender)
         {
             _unitOfWork = unitOfWork;
             _configuration = configuration.Value;

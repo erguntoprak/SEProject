@@ -3,7 +3,6 @@ using Autofac.Extras.DynamicProxy;
 using Castle.DynamicProxy;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using NETCore.MailKit.Core;
 using SE.Business.AccountServices;
 using SE.Business.AddressServices;
 using SE.Business.AttributeCategoryServices;
@@ -15,8 +14,6 @@ using SE.Business.EducationServices;
 using SE.Business.EmailSenders;
 using SE.Business.ImageServices;
 using SE.Business.Infrastructure.FluentValidation.Validations;
-using SE.Core.CrossCuttingConcerns.Caching;
-using SE.Core.CrossCuttingConcerns.Caching.Microsoft;
 using SE.Core.DTO;
 using SE.Core.Utilities.Interceptors;
 using SE.Data;
@@ -31,7 +28,7 @@ namespace SE.Business.Infrastructure.Autofac
 
             builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
             builder.RegisterType<EntitiesDbContext>().As<DbContext>().InstancePerLifetimeScope();
-            builder.RegisterType<EmailSender>().As<IEmailService>().InstancePerLifetimeScope();
+            builder.RegisterType<EmailSender>().As<IEmailSender>().InstancePerLifetimeScope();
 
 
 

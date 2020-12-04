@@ -1,10 +1,7 @@
-﻿using FluentValidation;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using NETCore.MailKit.Core;
 using SE.Business.Constants;
 using SE.Business.EmailSenders;
 using SE.Business.Infrastructure.ConfigurationManager;
@@ -20,7 +17,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace SE.Business.AccountServices
 {
@@ -29,12 +25,12 @@ namespace SE.Business.AccountServices
     {
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IEmailService _emailSender;
+        private readonly IEmailSender _emailSender;
         private readonly Configuration _configuration;
 
 
 
-        public AccountService(UserManager<User> userManager, IEmailService emailSender, IOptions<Configuration> configuration, RoleManager<IdentityRole> roleManager)
+        public AccountService(UserManager<User> userManager, IEmailSender emailSender, IOptions<Configuration> configuration, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _emailSender = emailSender;

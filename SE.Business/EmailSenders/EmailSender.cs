@@ -1,15 +1,11 @@
 ﻿using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using NETCore.MailKit.Core;
-using NETCore.MailKit.Infrastructure.Internal;
 using System;
-using System.Text;
 using System.Threading.Tasks;
-
 namespace SE.Business.EmailSenders
 {
-    public class EmailSender : IEmailService
+    public class EmailSender : IEmailSender
     {
 
         private readonly EmailSettings _emailSettings;
@@ -20,46 +16,7 @@ namespace SE.Business.EmailSenders
             _emailSettings = emailSettings.Value;
         }
 
-        public void Send(string mailTo, string subject, string message, bool isHtml = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Send(string mailTo, string subject, string message, Encoding encoding, bool isHtml = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Send(string mailTo, string mailCc, string mailBcc, string subject, string message, bool isHtml = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Send(string mailTo, string mailCc, string mailBcc, string subject, string message, Encoding encoding, bool isHtml = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Send(string mailTo, string subject, string message, bool isHtml = false, SenderInfo sender = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Send(string mailTo, string subject, string message, Encoding encoding, bool isHtml = false, SenderInfo sender = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Send(string mailTo, string mailCc, string mailBcc, string subject, string message, bool isHtml = false, SenderInfo sender = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Send(string mailTo, string mailCc, string mailBcc, string subject, string message, Encoding encoding, bool isHtml = false, SenderInfo sender = null)
-        {
-            throw new NotImplementedException();
-        }
-
+        [Obsolete]
         public async Task SendAsync(string mailTo, string subject, string message, bool isHtml = false)
         {
             try
@@ -82,10 +39,9 @@ namespace SE.Business.EmailSenders
                     // For demo-purposes, accept all SSL certificates (in case the server supports STARTTLS)
                     client.ServerCertificateValidationCallback = (s, c, h, e) => true;
 
-
                     // The third parameter is useSSL (true if the client should make an SSL-wrapped
                     // connection to the server; otherwise, false).
-                    await client.ConnectAsync(_emailSettings.MailServer, _emailSettings.MailPort, false);
+                    await client.ConnectAsync(_emailSettings.MailServer, _emailSettings.MailPort, true);
 
                     // Note: only needed if the SMTP server requires authentication
                     await client.AuthenticateAsync(_emailSettings.Sender, _emailSettings.Password);
@@ -100,41 +56,6 @@ namespace SE.Business.EmailSenders
             {
                 throw new InvalidOperationException(ex.Message);
             }
-        }
-
-        public Task SendAsync(string mailTo, string subject, string message, Encoding encoding, bool isHtml = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task SendAsync(string mailTo, string mailCc, string mailBcc, string subject, string message, bool isHtml = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task SendAsync(string mailTo, string mailCc, string mailBcc, string subject, string message, Encoding encoding, bool isHtml = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task SendAsync(string mailTo, string subject, string message, bool isHtml = false, SenderInfo sender = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task SendAsync(string mailTo, string subject, string message, Encoding encoding, bool isHtml = false, SenderInfo sender = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task SendAsync(string mailTo, string mailCc, string mailBcc, string subject, string message, bool isHtml = false, SenderInfo sender = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task SendAsync(string mailTo, string mailCc, string mailBcc, string subject, string message, Encoding encoding, bool isHtml = false, SenderInfo sender = null)
-        {
-            throw new NotImplementedException();
         }
     }
 
