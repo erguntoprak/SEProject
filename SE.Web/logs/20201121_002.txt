@@ -1,2 +1,0 @@
-2020-11-21 16:31:14.303 +03:00 [Information] {"FullName":"CategoryService","MethodName":"GetAllCategoryListAsync","Parameters":[],"UserEmail":null}
-2020-11-21 20:36:44.029 +03:00 [Information] {"FullName":"CategoryService","MethodName":"GetAllCategoryListAsync","Parameters":[],"UserEmail":null}

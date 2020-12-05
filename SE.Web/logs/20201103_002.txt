@@ -1,1 +1,0 @@
-2020-11-03 00:11:17.579 +03:00 [Information] {"FullName":"AccountService","MethodName":"UpdateUserRoleAsync","Parameters":[{"Name":"userId","Value":"6bb8257b-0686-4565-bb34-e176868146fa","Type":"String"},{"Name":"roles","Value":["User"],"Type":"List`1"}],"UserEmail":"ergun.35.toprak@gmail.com"}

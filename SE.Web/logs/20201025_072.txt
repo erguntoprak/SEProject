@@ -1,1 +1,0 @@
-2020-10-25 21:57:43.045 +03:00 [Information] {"FullName":"AccountService","MethodName":"GetAllRoleListAsync","Parameters":[],"UserEmail":"ergun.35.toprak@gmail.com"}

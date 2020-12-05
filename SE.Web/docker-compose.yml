@@ -11,7 +11,7 @@ services:
 
   seapi:
     build:
-      context: ./SE.Web
+      context: ./SEProject
       dockerfile: api-dockerfile
     container_name: seapi
     depends_on:

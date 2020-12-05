@@ -1,1 +1,0 @@
-2020-11-22 12:29:58.954 +03:00 [Information] {"FullName":"AccountService","MethodName":"UpdateUserActivateAsync","Parameters":[{"Name":"userId","Value":"fba79d75-36b5-4824-bca3-c0174ccba9a6","Type":"String"},{"Name":"isActive","Value":true,"Type":"Boolean"}],"UserEmail":"izmiregitimkurumlari@gmail.com"}

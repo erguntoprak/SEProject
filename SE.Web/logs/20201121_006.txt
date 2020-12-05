@@ -1,4 +1,0 @@
-2020-11-21 22:57:29.549 +03:00 [Information] {"FullName":"CategoryService","MethodName":"GetAllCategoryListAsync","Parameters":[],"UserEmail":"ergun.35.toprak@gmail.com"}
-2020-11-21 23:03:45.682 +03:00 [Information] {"FullName":"CategoryService","MethodName":"GetAllCategoryListAsync","Parameters":[],"UserEmail":"ergun.35.toprak@gmail.com"}
-2020-11-21 23:04:50.056 +03:00 [Information] {"FullName":"CategoryService","MethodName":"GetAllCategoryListAsync","Parameters":[],"UserEmail":"ergun.35.toprak@gmail.com"}
-2020-11-21 23:48:47.300 +03:00 [Information] {"FullName":"AccountService","MethodName":"LoginAsync","Parameters":[{"Name":"loginDto","Value":{"Email":"izmiregitimkurumlari@gmail.com","Password":"ersap*24"},"Type":"LoginDto"}],"UserEmail":null}

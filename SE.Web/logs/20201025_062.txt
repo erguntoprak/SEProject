@@ -1,1 +1,0 @@
-2020-10-25 21:25:14.508 +03:00 [Information] {"FullName":"AccountService","MethodName":"UpdateUserAsync","Parameters":[{"Name":"userUpdateDto","Value":{"UserId":"4259c402-b716-4932-9faa-2e2eff4da788","Email":"ergun.35.toprak@gmail.com","PhoneNumber":"5545454545","Name":"Ergün","Surname":"Toprak"},"Type":"UserUpdateDto"}],"UserEmail":"ergun.35.toprak@gmail.com"}

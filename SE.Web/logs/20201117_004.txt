@@ -1,1 +1,0 @@
-2020-11-17 22:30:42.419 +03:00 [Information] {"FullName":"AccountService","MethodName":"UpdateUserActivateAsync","Parameters":[{"Name":"userId","Value":"6bb8257b-0686-4565-bb34-e176868146fa","Type":"String"},{"Name":"isActive","Value":false,"Type":"Boolean"}],"UserEmail":"ergun.35.toprak@gmail.com"}

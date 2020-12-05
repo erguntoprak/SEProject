@@ -1,2 +1,0 @@
-2020-11-22 01:59:56.826 +03:00 [Information] {"FullName":"AccountService","MethodName":"GetUserDtoByEmailAsync","Parameters":[{"Name":"email","Value":"ergun.35.toprak@gmail.com","Type":"String"}],"UserEmail":"ergun.35.toprak@gmail.com"}
-2020-11-22 12:27:53.438 +03:00 [Information] {"FullName":"AccountService","MethodName":"RegisterAsync","Parameters":[{"Name":"registerDto","Value":{"Name":"Test","Surname":"Kullanıcı","Email":"video.35.cosmos@gmail.com","Phone":"5545345346","Password":"123456"},"Type":"RegisterDto"}],"UserEmail":"ergun.35.toprak@gmail.com"}

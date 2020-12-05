@@ -1,1 +1,0 @@
-2020-12-01 00:50:40.339 +03:00 [Information] {"FullName":"AccountService","MethodName":"LoginAsync","Parameters":[{"Name":"loginDto","Value":{"Email":"izmiregitimkurumlari@gmail.com","Password":"erSap*24"},"Type":"LoginDto"}],"UserEmail":"izmiregitimkurumlari@gmail.com"}

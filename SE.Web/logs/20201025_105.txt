@@ -1,1 +1,0 @@
-2020-10-25 23:14:41.829 +03:00 [Information] {"FullName":"CategoryService","MethodName":"GetAllCategoryList","Parameters":[],"UserEmail":"ergun.35.toprak@gmail.com"}

@@ -1,4 +1,0 @@
-2020-10-30 22:30:41.660 +03:00 [Information] {"FullName":"AccountService","MethodName":"GetAllUserListAsync","Parameters":[],"UserEmail":"ergun.35.toprak@gmail.com"}
-2020-10-30 22:31:29.205 +03:00 [Information] {"FullName":"AccountService","MethodName":"GetAllUserListAsync","Parameters":[],"UserEmail":"ergun.35.toprak@gmail.com"}
-2020-10-30 22:31:59.160 +03:00 [Information] {"FullName":"AccountService","MethodName":"GetAllUserListAsync","Parameters":[],"UserEmail":"ergun.35.toprak@gmail.com"}
-2020-10-30 22:32:25.995 +03:00 [Information] {"FullName":"AccountService","MethodName":"GetAllUserListAsync","Parameters":[],"UserEmail":"ergun.35.toprak@gmail.com"}

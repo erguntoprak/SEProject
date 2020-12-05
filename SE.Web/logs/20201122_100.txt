@@ -1,1 +1,0 @@
-2020-11-22 20:43:59.950 +03:00 [Information] {"FullName":"AccountService","MethodName":"ResendEmailConfirmationAsync","Parameters":[{"Name":"email","Value":"setrofsoftware@gmail.com","Type":"String"}],"UserEmail":"setrofsoftware@gmail.com"}

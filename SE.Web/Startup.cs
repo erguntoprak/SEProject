@@ -123,10 +123,6 @@ namespace SE.Web
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<User> userManager,
 RoleManager<IdentityRole> roleManager, EntitiesDbContext entitiesDbContext)
         {
-            //if (env.IsDevelopment())
-            //{
-            //    app.UseDeveloperExceptionPage();
-            //}
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto

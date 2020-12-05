@@ -1,1 +1,0 @@
-2020-11-17 22:28:05.896 +03:00 [Information] {"FullName":"AccountService","MethodName":"GetUserDtoByEmailAsync","Parameters":[{"Name":"email","Value":"ergun.35.toprak@gmail.com","Type":"String"}],"UserEmail":"ergun.35.toprak@gmail.com"}

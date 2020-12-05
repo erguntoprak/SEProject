@@ -1,1 +1,0 @@
-2020-11-19 09:37:40.071 +03:00 [Information] {"FullName":"CategoryService","MethodName":"GetAllCategoryList","Parameters":[],"UserEmail":null}

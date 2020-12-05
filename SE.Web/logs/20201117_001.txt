@@ -1,2 +1,0 @@
-2020-11-17 22:23:21.090 +03:00 [Information] {"FullName":"CategoryService","MethodName":"GetAllCategoryList","Parameters":[],"UserEmail":"ergun.35.toprak@gmail.com"}
-2020-11-17 22:28:05.802 +03:00 [Information] {"FullName":"AccountService","MethodName":"LoginAsync","Parameters":[{"Name":"loginDto","Value":{"Email":"ergun.35.toprak@gmail.com","Password":"ergun123l"},"Type":"LoginDto"}],"UserEmail":"ergun.35.toprak@gmail.com"}

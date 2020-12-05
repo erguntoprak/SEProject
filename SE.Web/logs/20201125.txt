@@ -1,1 +1,0 @@
-2020-11-25 00:10:15.376 +03:00 [Information] {"FullName":"AccountService","MethodName":"GetAllUserListAsync","Parameters":[],"UserEmail":"izmiregitimkurumlari@gmail.com"}

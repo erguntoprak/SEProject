@@ -1,1 +1,0 @@
-2020-10-30 02:59:48.157 +03:00 [Error] {"ExceptionMessage":"Value cannot be null.","FullName":"EducationService","MethodName":"GetEducationDetailDtoBySeoUrl","Parameters":[{"Name":"seoUrl","Value":"ozel-pakkan-okullari-ilkokulu-hakkinda","Type":"String"}],"UserEmail":"ergun.35.toprak@gmail.com"}

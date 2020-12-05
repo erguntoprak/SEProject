@@ -1,2 +1,0 @@
-2020-11-24 20:49:19.496 +03:00 [Information] {"FullName":"AccountService","MethodName":"GetUserDtoByEmailAsync","Parameters":[{"Name":"email","Value":"izmiregitimkurumlari@gmail.com","Type":"String"}],"UserEmail":null}
-2020-11-24 21:04:40.280 +03:00 [Information] {"FullName":"AccountService","MethodName":"GetAllUserListAsync","Parameters":[],"UserEmail":"izmiregitimkurumlari@gmail.com"}
