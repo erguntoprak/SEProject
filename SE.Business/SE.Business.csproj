@@ -13,6 +13,7 @@
     <PackageReference Include="LazZiya.ImageResize" Version="3.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="5.0.0" />
     <PackageReference Include="MailKit" Version="2.10.0" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SE.Core\SE.Core.csproj" />

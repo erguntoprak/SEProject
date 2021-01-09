@@ -18,12 +18,13 @@ using SE.Business.ImageServices;
 using SE.Core.DTO;
 using SE.Web.Model.Education;
 using SE.Web.Model.Image;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 namespace SE.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [EnableCors("ApiPolicy")]
     public class EducationController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -242,9 +243,18 @@ namespace SE.Web.Controllers
             string filedir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
             string bigFile = Path.Combine(filedir, imageModel.ImageUrl + "_1000x600.jpg");
             string smallFile = Path.Combine(filedir, imageModel.ImageUrl + "_300x180.jpg");
-            var bigImage = Image.FromFile(bigFile);
-            var bigScaleImage = ImageResize.ScaleAndCrop(bigImage, 300, 180);
-            bigScaleImage.SaveAs(smallFile);
+
+            using (var bigImage = SixLabors.ImageSharp.Image.Load(bigFile))
+            {
+                var options = new ResizeOptions
+                {
+                    Mode = ResizeMode.Crop,
+                    Position = AnchorPositionMode.Center,
+                    Size = new SixLabors.ImageSharp.Size(300, 180)
+                };
+                bigImage.Mutate(d => d.Resize(options));
+                await bigImage.SaveAsync(smallFile);
+            }
 
             if (result.Success)
                 return Ok(result);
@@ -277,9 +287,17 @@ namespace SE.Web.Controllers
 
             var imageDto = _mapper.Map<ImageDto>(imageModel);
             var result = await _educationService.UpdateFirstVisibleImageAsync(imageDto);
-            var bigImage = Image.FromFile(bigFile);
-            var bigScaleImage = ImageResize.ScaleAndCrop(bigImage, 300, 180);
-            bigScaleImage.SaveAs(smallFile);
+            using (var bigImage = SixLabors.ImageSharp.Image.Load(bigFile))
+            {
+                var options = new ResizeOptions
+                {
+                    Mode = ResizeMode.Crop,
+                    Position = AnchorPositionMode.Center,
+                    Size = new SixLabors.ImageSharp.Size(300, 180)
+                };
+                bigImage.Mutate(d => d.Resize(options));
+                await bigImage.SaveAsync(smallFile);
+            }
 
             if (result.Success)
                 return Ok(result);

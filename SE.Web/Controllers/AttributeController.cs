@@ -16,7 +16,6 @@ namespace SE.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [EnableCors("ApiPolicy")]
     public class AttributeController : ControllerBase
     {
         private readonly IMapper _mapper;

@@ -15,7 +15,6 @@ namespace SE.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [EnableCors("ApiPolicy")]
     public class AddressController : ControllerBase
     {
         private readonly IAddressService _addressService;

@@ -13,10 +13,11 @@ using SE.Core.DTO;
 using SE.Core.Entities;
 using SE.Core.Utilities.Results;
 using SE.Data;
-using System.Drawing;
+using SixLabors.ImageSharp.Processing;
 using SE.Core.Aspects.Autofac.Validation;
 using SE.Business.Infrastructure.FluentValidation.Validations;
 using SE.Core.Aspects.Autofac.Caching;
+using SixLabors.ImageSharp;
 
 namespace SE.Business.EducationServices
 {
@@ -476,21 +477,27 @@ namespace SE.Business.EducationServices
         public async Task<IDataResult<IEnumerable<SearchEducationDto>>> GetAllSearchEducationListAsync()
         {
             var searchEducationList = await (from e in _unitOfWork.EducationRepository.Table
-                                                        join c in _unitOfWork.CategoryRepository.Table on e.CategoryId equals c.Id
-                                                        join a in _unitOfWork.AddressRepository.Table on e.EducationAddress.Id equals a.Id
-                                                        join d in _unitOfWork.DistrictRepository.Table on a.DistrictId equals d.Id
-                                                        select new SearchEducationDto
-                                                        {
-                                                            Name = e.Name,
-                                                            SeoUrl = UrlHelper.FriendlyUrl(d.Name) + "/" + c.SeoUrl + '/' + e.SeoUrl
-                                                        }).ToListAsync();
+                                             join c in _unitOfWork.CategoryRepository.Table on e.CategoryId equals c.Id
+                                             join a in _unitOfWork.AddressRepository.Table on e.EducationAddress.Id equals a.Id
+                                             join d in _unitOfWork.DistrictRepository.Table on a.DistrictId equals d.Id
+                                             select new SearchEducationDto
+                                             {
+                                                 Name = e.Name,
+                                                 SeoUrl = UrlHelper.FriendlyUrl(d.Name) + "/" + c.SeoUrl + '/' + e.SeoUrl
+                                             }).ToListAsync();
 
             return new SuccessDataResult<IEnumerable<SearchEducationDto>>(searchEducationList);
         }
 
         public async Task<IDataResult<IEnumerable<EducationFilterListDto>>> GetAllEducationListByFilterAsync(FilterDto filterDto)
         {
-            var educationListDto = await _unitOfWork.EducationRepository.Include(c => c.Category, ea => ea.EducationAddress, eat => eat.AttributeEducations, i => i.Images, d => d.EducationAddress.District).Where(d => d.Category.Id == filterDto.CategoryId).Select(d => new EducationFilterListDto
+            var educationListDtoQuery = _unitOfWork.EducationRepository.Include(c => c.Category, ea => ea.EducationAddress, eat => eat.AttributeEducations, i => i.Images, d => d.EducationAddress.District).Where(d => d.Category.Id == filterDto.CategoryId && d.IsActive).AsQueryable();
+
+            if (!string.IsNullOrEmpty(filterDto.SearchText))
+            {
+                educationListDtoQuery = educationListDtoQuery.Where(d => d.Name.ToLower().Contains(filterDto.SearchText.ToLower()));
+            }
+            var educationListDto = await educationListDtoQuery.Select(d => new EducationFilterListDto
             {
                 Id = d.Id,
                 Name = d.Name,
@@ -525,14 +532,17 @@ namespace SE.Business.EducationServices
 
                     if (file.Length > 0)
                     {
-                        using (var stream = file.OpenReadStream())
+                        using (var image = SixLabors.ImageSharp.Image.Load(file.OpenReadStream()))
                         {
-                            using (var img = System.Drawing.Image.FromStream(stream))
+                            var options = new ResizeOptions
                             {
-                                var bigScaleImage = ImageResize.ScaleAndCrop(img, 1000, 600);
-                                string bigFile = Path.Combine(fullPath + "_1000x600.jpg");
-                                bigScaleImage.SaveAs(bigFile);
-                            }
+                                Mode = ResizeMode.Crop,
+                                Position = AnchorPositionMode.Center,
+                                Size = new Size(1000, 600)
+                            };
+                            image.Mutate(d => d.Resize(options));
+                            string bigFile = Path.Combine(fullPath + "_1000x600.jpg");
+                            await image.SaveAsync(bigFile);
                         }
                     }
 

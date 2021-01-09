@@ -16,12 +16,13 @@ using SE.Business.BlogServices;
 using SE.Business.Helpers;
 using SE.Core.DTO;
 using SE.Web.Model.Blog;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 namespace SE.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [EnableCors("ApiPolicy")]
     public class BlogController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -50,10 +51,18 @@ namespace SE.Web.Controllers
 
             if (smallImageBytes.Length > 0)
             {
-                var smallImage = Image.FromStream(new MemoryStream(smallImageBytes));
-                var smallScaleImage = ImageResize.ScaleAndCrop(smallImage, 300, 180);
-                string smallFile = Path.Combine(filedir, smallImageName + "_300x180.jpg");
-                smallScaleImage.SaveAs(smallFile);
+                using (var smallScaleImage = SixLabors.ImageSharp.Image.Load(smallImageBytes))
+                {
+                    var options = new ResizeOptions
+                    {
+                        Mode = ResizeMode.Crop,
+                        Position = AnchorPositionMode.Center,
+                        Size = new SixLabors.ImageSharp.Size(300, 180)
+                    };
+                    smallScaleImage.Mutate(d => d.Resize(options));
+                    string smallFile = Path.Combine(filedir, smallImageName + "_300x180.jpg");
+                    await smallScaleImage.SaveAsync(smallFile);
+                }
                 blogInsertDto.FirstVisibleImageName = smallImageName;
             }
 
@@ -68,16 +77,24 @@ namespace SE.Web.Controllers
             {
                 if (blogItem.ImageName != "" && blogItem.ImageName.StartsWith("data:image"))
                 {
-                    string imageName = $"{UrlHelper.FriendlyUrl(blogInsertDto.Title)}-{Guid.NewGuid().ToString().Substring(0, 5)}";
+                    string imageName = $"{UrlHelper.FriendlyUrl(blogInsertDto.Title)}_{Path.GetRandomFileName()}";
                     string base64Data = blogItem.ImageName.Split(',')[1];
                     var bytes = Convert.FromBase64String(base64Data);
 
                     if (bytes.Length > 0)
                     {
-                        var bigImage = Image.FromStream(new MemoryStream(bytes));
-                        var bigScaleImage = ImageResize.ScaleAndCrop(bigImage, 1000, 600);
-                        string bigFile = Path.Combine(filedir, imageName + "_1000x600.jpg");
-                        bigScaleImage.SaveAs(bigFile);
+                        using (var bigImage = SixLabors.ImageSharp.Image.Load(smallImageBytes))
+                        {
+                            var options = new ResizeOptions
+                            {
+                                Mode = ResizeMode.Crop,
+                                Position = AnchorPositionMode.Center,
+                                Size = new SixLabors.ImageSharp.Size(1000, 600)
+                            };
+                            bigImage.Mutate(d => d.Resize(options));
+                            string bigFile = Path.Combine(filedir, imageName + "_1000x600.jpg");
+                            await bigImage.SaveAsync(bigFile);
+                        }
                         blogItem.ImageName = imageName;
                     }
                 }
@@ -112,16 +129,24 @@ namespace SE.Web.Controllers
                     System.GC.Collect();
                     System.GC.WaitForPendingFinalizers();
                 }
-                string firstVisibleImageName = $"{UrlHelper.FriendlyUrl(blogUpdateDto.Title)}-{Guid.NewGuid().ToString().Substring(0, 5)}.jpg";
+                string firstVisibleImageName = $"{UrlHelper.FriendlyUrl(blogUpdateDto.Title)}_{Path.GetRandomFileName()}.jpg";
                 string base64Data = blogUpdateDto.FirstVisibleImageName.Split(',')[1];
                 var bytes = Convert.FromBase64String(base64Data);
 
                 if (bytes.Length > 0)
                 {
-                    var firstVisibleImage = Image.FromStream(new MemoryStream(bytes));
-                    var firstVisibleImageScale = ImageResize.ScaleAndCrop(firstVisibleImage, 300, 180);
-                    string firstVisibleImageFile = Path.Combine(filedir, firstVisibleImageName + "_300x180.jpg");
-                    firstVisibleImageScale.SaveAs(firstVisibleImageFile);
+                    using (var firstVisibleImage = SixLabors.ImageSharp.Image.Load(bytes))
+                    {
+                        var options = new ResizeOptions
+                        {
+                            Mode = ResizeMode.Crop,
+                            Position = AnchorPositionMode.Center,
+                            Size = new SixLabors.ImageSharp.Size(300, 180)
+                        };
+                        firstVisibleImage.Mutate(d => d.Resize(options));
+                        string firstVisibleImageFile = Path.Combine(filedir, firstVisibleImageName + "_300x180.jpg");
+                        await firstVisibleImage.SaveAsync(firstVisibleImageFile);
+                    }
                     blogUpdateDto.FirstVisibleImageName = firstVisibleImageName;
                 }
             }
@@ -133,16 +158,24 @@ namespace SE.Web.Controllers
                 {
                     if (blogItem.ImageName != "" && blogItem.ImageName.StartsWith("data:image"))
                     {
-                        string imageName = $"{UrlHelper.FriendlyUrl(blogUpdateDto.Title)}-{Guid.NewGuid().ToString().Substring(0, 5)}";
+                        string imageName = $"{UrlHelper.FriendlyUrl(blogUpdateDto.Title)}_{Path.GetRandomFileName()}";
                         string base64Data = blogItem.ImageName.Split(',')[1];
                         var bytes = Convert.FromBase64String(base64Data);
 
                         if (bytes.Length > 0)
                         {
-                            var bigImage = Image.FromStream(new MemoryStream(bytes));
-                            var bigScaleImage = ImageResize.ScaleAndCrop(bigImage, 1000, 600);
-                            string bigFile = Path.Combine(filedir, imageName + "_1000x600.jpg");
-                            bigScaleImage.SaveAs(bigFile);
+                            using (var bigImage = SixLabors.ImageSharp.Image.Load(bytes))
+                            {
+                                var options = new ResizeOptions
+                                {
+                                    Mode = ResizeMode.Crop,
+                                    Position = AnchorPositionMode.Center,
+                                    Size = new SixLabors.ImageSharp.Size(1000, 600)
+                                };
+                                bigImage.Mutate(d => d.Resize(options));
+                                string bigFile = Path.Combine(filedir, imageName + "_1000x600.jpg");
+                                await bigImage.SaveAsync(bigFile);
+                            }
                             blogItem.ImageName = imageName;
                         }
                     }

@@ -14,7 +14,6 @@ namespace SE.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [EnableCors("ApiPolicy")]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;

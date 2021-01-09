@@ -4,6 +4,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
@@ -11,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using SE.Business.EmailSenders;
 using SE.Business.Infrastructure.Autofac;
@@ -42,6 +45,17 @@ namespace SE.Web
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("ApiPolicy",
+                                  builder =>
+                                  {
+                                      builder.WithOrigins(Configuration.GetSection("Configuration").GetSection("BaseUrl").Value)
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod();
+                                  });
+            });
+
             services.AddControllers();
             services.AddIdentity<User, IdentityRole>(cfg =>
             {
@@ -77,14 +91,7 @@ namespace SE.Web
 
             string sqlConnection = Configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value;
             services.AddDbContext<EntitiesDbContext>(dbcontextoption => dbcontextoption.UseNpgsql(sqlConnection, b => b.MigrationsAssembly("SE.Web")));
-            services.AddCors(options =>
-            {
-                options.AddPolicy("ApiPolicy",
-                                  builder =>
-                                  {
-                                      builder.WithOrigins(Configuration.GetSection("Configuration").GetSection("BaseUrl").Value).AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-                                  });
-            });
+
             services.AddDirectoryBrowser();
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
             services.Configure<JwtSecurityTokenSetting>(Configuration.GetSection("Token"));
@@ -120,25 +127,33 @@ namespace SE.Web
             return new AutofacServiceProvider(container);
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<User> userManager,
+        public void Configure(IApplicationBuilder app, UserManager<User> userManager,
 RoleManager<IdentityRole> roleManager, EntitiesDbContext entitiesDbContext)
         {
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
+            app.UseCors("ApiPolicy");
 
             SeedData.SeedDataSave(entitiesDbContext);
             IdentitySeedData.SeedData(userManager, roleManager);
             ServiceTool.ServiceProvider = app.ApplicationServices;
             app.ConfigureCustomExceptionMiddleware();
-            app.UseStaticFiles();
-            app.UseRouting();
-            app.UseCors("ApiPolicy");
-            app.UseAuthentication();
-            app.UseDirectoryBrowser(new DirectoryBrowserOptions
+            app.UseStaticFiles(new StaticFileOptions()
             {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images"))
+                FileProvider = new PhysicalFileProvider(
+                Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images")),
+                RequestPath = new PathString("/images"),
+                ServeUnknownFileTypes = true
+            });
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseDirectoryBrowser(new DirectoryBrowserOptions()
+            {
+                FileProvider = new PhysicalFileProvider(
+                Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images")),
+                RequestPath = new PathString("/images")
             });
             app.UseAuthorization();
             app.UseEndpoints(endpoints => endpoints.MapControllers());

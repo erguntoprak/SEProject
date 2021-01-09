@@ -21,7 +21,6 @@ namespace SE.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [EnableCors("ApiPolicy")]
     public class AccountController : ControllerBase
     {
 
