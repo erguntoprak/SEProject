@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace SE.Business.AccountServices
 {
@@ -77,22 +78,34 @@ namespace SE.Business.AccountServices
                 PhoneNumber = registerDto.Phone,
                 IsActive = false
             };
-            var result = await _userManager.CreateAsync(user, registerDto.Password);
-            if (!result.Succeeded)
-                return new ErrorResult(Messages.NotAdded);
+            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    var result = await _userManager.CreateAsync(user, registerDto.Password);
+                    if (!result.Succeeded)
+                        return new ErrorResult(Messages.NotAdded);
 
-            await _userManager.AddToRoleAsync(user, "User");
-            var savedUser = await _userManager.FindByEmailAsync(registerDto.Email);
-            var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(savedUser);
-            byte[] tokenGeneratedBytes = Encoding.UTF8.GetBytes(confirmationToken);
-            var codeEncoded = WebEncoders.Base64UrlEncode(tokenGeneratedBytes);
-            var confirmationLink = $"{_configuration.BaseUrl}/e-posta-onay?userId={savedUser.Id}&confirmation-token={codeEncoded}";
-            await _emailSender.SendAsync(savedUser.Email, "E-posta adresinizi onaylayın!", EmailMessages.GetEmailConfirmationHtml(confirmationLink, _configuration.ApiUrl));
+                    await _userManager.AddToRoleAsync(user, "User");
+                    var savedUser = await _userManager.FindByEmailAsync(registerDto.Email);
+                    var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(savedUser);
+                    byte[] tokenGeneratedBytes = Encoding.UTF8.GetBytes(confirmationToken);
+                    var codeEncoded = WebEncoders.Base64UrlEncode(tokenGeneratedBytes);
+                    var confirmationLink = $"{_configuration.BaseUrl}/e-posta-onay?userId={savedUser.Id}&confirmation-token={codeEncoded}";
+                    await _emailSender.SendAsync(savedUser.Email, "E-posta adresinizi onaylayın!", EmailMessages.GetEmailConfirmationHtml(confirmationLink, _configuration.ApiUrl));
+                    scope.Complete();
+                    return new SuccessResult(Messages.SuccessfulRegister);
+                }
+                catch
+                {
+                    scope.Dispose();
+                    throw;
+                }
 
-            return new SuccessResult(Messages.SuccessfulRegister);
+            }
         }
-        
-        
+
+
         public async Task<IDataResult<UserDto>> GetUserDtoByEmailAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -161,23 +174,34 @@ namespace SE.Business.AccountServices
         }
         public async Task<IResult> UpdateUserRoleAsync(string userId, List<string> roles)
         {
-            var user = await _userManager.FindByIdAsync(userId);
-            var userRoles = await _userManager.GetRolesAsync(user);
+            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    var user = await _userManager.FindByIdAsync(userId);
+                    var userRoles = await _userManager.GetRolesAsync(user);
 
-            if (user == null || !userRoles.Any())
-                return new ErrorResult(Messages.UserNotFound);
+                    if (user == null || !userRoles.Any())
+                        return new ErrorResult(Messages.UserNotFound);
 
-            var removeResult = await _userManager.RemoveFromRolesAsync(user, userRoles);
-            if (!removeResult.Succeeded)
-                return new ErrorResult(Messages.CouldNotDeleteRoles);
+                    var removeResult = await _userManager.RemoveFromRolesAsync(user, userRoles);
+                    if (!removeResult.Succeeded)
+                        return new ErrorResult(Messages.CouldNotDeleteRoles);
 
-            var insertResult = await _userManager.AddToRolesAsync(user, roles);
+                    var insertResult = await _userManager.AddToRolesAsync(user, roles);
 
-            if (!insertResult.Succeeded)
-                return new ErrorResult(Messages.CouldNotAddRoles);
+                    if (!insertResult.Succeeded)
+                        return new ErrorResult(Messages.CouldNotAddRoles);
+                    scope.Complete();
+                    return new SuccessResult(Messages.Updated);
+                }
+                catch
+                {
+                    scope.Dispose();
+                    throw;
+                }
 
-            return new SuccessResult(Messages.Updated);
-
+            }
         }
         public async Task<IResult> UpdateEmailConfirmationAsync(string userId, bool emailConfirmation)
         {

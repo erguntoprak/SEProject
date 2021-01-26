@@ -14,9 +14,9 @@ namespace SE.Data.Mapping
             builder.ToTable("EducationContactForm");
             builder.HasKey(d => d.Id);
 
-            builder.Property(d => d.NameSurname).HasMaxLength(50).IsRequired();
-            builder.Property(d => d.Email).HasMaxLength(50).IsRequired();
-            builder.Property(d => d.PhoneNumber).HasMaxLength(15).IsRequired();
+            builder.Property(d => d.NameSurname).HasMaxLength(100).IsRequired();
+            builder.Property(d => d.Email).HasMaxLength(200).IsRequired();
+            builder.Property(d => d.PhoneNumber).HasMaxLength(20).IsRequired();
 
         }
     }

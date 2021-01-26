@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using SE.Core.Utilities.Messages;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,12 +38,12 @@ namespace SE.Core.Extensions
         {
             httpContext.Response.ContentType = "application/json";
             httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            _ = e.Message;
             string message;
             if (e.GetType() == typeof(ValidationException))
             {
-                message = e.Message;
-                httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                ValidationException validationException = e as ValidationException;
+                message = validationException.Errors.First().ErrorMessage;
+                httpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
             }
             else if (e.GetType() == typeof(ApplicationException))
             {

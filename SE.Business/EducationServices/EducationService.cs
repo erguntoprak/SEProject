@@ -77,12 +77,14 @@ namespace SE.Business.EducationServices
 
             foreach (var questionItem in educationInsertDto.Questions)
             {
-                education.Questions.Add(new Question
+                if (string.IsNullOrEmpty(questionItem.Answer) || string.IsNullOrEmpty(questionItem.Question))
                 {
-                    Title = questionItem.Question,
-                    Answer = questionItem.Answer
-                });
-
+                    education.Questions.Add(new Question
+                    {
+                        Title = questionItem.Question,
+                        Answer = questionItem.Answer
+                    });
+                }
             }
             foreach (var attributeId in educationInsertDto.Attributes)
             {
@@ -322,12 +324,14 @@ namespace SE.Business.EducationServices
 
             foreach (var questionItem in educationUpdateDto.Questions)
             {
-                education.Questions.Add(new Question
+                if (!string.IsNullOrEmpty(questionItem.Answer) || !string.IsNullOrEmpty(questionItem.Question))
                 {
-                    Title = questionItem.Question,
-                    Answer = questionItem.Answer
-                });
-
+                    education.Questions.Add(new Question
+                    {
+                        Title = questionItem.Question,
+                        Answer = questionItem.Answer
+                    });
+                }
             }
             foreach (var attributeId in educationUpdateDto.Attributes)
             {
@@ -433,6 +437,7 @@ namespace SE.Business.EducationServices
             return new SuccessResult(Messages.Updated);
         }
 
+        [ValidationAspect(typeof(EducationContactFormInsertDtoValidator), Priority = 1)]
         [CacheRemoveAspect("Get")]
         public async Task<IResult> InsertEducationContactFormAsync(EducationContactFormInsertDto educationContactFormDto)
         {

@@ -13,7 +13,9 @@ namespace SE.Data.Mapping
         {
             builder.ToTable("District");
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Name).HasMaxLength(100).IsRequired();
+
+            builder.Property(x => x.Name).HasMaxLength(50).IsRequired();
+            builder.Property(x => x.SeoUrl).HasMaxLength(50).IsRequired();
 
             builder.HasMany(d => d.EducationAddress).WithOne(d => d.District).HasForeignKey(d => d.DistrictId).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }

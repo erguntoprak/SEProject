@@ -14,7 +14,11 @@ namespace SE.Data.Mapping
             builder.ToTable("EducationAddress");
             builder.HasKey(d => d.Id);
 
-            builder.Property(d => d.AddressOne).HasMaxLength(300).IsRequired();
+            builder.Property(d => d.AddressOne).HasMaxLength(1000).IsRequired();
+
+            builder.Property(d => d.CityId).IsRequired();
+            builder.Property(d => d.DistrictId).IsRequired();
+            builder.Property(d => d.EducationId).IsRequired();
         }
     }
 }

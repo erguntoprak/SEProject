@@ -132,6 +132,9 @@ namespace SE.Business.BlogServices
                 CreateTime = d.CreateTime,
                 Title = d.Title,
                 FirstVisibleImageName = d.FirstVisibleImageName,
+                MetaDescription = d.MetaDescription,
+                MetaKeywords = d.MetaKeywords,
+                MetaTitle = d.MetaTitle,
                 BlogItems = d.BlogItems.Select(b => new BlogItemDto
                 {
                     Id = b.Id,
@@ -153,6 +156,9 @@ namespace SE.Business.BlogServices
                 Title = d.Title,
                 UserId = d.UserId,
                 FirstVisibleImageName = d.FirstVisibleImageName,
+                MetaDescription = d.MetaDescription,
+                MetaKeywords = d.MetaKeywords,
+                MetaTitle = d.MetaTitle,
                 BlogItems = d.BlogItems.Select(b => new BlogItemDto
                 {
                     Id = b.Id,
@@ -186,6 +192,9 @@ namespace SE.Business.BlogServices
                 UpdateTime = blogInsertDto.UpdateTime,
                 FirstVisibleImageName = blogInsertDto.FirstVisibleImageName,
                 SeoUrl = seoUrl,
+                MetaDescription = blogInsertDto.MetaDescription,
+                MetaKeywords = blogInsertDto.MetaKeywords,
+                MetaTitle = blogInsertDto.MetaTitle,
                 IsActive = false
             };
             foreach (var blogItem in blogInsertDto.BlogItems)
@@ -231,6 +240,10 @@ namespace SE.Business.BlogServices
             blog.UpdateTime = DateTime.Now;
             blog.IsActive = false;
             blog.FirstVisibleImageName = blogUpdateDto.FirstVisibleImageName;
+            blog.MetaTitle = blogUpdateDto.MetaTitle;
+            blog.MetaKeywords = blogUpdateDto.MetaKeywords;
+            blog.MetaDescription = blogUpdateDto.MetaDescription;
+
             blog.BlogItems.Clear();
 
             foreach (var blogItem in blogUpdateDto.BlogItems)

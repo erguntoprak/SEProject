@@ -14,7 +14,7 @@ namespace SE.Data.Mapping
             builder.ToTable("BlogItem");
             builder.HasKey(d => d.Id);
 
-            builder.Property(d => d.ImageName).HasMaxLength(200).IsRequired();
+            builder.Property(d => d.ImageName).HasMaxLength(450);
         }
     }
 }

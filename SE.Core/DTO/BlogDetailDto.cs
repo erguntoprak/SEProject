@@ -11,6 +11,9 @@ namespace SE.Core.DTO
         public string Author { get; set; }
         public string FirstVisibleImageName { get; set; }
         public DateTime CreateTime { get; set; }
+        public string MetaKeywords { get; set; }
+        public string MetaDescription { get; set; }
+        public string MetaTitle { get; set; }
         public List<BlogItemDto> BlogItems { get; set; }
     }
 }

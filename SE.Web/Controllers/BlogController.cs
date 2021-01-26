@@ -68,14 +68,14 @@ namespace SE.Web.Controllers
 
             for (int i = 0; i < blogInsertDto.BlogItems.Count; i++)
             {
-                if (blogInsertDto.BlogItems[i].ImageName == "" && blogInsertDto.BlogItems[i].Description == "")
+                if (string.IsNullOrEmpty(blogInsertDto.BlogItems[i].ImageName) && string.IsNullOrEmpty(blogInsertDto.BlogItems[i].Description))
                 {
                     blogInsertDto.BlogItems.Remove(blogInsertDto.BlogItems[i]);
                 }
             }
             foreach (var blogItem in blogInsertDto.BlogItems)
             {
-                if (blogItem.ImageName != "" && blogItem.ImageName.StartsWith("data:image"))
+                if (!string.IsNullOrEmpty(blogItem.ImageName) && blogItem.ImageName.StartsWith("data:image"))
                 {
                     string imageName = $"{UrlHelper.FriendlyUrl(blogInsertDto.Title)}_{Path.GetRandomFileName()}";
                     string base64Data = blogItem.ImageName.Split(',')[1];
@@ -156,7 +156,7 @@ namespace SE.Web.Controllers
             {
                 if (!existingBlogDetailModel.BlogItems.Any(d => d.ImageName == blogItem.ImageName))
                 {
-                    if (blogItem.ImageName != "" && blogItem.ImageName.StartsWith("data:image"))
+                    if (!string.IsNullOrEmpty(blogItem.ImageName) && blogItem.ImageName.StartsWith("data:image"))
                     {
                         string imageName = $"{UrlHelper.FriendlyUrl(blogUpdateDto.Title)}_{Path.GetRandomFileName()}";
                         string base64Data = blogItem.ImageName.Split(',')[1];
@@ -184,7 +184,7 @@ namespace SE.Web.Controllers
 
             foreach (var blogItem in existingBlogDetailModel.BlogItems)
             {
-                if (!blogUpdateDto.BlogItems.Any(d => d.ImageName == blogItem.ImageName) && blogItem.ImageName != "")
+                if (!string.IsNullOrEmpty(blogItem.ImageName) && !blogUpdateDto.BlogItems.Any(d => d.ImageName == blogItem.ImageName))
                 {
                     string existingBlogItemImage = Path.Combine(filedir, blogItem.ImageName + "_1000x600.jpg");
                     if (System.IO.File.Exists(existingBlogItemImage))
@@ -198,7 +198,7 @@ namespace SE.Web.Controllers
 
             for (int i = 0; i < blogUpdateDto.BlogItems.Count; i++)
             {
-                if (blogUpdateDto.BlogItems[i].ImageName == "" && blogUpdateDto.BlogItems[i].Description == "")
+                if (string.IsNullOrEmpty(blogUpdateDto.BlogItems[i].ImageName) && string.IsNullOrEmpty(blogUpdateDto.BlogItems[i].Description))
                 {
                     blogUpdateDto.BlogItems.Remove(blogUpdateDto.BlogItems[i]);
                 }

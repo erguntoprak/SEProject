@@ -1,32 +1,19 @@
 ﻿version: "3.6"
 services:
-  postgresdb:
-    image: postgres:13.1
-    container_name: postgresdb
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: "SEjNMf4795LHAhus3E"
-    ports:
-      - 5432:5432
-
-  seapi:
+  se-netapi:
     build:
       context: ./SEProject
       dockerfile: api-dockerfile
-    container_name: seapi
-    depends_on:
-      - postgresdb
+    container_name: se-netapi
     volumes:
-      - ./seapi:/app
+      - ./senetapi:/app
     ports:
       - 5000:80
 
-  seangularapp:
+  se-angularapp:
     build:
-      context: ./SE.Web
+      context: ./ClientApp
       dockerfile: app-dockerfile
-    container_name: seangularapp
+    container_name: se-angularapp
     ports:
       - 4200:80
-    depends_on:
-      - seapi

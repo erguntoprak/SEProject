@@ -13,6 +13,10 @@ namespace SE.Data.Mapping
         {
             builder.ToTable("Question");
             builder.HasKey(d => d.Id);
+
+            builder.Property(d => d.Title).HasMaxLength(1000).IsRequired();
+            builder.Property(d => d.Answer).HasMaxLength(1000).IsRequired();
+
         }
     }
 }

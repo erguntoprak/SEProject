@@ -10,10 +10,16 @@ namespace SE.Business.Infrastructure.FluentValidation.Validations
     {
         public BlogUpdateDtoValidator()
         {
+            RuleFor(x => x.Title).NotEmpty().WithMessage("Lütfen başlık giriniz.");
+            RuleFor(x => x.MetaKeywords).NotEmpty().WithMessage("Lütfen meta anahtar kelime giriniz.");
+            RuleFor(x => x.MetaTitle).NotEmpty().WithMessage("Lütfen meta başlık giriniz.");
 
-            RuleFor(x => x.Title).NotNull().WithMessage("Lütfen başlık giriniz.");
-            RuleFor(x => x.UserId).NotNull().WithMessage("Kullanıcı boş geçilemez.");
-            RuleFor(x => x.BlogItems).Must(x => x != null || x.Count >= 1).WithMessage("Lütfen içerik giriniz.");
+            RuleFor(x => x.Title).MaximumLength(400).WithMessage("Başlık, 400 karakterden az olmalıdır.");
+            RuleFor(x => x.MetaKeywords).MaximumLength(400).WithMessage("Meta Anahtar Kelime, 400 karakterden az olmalıdır.");
+            RuleFor(x => x.MetaTitle).MaximumLength(400).WithMessage("Meta Başlık, 400 karakterden az olmalıdır.");
+
+            RuleFor(x => x.UserId).NotEmpty().WithMessage("Kullanıcı boş geçilemez.");
+            RuleFor(x => x.FirstVisibleImageName).NotEmpty().WithMessage("Lütfen sayfalarda gösterilecek ilk görsel seçiniz.");
         }
     }
 }

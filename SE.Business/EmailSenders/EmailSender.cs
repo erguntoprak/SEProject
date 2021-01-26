@@ -39,7 +39,7 @@ namespace SE.Business.EmailSenders
                     
                     // The third parameter is useSSL (true if the client should make an SSL-wrapped
                     // connection to the server; otherwise, false).
-                    await client.ConnectAsync(_emailSettings.MailServer, _emailSettings.MailPort, false);
+                    await client.ConnectAsync(_emailSettings.MailServer, _emailSettings.MailPort, true);
 
                     // Note: only needed if the SMTP server requires authentication
                     await client.AuthenticateAsync(_emailSettings.Sender, _emailSettings.Password);
