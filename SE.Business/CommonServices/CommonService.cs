@@ -33,10 +33,12 @@ namespace SE.Business.CommonServices
 
             dashboardDataDto.EducationTotalCount = educationList.Count;
 
-            dashboardDataDto.BlogTotalCount = (await _unitOfWork.BlogRepository.Table.Where(d => d.UserId == dashboardFilterDto.UserId).ToListAsync()).Count;
+            var blogList = await _unitOfWork.BlogRepository.Table.Where(d => d.UserId == dashboardFilterDto.UserId).ToListAsync();
+            dashboardDataDto.BlogTotalCount = blogList.Count;
 
             var educationIds = educationList.Select(d => d.Id);
-            dashboardDataDto.ContactFormCount = (await _unitOfWork.EducationContactFormRepository.Table.Where(d=> educationIds.Contains(d.EducationId)).ToListAsync()).Count;
+            var contactFormList = await _unitOfWork.EducationContactFormRepository.Table.Where(d => educationIds.Contains(d.EducationId)).ToListAsync();
+            dashboardDataDto.ContactFormCount = contactFormList.Count;
 
             return new SuccessDataResult<DashboardDataDto>(dashboardDataDto);
         }

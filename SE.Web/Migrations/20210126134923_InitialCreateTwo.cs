@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace SE.Web.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class InitialCreateTwo : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -70,7 +70,7 @@ namespace SE.Web.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    SeoUrl = table.Column<string>(type: "character varying(120)", maxLength: 120, nullable: true)
+                    SeoUrl = table.Column<string>(type: "character varying(120)", maxLength: 120, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -202,12 +202,15 @@ namespace SE.Web.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<string>(type: "text", nullable: false),
-                    Title = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    FirstVisibleImageName = table.Column<string>(type: "text", nullable: true),
-                    SeoUrl = table.Column<string>(type: "text", nullable: true),
+                    UserId = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Title = table.Column<string>(type: "character varying(400)", maxLength: 400, nullable: false),
+                    FirstVisibleImageName = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: false),
+                    SeoUrl = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: false),
                     CreateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     UpdateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    MetaKeywords = table.Column<string>(type: "character varying(400)", maxLength: 400, nullable: true),
+                    MetaDescription = table.Column<string>(type: "text", nullable: true),
+                    MetaTitle = table.Column<string>(type: "character varying(400)", maxLength: 400, nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -273,24 +276,24 @@ namespace SE.Web.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "character varying(400)", maxLength: 400, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    UserId = table.Column<string>(type: "text", nullable: false),
+                    UserId = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     CategoryId = table.Column<int>(type: "integer", nullable: false),
-                    AuthorizedName = table.Column<string>(type: "text", nullable: true),
-                    AuthorizedEmail = table.Column<string>(type: "text", nullable: true),
-                    PhoneOne = table.Column<string>(type: "text", nullable: true),
-                    PhoneTwo = table.Column<string>(type: "text", nullable: true),
-                    Email = table.Column<string>(type: "text", nullable: true),
-                    Website = table.Column<string>(type: "text", nullable: true),
-                    YoutubeVideoOne = table.Column<string>(type: "text", nullable: true),
-                    YoutubeVideoTwo = table.Column<string>(type: "text", nullable: true),
-                    FacebookAccountUrl = table.Column<string>(type: "text", nullable: true),
-                    InstagramAccountUrl = table.Column<string>(type: "text", nullable: true),
-                    TwitterAccountUrl = table.Column<string>(type: "text", nullable: true),
-                    YoutubeAccountUrl = table.Column<string>(type: "text", nullable: true),
-                    MapCode = table.Column<string>(type: "text", nullable: true),
-                    SeoUrl = table.Column<string>(type: "character varying(120)", maxLength: 120, nullable: false),
+                    AuthorizedName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    AuthorizedEmail = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    PhoneOne = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    PhoneTwo = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    Email = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Website = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    YoutubeVideoOne = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
+                    YoutubeVideoTwo = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
+                    FacebookAccountUrl = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
+                    InstagramAccountUrl = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
+                    TwitterAccountUrl = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
+                    YoutubeAccountUrl = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
+                    MapCode = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
+                    SeoUrl = table.Column<string>(type: "character varying(420)", maxLength: 420, nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -316,8 +319,8 @@ namespace SE.Web.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    SeoUrl = table.Column<string>(type: "text", nullable: true),
+                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    SeoUrl = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     CityId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -338,7 +341,7 @@ namespace SE.Web.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     BlogId = table.Column<int>(type: "integer", nullable: false),
-                    ImageName = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    ImageName = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true),
                     Description = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -384,9 +387,9 @@ namespace SE.Web.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    NameSurname = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Email = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    PhoneNumber = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
+                    NameSurname = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     CreateDateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     EducationId = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -407,8 +410,8 @@ namespace SE.Web.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ImageUrl = table.Column<string>(type: "text", nullable: true),
-                    Title = table.Column<string>(type: "text", nullable: true),
+                    ImageUrl = table.Column<string>(type: "character varying(420)", maxLength: 420, nullable: false),
+                    Title = table.Column<string>(type: "character varying(400)", maxLength: 400, nullable: false),
                     FirstVisible = table.Column<bool>(type: "boolean", nullable: false),
                     EducationId = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -429,8 +432,8 @@ namespace SE.Web.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Title = table.Column<string>(type: "text", nullable: true),
-                    Answer = table.Column<string>(type: "text", nullable: true),
+                    Title = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
+                    Answer = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
                     EducationId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -450,7 +453,7 @@ namespace SE.Web.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    AddressOne = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
+                    AddressOne = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
                     CityId = table.Column<int>(type: "integer", nullable: false),
                     DistrictId = table.Column<int>(type: "integer", nullable: false),
                     EducationId = table.Column<int>(type: "integer", nullable: false)
