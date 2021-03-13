@@ -18,6 +18,7 @@ using SE.Core.Aspects.Autofac.Validation;
 using SE.Business.Infrastructure.FluentValidation.Validations;
 using SE.Core.Aspects.Autofac.Caching;
 using SixLabors.ImageSharp;
+using SE.Core.Utilities.Security.Http;
 
 namespace SE.Business.EducationServices
 {
@@ -25,10 +26,12 @@ namespace SE.Business.EducationServices
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly string[] acceptFileType = { "image/png", "image/jpeg" };
+        private readonly IRequestContext _requestContext;
 
-        public EducationService(IUnitOfWork unitOfWork)
+        public EducationService(IUnitOfWork unitOfWork, IRequestContext requestContext)
         {
             _unitOfWork = unitOfWork;
+            _requestContext = requestContext;
         }
 
         [ValidationAspect(typeof(EducationInsertDtoValidator), Priority = 1)]
@@ -39,7 +42,7 @@ namespace SE.Business.EducationServices
             {
                 Name = educationInsertDto.GeneralInformation.EducationName,
                 CategoryId = educationInsertDto.GeneralInformation.EducationType,
-                UserId = educationInsertDto.UserId,
+                UserId = _requestContext.UserId,
                 Description = educationInsertDto.GeneralInformation.Description,
                 AuthorizedEmail = educationInsertDto.ContactInformation.AuthorizedEmail,
                 AuthorizedName = educationInsertDto.ContactInformation.AuthorizedName,
@@ -57,7 +60,7 @@ namespace SE.Business.EducationServices
                 IsActive = false
             };
             educationInsertDto.GeneralInformation.SeoUrl = UrlHelper.FriendlyUrl(educationInsertDto.GeneralInformation.EducationName);
-            string seoUrl = await _unitOfWork.EducationRepository.Table.Where(d => d.SeoUrl == educationInsertDto.GeneralInformation.SeoUrl).Select(d => d.SeoUrl).AsNoTracking().FirstOrDefaultAsync();
+            string seoUrl = await _unitOfWork.EducationRepository.Table.Select(d => d.SeoUrl).AsNoTracking().FirstOrDefaultAsync(d => d == educationInsertDto.GeneralInformation.SeoUrl);
 
             if (seoUrl != null)
             {
@@ -99,7 +102,7 @@ namespace SE.Business.EducationServices
 
             return new SuccessDataResult<int>(education.Id);
         }
-        public async Task<IDataResult<IEnumerable<EducationListDto>>> GetAllEducationListByUserIdAsync(string userId)
+        public async Task<IDataResult<IEnumerable<EducationListDto>>> GetAllEducationListByUserIdAsync()
         {
 
             var educationListDto = await (from e in _unitOfWork.EducationRepository.Table
@@ -107,7 +110,7 @@ namespace SE.Business.EducationServices
                                           join a in _unitOfWork.AddressRepository.Table on e.EducationAddress.Id equals a.Id
                                           join d in _unitOfWork.DistrictRepository.Table on a.DistrictId equals d.Id
                                           let image = (from i in _unitOfWork.ImageRepository.Table where (i.EducationId == e.Id && i.FirstVisible == true) select i.ImageUrl).FirstOrDefault()
-                                          where e.UserId == userId
+                                          where e.UserId == _requestContext.UserId
                                           select new EducationListDto
                                           {
                                               Id = e.Id,
@@ -151,10 +154,9 @@ namespace SE.Business.EducationServices
 
             return new SuccessDataResult<IEnumerable<EducationListDto>>(educationListDto);
         }
-        public async Task<IDataResult<EducationUpdateDto>> GetEducationUpdateDtoBySeoUrlAsync(string seoUrl, string userId)
+        public async Task<IDataResult<EducationUpdateDto>> GetEducationUpdateDtoBySeoUrlAsync(string seoUrl)
         {
-
-            var education = await _unitOfWork.EducationRepository.Include(a => a.AttributeEducations, e => e.EducationAddress, i => i.Images, q => q.Questions).Where(d => d.SeoUrl == seoUrl && d.UserId == userId).AsNoTracking().FirstOrDefaultAsync();
+            var education = await _unitOfWork.EducationRepository.Include(a => a.AttributeEducations, e => e.EducationAddress, i => i.Images, q => q.Questions).AsNoTracking().FirstOrDefaultAsync(d => d.SeoUrl == seoUrl && (_requestContext.Roles.Contains(GeneralConstants.Admin) ? true : d.UserId == _requestContext.UserId));
 
             if (education == null)
                 return new ErrorDataResult<EducationUpdateDto>(Messages.ObjectIsNull);
@@ -163,7 +165,6 @@ namespace SE.Business.EducationServices
             var educationUpdateDto = new EducationUpdateDto();
             educationUpdateDto.GeneralInformation.Id = education.Id;
             educationUpdateDto.GeneralInformation.SeoUrl = education.SeoUrl;
-            educationUpdateDto.UserId = education.UserId;
             educationUpdateDto.GeneralInformation.Description = education.Description;
             educationUpdateDto.GeneralInformation.EducationName = education.Name;
             educationUpdateDto.GeneralInformation.EducationType = education.CategoryId;
@@ -197,7 +198,7 @@ namespace SE.Business.EducationServices
         }
         public async Task<IDataResult<EducationDetailDto>> GetEducationDetailDtoBySeoUrlAsync(string seoUrl)
         {
-            var education = await _unitOfWork.EducationRepository.Include(x => x.Category, a => a.AttributeEducations, e => e.EducationAddress, i => i.Images, q => q.Questions, c => c.EducationAddress.City, d => d.EducationAddress.District).Where(d => d.SeoUrl == seoUrl && d.IsActive == true).AsNoTracking().FirstOrDefaultAsync();
+            var education = await _unitOfWork.EducationRepository.Include(x => x.Category, a => a.AttributeEducations, e => e.EducationAddress, i => i.Images, q => q.Questions, c => c.EducationAddress.City, d => d.EducationAddress.District).AsNoTracking().FirstOrDefaultAsync(d => d.SeoUrl == seoUrl && d.IsActive == true);
 
             if (education == null)
                 return new ErrorDataResult<EducationDetailDto>(Messages.ObjectIsNull);
@@ -215,9 +216,6 @@ namespace SE.Business.EducationServices
             }).ToListAsync();
 
             educationDetailDto.BlogList = blogList;
-
-
-            educationDetailDto.UserId = education.UserId;
 
             educationDetailDto.GeneralInformation.Id = education.Id;
             educationDetailDto.GeneralInformation.SeoUrl = education.SeoUrl;
@@ -274,7 +272,7 @@ namespace SE.Business.EducationServices
         [CacheRemoveAspect("Get")]
         public async Task<IDataResult<int>> UpdateEducationAsync(EducationUpdateDto educationUpdateDto)
         {
-            var education = await _unitOfWork.EducationRepository.Include(a => a.AttributeEducations, e => e.EducationAddress, q => q.Questions).Where(d => d.Id == educationUpdateDto.GeneralInformation.Id && d.UserId == educationUpdateDto.UserId).FirstOrDefaultAsync();
+            var education = await _unitOfWork.EducationRepository.Include(a => a.AttributeEducations, e => e.EducationAddress, q => q.Questions).FirstOrDefaultAsync(d => d.Id == educationUpdateDto.GeneralInformation.Id && (_requestContext.Roles.Contains(GeneralConstants.Admin) ? true : d.UserId == _requestContext.UserId));
 
             if (education == null)
                 return new ErrorDataResult<int>(Messages.ObjectIsNull);
@@ -349,10 +347,10 @@ namespace SE.Business.EducationServices
         }
 
         [CacheRemoveAspect("Get")]
-        public async Task<IResult> DeleteEducationAsync(int educationId, string userId)
+        public async Task<IResult> DeleteEducationAsync(int educationId)
         {
 
-            var education = await _unitOfWork.EducationRepository.Include(a => a.AttributeEducations, e => e.EducationAddress, i => i.Images, q => q.Questions).Where(d => d.Id == educationId && d.UserId == userId).AsNoTracking().FirstOrDefaultAsync();
+            var education = await _unitOfWork.EducationRepository.Include(a => a.AttributeEducations, e => e.EducationAddress, i => i.Images, q => q.Questions).AsNoTracking().FirstOrDefaultAsync(d => d.Id == educationId && (_requestContext.Roles.Contains(GeneralConstants.Admin) ? true : d.UserId == _requestContext.UserId));
 
             if (education == null)
                 return new ErrorResult(Messages.ObjectIsNull);
@@ -410,7 +408,7 @@ namespace SE.Business.EducationServices
         public async Task<IResult> InsertFirstVisibleImageAsync(ImageDto imageDto)
         {
 
-            var image = await _unitOfWork.ImageRepository.Table.Where(d => d.Id == imageDto.Id && d.EducationId == imageDto.EducationId).FirstOrDefaultAsync();
+            var image = await _unitOfWork.ImageRepository.Table.FirstOrDefaultAsync(d => d.Id == imageDto.Id && d.EducationId == imageDto.EducationId);
 
             if (image == null)
                 return new ErrorResult(Messages.ObjectIsNull);
@@ -455,10 +453,10 @@ namespace SE.Business.EducationServices
 
         }
 
-        public async Task<IDataResult<IEnumerable<EducationContactFormListDto>>> GetEducationContactFormListDtoBySeoUrlAsync(string seoUrl, string userId)
+        public async Task<IDataResult<IEnumerable<EducationContactFormListDto>>> GetEducationContactFormListDtoBySeoUrlAsync(string seoUrl)
         {
 
-            var education = await _unitOfWork.EducationRepository.Include(f => f.EducationContactForms).Where(d => d.SeoUrl == seoUrl && d.UserId == userId).AsNoTracking().FirstOrDefaultAsync();
+            var education = await _unitOfWork.EducationRepository.Include(f => f.EducationContactForms).AsNoTracking().FirstOrDefaultAsync(d => d.SeoUrl == seoUrl && (_requestContext.Roles.Contains(GeneralConstants.Admin) ? true : d.UserId == _requestContext.UserId));
 
             if (education == null)
                 return new ErrorDataResult<IEnumerable<EducationContactFormListDto>>(Messages.ObjectIsNull);
@@ -496,7 +494,7 @@ namespace SE.Business.EducationServices
 
         public async Task<IDataResult<IEnumerable<EducationFilterListDto>>> GetAllEducationListByFilterAsync(FilterDto filterDto)
         {
-            var educationListDtoQuery = _unitOfWork.EducationRepository.Include(c => c.Category, ea => ea.EducationAddress, eat => eat.AttributeEducations, i => i.Images, d => d.EducationAddress.District).Where(d => d.Category.Id == filterDto.CategoryId && d.IsActive).AsQueryable();
+            var educationListDtoQuery = _unitOfWork.EducationRepository.Include(c => c.Category, ea => ea.EducationAddress, eat => eat.AttributeEducations, i => i.Images, d => d.EducationAddress.District).Where(d => d.Category.Id == filterDto.CategoryId && d.EducationAddress.District.Id == filterDto.DistrictId && d.IsActive).AsQueryable();
 
             if (!string.IsNullOrEmpty(filterDto.SearchText))
             {

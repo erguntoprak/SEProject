@@ -11,13 +11,13 @@ namespace SE.Business.BlogServices
     {
         Task<IDataResult<int>> InsertBlogAsync(BlogInsertDto blogInsertDto);
         Task<IDataResult<int>> UpdateBlogAsync(BlogUpdateDto blogUpdateDto);
-        Task<IResult> DeleteBlogAsync(int blogId, string userId);
-        Task<IDataResult<IEnumerable<BlogListDto>>> GetAllBlogListByUserIdAsync(string userId);
+        Task<IResult> DeleteBlogAsync(int blogId);
+        Task<IDataResult<IEnumerable<BlogListDto>>> GetAllBlogListByUserIdAsync();
         Task<IDataResult<IEnumerable<BlogListDto>>> GetAllBlogListByUserNameAsync(string userName);
         Task<IDataResult<IEnumerable<BlogListDto>>> GetAllBlogListAsync();
         Task<IDataResult<IEnumerable<BlogListDto>>> GetAllBlogViewListAsync();
         Task<IDataResult<BlogDetailDto>> GetBlogDetailBySeoUrlAsync(string seoUrl);
-        Task<IDataResult<BlogUpdateDto>> GetBlogUpdateBySeoUrlAsync(string seoUrl, string userId);
+        Task<IDataResult<BlogUpdateDto>> GetBlogUpdateBySeoUrlAsync(string seoUrl);
         Task<IDataResult<BlogDetailDto>> GetBlogDetailByIdAsync(int Id);
         Task<IResult> UpdateBlogActivateAsync(int blogId, bool isActive);
 

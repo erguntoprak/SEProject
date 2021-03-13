@@ -6,6 +6,5 @@ namespace SE.Core.DTO
 {
     public class DashboardFilterDto
     {
-        public string UserId { get; set; }
     }
 }

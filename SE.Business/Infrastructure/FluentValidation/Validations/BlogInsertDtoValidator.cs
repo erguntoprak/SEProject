@@ -19,7 +19,6 @@ namespace SE.Business.Infrastructure.FluentValidation.Validations
             RuleFor(x => x.MetaKeywords).MaximumLength(400).WithMessage("Meta Anahtar Kelime, 400 karakterden az olmalıdır.");
             RuleFor(x => x.MetaTitle).MaximumLength(400).WithMessage("Meta Başlık, 400 karakterden az olmalıdır.");
 
-            RuleFor(x => x.UserId).NotEmpty().WithMessage("Kullanıcı boş geçilemez.");
             RuleFor(x => x.FirstVisibleImageName).NotEmpty().WithMessage("Lütfen sayfalarda gösterilecek ilk görsel seçiniz.");
 
 

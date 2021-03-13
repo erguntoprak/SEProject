@@ -9,6 +9,7 @@ using SE.Business.Infrastructure.ConfigurationManager;
 using Microsoft.Extensions.Options;
 using SE.Business.EmailSenders;
 using SE.Business.Constants;
+using SE.Core.Utilities.Security.Http;
 
 namespace SE.Business.CommonServices
 {
@@ -17,23 +18,26 @@ namespace SE.Business.CommonServices
         private readonly IUnitOfWork _unitOfWork;
         private readonly Configuration _configuration;
         private readonly IEmailSender _emailSender;
+        private readonly IRequestContext _requestContext;
 
 
-        public CommonService(IUnitOfWork unitOfWork, IOptions<Configuration> configuration, IEmailSender emailSender)
+
+        public CommonService(IUnitOfWork unitOfWork, IOptions<Configuration> configuration, IEmailSender emailSender, IRequestContext requestContext)
         {
             _unitOfWork = unitOfWork;
             _configuration = configuration.Value;
             _emailSender = emailSender;
+            _requestContext = requestContext;
         }
-        public async Task<IDataResult<DashboardDataDto>> GetDashboardDataAsync(DashboardFilterDto dashboardFilterDto)
+        public async Task<IDataResult<DashboardDataDto>> GetDashboardDataAsync()
         {
             DashboardDataDto dashboardDataDto = new DashboardDataDto();
 
-            var educationList = await _unitOfWork.EducationRepository.Table.Where(d => d.UserId == dashboardFilterDto.UserId).ToListAsync();
+            var educationList = await _unitOfWork.EducationRepository.Table.Where(d => d.UserId == _requestContext.UserId).ToListAsync();
 
             dashboardDataDto.EducationTotalCount = educationList.Count;
 
-            var blogList = await _unitOfWork.BlogRepository.Table.Where(d => d.UserId == dashboardFilterDto.UserId).ToListAsync();
+            var blogList = await _unitOfWork.BlogRepository.Table.Where(d => d.UserId == _requestContext.UserId).ToListAsync();
             dashboardDataDto.BlogTotalCount = blogList.Count;
 
             var educationIds = educationList.Select(d => d.Id);

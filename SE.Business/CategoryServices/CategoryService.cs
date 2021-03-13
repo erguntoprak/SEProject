@@ -39,7 +39,7 @@ namespace SE.Business.CategoryServices
         [CacheAspect]
         public async Task<IDataResult<IEnumerable<CategoryDto>>> GetAllCategoryListAsync()
         {
-            var categoryList = await _unitOfWork.CategoryRepository.Table.AsNoTracking().Select(d => new CategoryDto { Name = d.Name, Id = d.Id, SeoUrl = UrlHelper.FriendlyUrl(d.Name) }).ToListAsync();
+            var categoryList = await _unitOfWork.CategoryRepository.Table.AsNoTracking().Select(d => new CategoryDto { Name = d.Name, Id = d.Id, SeoUrl = UrlHelper.FriendlyUrl(d.Name) }).OrderBy(d=>d.Id).ToListAsync();
 
             return new SuccessDataResult<IEnumerable<CategoryDto>>(categoryList);
         }

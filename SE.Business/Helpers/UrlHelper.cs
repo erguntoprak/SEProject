@@ -17,18 +17,18 @@ namespace SE.Business.Helpers
             {
                 url = url.Substring(0, 100);
             }
-            url = url.Replace("İ", "I");
+            url = url.Replace("İ", "i");
             url = url.Replace("ı", "i");
             url = url.Replace("ğ", "g");
-            url = url.Replace("Ğ", "G");
+            url = url.Replace("Ğ", "g");
             url = url.Replace("ç", "c");
-            url = url.Replace("Ç", "C");
+            url = url.Replace("Ç", "c");
             url = url.Replace("ö", "o");
-            url = url.Replace("Ö", "O");
+            url = url.Replace("Ö", "o");
             url = url.Replace("ş", "s");
-            url = url.Replace("Ş", "S");
+            url = url.Replace("Ş", "s");
             url = url.Replace("ü", "u");
-            url = url.Replace("Ü", "U");
+            url = url.Replace("Ü", "u");
             url = url.Replace("'", "");
             url = url.Replace("\"", "");
             char[] replacerList = @"$%#@!*?;:~`+=()[]{}|\'<>,/^&"".".ToCharArray();

@@ -8,6 +8,7 @@ namespace SE.Web.Model.Education
     public class FilterModel
     {
         public int CategoryId { get; set; }
+        public int DistrictId { get; set; }
         public string SearchText { get; set; }
     }
 }

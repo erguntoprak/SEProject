@@ -24,6 +24,7 @@ using SE.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using SE.Core.Entities;
 using SE.Core.Extensions;
 using SE.Core.Utilities.IoC;
+using SE.Core.Utilities.Security.Http;
 using SE.Data;
 using SE.Web.Extentions;
 using SE.Web.Infrastructure.Jwt;
@@ -120,6 +121,8 @@ namespace SE.Web
             });
             services.AddMemoryCache();
             services.AddSingleton<ICacheManager, MemoryCacheManager>();
+            services.AddSingleton<IRequestContext, RequestContext>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             var builder = new ContainerBuilder();
             builder.RegisterModule<AutofacDependencyModule>();
             builder.Populate(services);

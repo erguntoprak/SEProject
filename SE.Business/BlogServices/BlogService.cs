@@ -7,6 +7,7 @@ using SE.Core.Aspects.Autofac.Validation;
 using SE.Core.DTO;
 using SE.Core.Entities;
 using SE.Core.Utilities.Results;
+using SE.Core.Utilities.Security.Http;
 using SE.Data;
 using System;
 using System.Collections.Generic;
@@ -18,14 +19,16 @@ namespace SE.Business.BlogServices
     public class BlogService : IBlogService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IRequestContext _requestContext;
 
-        public BlogService(IUnitOfWork unitOfWork)
+        public BlogService(IUnitOfWork unitOfWork, IRequestContext requestContext)
         {
             _unitOfWork = unitOfWork;
+            _requestContext = requestContext;
         }
-        public async Task<IResult> DeleteBlogAsync(int blogId, string userId)
+        public async Task<IResult> DeleteBlogAsync(int blogId)
         {
-            var blog = await _unitOfWork.BlogRepository.Include(d => d.BlogItems).Where(d => d.Id == blogId && d.UserId == userId).FirstOrDefaultAsync();
+            var blog = await _unitOfWork.BlogRepository.Include(d => d.BlogItems).Where(d => d.Id == blogId && (_requestContext.Roles.Contains(GeneralConstants.Admin) ? true : d.UserId == _requestContext.UserId)).FirstOrDefaultAsync();
 
             if (blog == null)
                 return new ErrorResult(Messages.ObjectIsNull);
@@ -35,9 +38,9 @@ namespace SE.Business.BlogServices
             return new SuccessResult(Messages.Deleted);
         }
 
-        public async Task<IDataResult<IEnumerable<BlogListDto>>> GetAllBlogListByUserIdAsync(string userId)
+        public async Task<IDataResult<IEnumerable<BlogListDto>>> GetAllBlogListByUserIdAsync()
         {
-            var blogList = await _unitOfWork.BlogRepository.Table.Where(d => d.UserId == userId).AsNoTracking().Select(d => new BlogListDto
+            var blogList = await _unitOfWork.BlogRepository.Table.Where(d => d.UserId == _requestContext.UserId).AsNoTracking().OrderByDescending(d => d.UpdateTime).Select(d => new BlogListDto
             {
                 Id = d.Id,
                 CreateTime = d.CreateTime,
@@ -52,7 +55,7 @@ namespace SE.Business.BlogServices
 
         public async Task<IDataResult<IEnumerable<BlogListDto>>> GetAllBlogListByUserNameAsync(string userName)
         {
-            var blogList = await _unitOfWork.BlogRepository.Include(d => d.User).Where(d => d.User.UserName == userName).AsNoTracking().Where(d => d.IsActive).Select(d => new BlogListDto
+            var blogList = await _unitOfWork.BlogRepository.Include(d => d.User).Where(d => d.User.UserName == userName).AsNoTracking().Where(d => d.IsActive).OrderByDescending(d => d.UpdateTime).Select(d => new BlogListDto
             {
                 Id = d.Id,
                 UserName = d.User.UserName,
@@ -69,7 +72,7 @@ namespace SE.Business.BlogServices
         public async Task<IDataResult<IEnumerable<BlogListDto>>> GetAllBlogListAsync()
         {
             var blogList = await _unitOfWork.BlogRepository.Include(d => d.User)
-                .AsNoTracking().Select(d => new BlogListDto
+                .AsNoTracking().OrderByDescending(d => d.UpdateTime).Select(d => new BlogListDto
                 {
                     Id = d.Id,
                     UserName = d.User.UserName,
@@ -85,8 +88,8 @@ namespace SE.Business.BlogServices
         }
         public async Task<IDataResult<IEnumerable<BlogListDto>>> GetAllBlogViewListAsync()
         {
-            var blogList = await _unitOfWork.BlogRepository.Include(d => d.User).Where(d=>d.IsActive)
-                .AsNoTracking().Select(d => new BlogListDto
+            var blogList = await _unitOfWork.BlogRepository.Include(d => d.User).Where(d => d.IsActive)
+                .AsNoTracking().OrderByDescending(d=>d.UpdateTime).Select(d => new BlogListDto
                 {
                     Id = d.Id,
                     UserName = d.User.UserName,
@@ -148,13 +151,12 @@ namespace SE.Business.BlogServices
             return new SuccessDataResult<BlogDetailDto>(blogDetailDto);
         }
 
-        public async Task<IDataResult<BlogUpdateDto>> GetBlogUpdateBySeoUrlAsync(string seoUrl, string userId)
+        public async Task<IDataResult<BlogUpdateDto>> GetBlogUpdateBySeoUrlAsync(string seoUrl)
         {
-            var blogUpdateDto = await _unitOfWork.BlogRepository.Include(d => d.BlogItems).Where(d => d.SeoUrl == seoUrl && d.UserId == userId).Select(d => new BlogUpdateDto
+            var blogUpdateDto = await _unitOfWork.BlogRepository.Include(d => d.BlogItems).Where(d => d.SeoUrl == seoUrl && (_requestContext.Roles.Contains(GeneralConstants.Admin) ? true : d.UserId == _requestContext.UserId)).Select(d => new BlogUpdateDto
             {
                 Id = d.Id,
                 Title = d.Title,
-                UserId = d.UserId,
                 FirstVisibleImageName = d.FirstVisibleImageName,
                 MetaDescription = d.MetaDescription,
                 MetaKeywords = d.MetaKeywords,
@@ -186,10 +188,10 @@ namespace SE.Business.BlogServices
 
             var blog = new Blog()
             {
-                UserId = blogInsertDto.UserId,
+                UserId = _requestContext.UserId,
                 Title = blogInsertDto.Title,
-                CreateTime = blogInsertDto.CreateTime,
-                UpdateTime = blogInsertDto.UpdateTime,
+                CreateTime = DateTime.Now,
+                UpdateTime = DateTime.Now,
                 FirstVisibleImageName = blogInsertDto.FirstVisibleImageName,
                 SeoUrl = seoUrl,
                 MetaDescription = blogInsertDto.MetaDescription,
@@ -215,7 +217,7 @@ namespace SE.Business.BlogServices
         public async Task<IDataResult<int>> UpdateBlogAsync(BlogUpdateDto blogUpdateDto)
         {
 
-            var blog = await _unitOfWork.BlogRepository.Include(d => d.BlogItems).Where(d => d.Id == blogUpdateDto.Id && d.UserId == blogUpdateDto.UserId).FirstOrDefaultAsync();
+            var blog = await _unitOfWork.BlogRepository.Include(d => d.BlogItems).Where(d => d.Id == blogUpdateDto.Id && (_requestContext.Roles.Contains(GeneralConstants.Admin) ? true : d.UserId == _requestContext.UserId)).FirstOrDefaultAsync();
 
             if (blog == null)
                 return new ErrorDataResult<int>(Messages.ObjectIsNull);

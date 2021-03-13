@@ -31,9 +31,9 @@ namespace SE.Web.Controllers
 
         [Authorize(Policy = "UserPolicy")]
         [HttpGet("GetDashboardData")]
-        public async Task<IActionResult> GetDashboardData([FromQuery]DashboardFilterModel dashboardFilterModel)
+        public async Task<IActionResult> GetDashboardData()
         {
-            var result = await _commonService.GetDashboardDataAsync(_mapper.Map<DashboardFilterDto>(dashboardFilterModel));
+            var result = await _commonService.GetDashboardDataAsync();
             if (result.Success)
                 return Ok(_mapper.Map<DashboardDataModel>(result.Data));
             return BadRequest(result);

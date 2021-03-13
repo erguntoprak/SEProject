@@ -39,12 +39,8 @@ namespace SE.Web.Controllers
         public async Task<IActionResult> InsertBlog([FromBody] BlogInsertModel blogInsertModel)
         {
             var blogInsertDto = _mapper.Map<BlogInsertDto>(blogInsertModel);
-            blogInsertDto.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            blogInsertDto.CreateTime = DateTime.Now;
-            blogInsertDto.UpdateTime = DateTime.Now;
 
-
-            string smallImageName = $"{UrlHelper.FriendlyUrl(blogInsertDto.Title)}-{Guid.NewGuid().ToString().Substring(0, 5)}";
+            string smallImageName = $"{UrlHelper.FriendlyUrl(blogInsertDto.Title)}-{Path.GetRandomFileName()}";
             string smallImageBase64Data = blogInsertDto.FirstVisibleImageName.Split(',')[1];
             var smallImageBytes = Convert.FromBase64String(smallImageBase64Data);
             string filedir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "blog");
@@ -83,7 +79,7 @@ namespace SE.Web.Controllers
 
                     if (bytes.Length > 0)
                     {
-                        using (var bigImage = SixLabors.ImageSharp.Image.Load(smallImageBytes))
+                        using (var bigImage = SixLabors.ImageSharp.Image.Load(bytes))
                         {
                             var options = new ResizeOptions
                             {
@@ -112,7 +108,6 @@ namespace SE.Web.Controllers
         {
 
             var blogUpdateDto = _mapper.Map<BlogUpdateDto>(blogUpdateModel);
-            blogUpdateDto.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var blogDetail = await _blogService.GetBlogDetailByIdAsync(blogUpdateDto.Id);
 
@@ -213,8 +208,7 @@ namespace SE.Web.Controllers
         [HttpGet("GetAllBlogListByUserId")]
         public async Task<IActionResult> GetAllBlogListByUserId()
         {
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = await _blogService.GetAllBlogListByUserIdAsync(userId);
+            var result = await _blogService.GetAllBlogListByUserIdAsync();
             if (result.Success)
                 return Ok(_mapper.Map<List<BlogListModel>>(result.Data));
 
@@ -263,8 +257,7 @@ namespace SE.Web.Controllers
         [HttpGet("GetBlogUpdateBySeoUrl")]
         public async Task<IActionResult> GetBlogUpdateBySeoUrl(string seoUrl)
         {
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = await _blogService.GetBlogUpdateBySeoUrlAsync(seoUrl, userId);
+            var result = await _blogService.GetBlogUpdateBySeoUrlAsync(seoUrl);
             if (result.Success)
                 return Ok(_mapper.Map<BlogUpdateModel>(result.Data));
 
@@ -275,7 +268,6 @@ namespace SE.Web.Controllers
         [HttpDelete("DeleteBlog")]
         public async Task<IActionResult> DeleteBlog(int blogId)
         {
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var blogDetail = await _blogService.GetBlogDetailByIdAsync(blogId);
             var blogDetailModel = _mapper.Map<BlogDetailModel>(blogDetail.Data);
             string filedir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "blog");
@@ -300,7 +292,7 @@ namespace SE.Web.Controllers
                     System.GC.WaitForPendingFinalizers();
                 }
             }
-            var result = await _blogService.DeleteBlogAsync(blogId, userId);
+            var result = await _blogService.DeleteBlogAsync(blogId);
 
             if (result.Success)
                 return Ok(result);

@@ -9,7 +9,7 @@ namespace SE.Business.CommonServices
 {
     public interface ICommonService
     {
-        Task<IDataResult<DashboardDataDto>> GetDashboardDataAsync(DashboardFilterDto dashboardFilterDto);
+        Task<IDataResult<DashboardDataDto>> GetDashboardDataAsync();
         Task<IResult> SendContactFormAsync(ContactFormDto contactFormDto);
     }
 }

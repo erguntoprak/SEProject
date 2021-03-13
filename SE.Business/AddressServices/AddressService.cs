@@ -33,7 +33,7 @@ namespace SE.Business.AddressServices
                         Id = c.Id,
                         Name = c.Name,
                         SeoUrl = c.SeoUrl
-                    }).ToList()
+                    }).OrderBy(d=>d.Name).ToList()
                 }).FirstOrDefaultAsync();
             return new SuccessDataResult<AddressDto>(addressDto);
         }

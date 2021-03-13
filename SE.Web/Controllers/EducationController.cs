@@ -71,8 +71,7 @@ namespace SE.Web.Controllers
         [HttpGet("GetAllEducationListByUserId")]
         public async Task<IActionResult> GetAllEducationListByUserId()
         {
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = await _educationService.GetAllEducationListByUserIdAsync(userId);
+            var result = await _educationService.GetAllEducationListByUserIdAsync();
             if (result.Success)
                 return Ok(_mapper.Map<List<EducationListModel>>(result.Data));
 
@@ -83,8 +82,7 @@ namespace SE.Web.Controllers
         [HttpGet("GetEducationUpdateModelBySeoUrl")]
         public async Task<IActionResult> GetEducationUpdateModelBySeoUrl(string seoUrl)
         {
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = await _educationService.GetEducationUpdateDtoBySeoUrlAsync(seoUrl, userId);
+            var result = await _educationService.GetEducationUpdateDtoBySeoUrlAsync(seoUrl);
             if (result.Success)
                 return Ok(_mapper.Map<EducationUpdateModel>(result.Data));
 
@@ -167,7 +165,7 @@ namespace SE.Web.Controllers
                 }
             }
 
-            var result = await _educationService.DeleteEducationAsync(educationId, userId);
+            var result = await _educationService.DeleteEducationAsync(educationId);
             if (result.Success)
                 return Ok(result);
 
@@ -320,8 +318,7 @@ namespace SE.Web.Controllers
         [HttpGet("GetEducationContactFormListModelBySeoUrl")]
         public async Task<IActionResult> GetEducationContactFormListModelBySeoUrl(string seoUrl)
         {
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = await _educationService.GetEducationContactFormListDtoBySeoUrlAsync(seoUrl, userId);
+            var result = await _educationService.GetEducationContactFormListDtoBySeoUrlAsync(seoUrl);
             if (result.Success)
                 return Ok(_mapper.Map<List<EducationContactFormListModel>>(result.Data));
 
