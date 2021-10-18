@@ -111,12 +111,12 @@ namespace SE.Web
                 options.AddPolicy(Policy.Admin, builder =>
                 {
                     builder.RequireAuthenticatedUser();
-                    builder.RequireRole("Admin");
+                    builder.RequireRole("Admin","Editor");
                 });
                 options.AddPolicy(Policy.User, builder =>
                 {
                     builder.RequireAuthenticatedUser();
-                    builder.RequireRole("User", "Admin");
+                    builder.RequireRole("User", "Admin", "Editor");
                 });
             });
             services.AddMemoryCache();

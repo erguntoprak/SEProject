@@ -156,7 +156,7 @@ namespace SE.Business.EducationServices
         }
         public async Task<IDataResult<EducationUpdateDto>> GetEducationUpdateDtoBySeoUrlAsync(string seoUrl)
         {
-            var education = await _unitOfWork.EducationRepository.Include(a => a.AttributeEducations, e => e.EducationAddress, i => i.Images, q => q.Questions).AsNoTracking().FirstOrDefaultAsync(d => d.SeoUrl == seoUrl && (_requestContext.Roles.Contains(GeneralConstants.Admin) ? true : d.UserId == _requestContext.UserId));
+            var education = await _unitOfWork.EducationRepository.Include(a => a.AttributeEducations, e => e.EducationAddress, i => i.Images, q => q.Questions).AsNoTracking().FirstOrDefaultAsync(d => d.SeoUrl == seoUrl && ((_requestContext.Roles.Contains(GeneralConstants.Admin) || _requestContext.Roles.Contains(GeneralConstants.Editor)) ? true : d.UserId == _requestContext.UserId));
 
             if (education == null)
                 return new ErrorDataResult<EducationUpdateDto>(Messages.ObjectIsNull);
@@ -272,7 +272,7 @@ namespace SE.Business.EducationServices
         [CacheRemoveAspect("Get")]
         public async Task<IDataResult<int>> UpdateEducationAsync(EducationUpdateDto educationUpdateDto)
         {
-            var education = await _unitOfWork.EducationRepository.Include(a => a.AttributeEducations, e => e.EducationAddress, q => q.Questions).FirstOrDefaultAsync(d => d.Id == educationUpdateDto.GeneralInformation.Id && (_requestContext.Roles.Contains(GeneralConstants.Admin) ? true : d.UserId == _requestContext.UserId));
+            var education = await _unitOfWork.EducationRepository.Include(a => a.AttributeEducations, e => e.EducationAddress, q => q.Questions).FirstOrDefaultAsync(d => d.Id == educationUpdateDto.GeneralInformation.Id && ((_requestContext.Roles.Contains(GeneralConstants.Admin) || _requestContext.Roles.Contains(GeneralConstants.Editor)) ? true : d.UserId == _requestContext.UserId));
 
             if (education == null)
                 return new ErrorDataResult<int>(Messages.ObjectIsNull);
@@ -361,7 +361,7 @@ namespace SE.Business.EducationServices
             return new SuccessResult(Messages.Deleted);
         }
 
-        public async Task<IDataResult<IEnumerable<EducationListDto>>> GetAllEducationListByCategoryIdAndDistrictIdAsync(int categoryId, int districtId)
+        public async Task<IDataResult<IEnumerable<EducationListDto>>> GetAllEducationListByCategoryIdAndDistrictIdAsync(int categoryId, int districtId, int count)
         {
             var educationListDto = await (from e in _unitOfWork.EducationRepository.Table
                                           join c in _unitOfWork.CategoryRepository.Table on e.CategoryId equals c.Id
@@ -383,7 +383,7 @@ namespace SE.Business.EducationServices
                                               Address = a.AddressOne,
                                               ImageUrl = image,
                                               SeoUrl = e.SeoUrl
-                                          }).AsNoTracking().ToArray().RandomListAsync(20);
+                                          }).AsNoTracking().ToArray().RandomListAsync(count);
 
             return new SuccessDataResult<IEnumerable<EducationListDto>>(educationListDto);
         }
@@ -483,6 +483,7 @@ namespace SE.Business.EducationServices
                                              join c in _unitOfWork.CategoryRepository.Table on e.CategoryId equals c.Id
                                              join a in _unitOfWork.AddressRepository.Table on e.EducationAddress.Id equals a.Id
                                              join d in _unitOfWork.DistrictRepository.Table on a.DistrictId equals d.Id
+                                             where e.IsActive
                                              select new SearchEducationDto
                                              {
                                                  Name = e.Name,

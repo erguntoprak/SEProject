@@ -28,8 +28,7 @@ namespace SE.Business.Constants
         public static string EmailConfirmed => "E-posta adresiniz onaylandı.";
         public static string EmailNotConfirmed => "E-posta adresiniz onaylanmadı.";
         public static string ObjectIsNull => "Talep edilen nesne bulunamadı.";
-
-
+        public static string AlreadyRole => "Bu role daha önce tanımlanmış.";
 
     }
 }

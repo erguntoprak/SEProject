@@ -15,7 +15,7 @@ namespace SE.Business.BlogServices
         Task<IDataResult<IEnumerable<BlogListDto>>> GetAllBlogListByUserIdAsync();
         Task<IDataResult<IEnumerable<BlogListDto>>> GetAllBlogListByUserNameAsync(string userName);
         Task<IDataResult<IEnumerable<BlogListDto>>> GetAllBlogListAsync();
-        Task<IDataResult<IEnumerable<BlogListDto>>> GetAllBlogViewListAsync();
+        Task<IDataResult<IEnumerable<BlogListDto>>> GetAllBlogViewListAsync(int count);
         Task<IDataResult<BlogDetailDto>> GetBlogDetailBySeoUrlAsync(string seoUrl);
         Task<IDataResult<BlogUpdateDto>> GetBlogUpdateBySeoUrlAsync(string seoUrl);
         Task<IDataResult<BlogDetailDto>> GetBlogDetailByIdAsync(int Id);

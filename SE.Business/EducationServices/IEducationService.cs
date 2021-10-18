@@ -12,7 +12,7 @@ namespace SE.Business.EducationServices
     {
         Task<IDataResult<int>> InsertEducationAsync(EducationInsertDto educationInsertDto);
         Task<IDataResult<IEnumerable<EducationListDto>>> GetAllEducationListByUserIdAsync();
-        Task<IDataResult<IEnumerable<EducationListDto>>> GetAllEducationListByCategoryIdAndDistrictIdAsync(int categoryId, int districtId);
+        Task<IDataResult<IEnumerable<EducationListDto>>> GetAllEducationListByCategoryIdAndDistrictIdAsync(int categoryId, int districtId,int count);
         Task<IDataResult<IEnumerable<EducationListDto>>> GetAllEducationListAsync();
         Task<IDataResult<EducationUpdateDto>> GetEducationUpdateDtoBySeoUrlAsync(string seoUrl);
         Task<IDataResult<int>> UpdateEducationAsync(EducationUpdateDto educationUpdateDto);

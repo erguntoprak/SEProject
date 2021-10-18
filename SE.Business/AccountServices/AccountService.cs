@@ -365,5 +365,19 @@ namespace SE.Business.AccountServices
             return new SuccessResult(Messages.EmailConfirmed);
 
         }
+
+        public async Task<IResult> AddRoleAsync(string role)
+        {
+            bool isExistsRole = await _roleManager.RoleExistsAsync(role);
+            if (isExistsRole)
+                return new ErrorResult(Messages.AlreadyRole);
+            IdentityRole identityRole = new IdentityRole();
+            identityRole.Name = role;
+            var result = _roleManager.CreateAsync(identityRole);
+            if (!result.Result.Succeeded)
+                return new ErrorResult(Messages.CouldNotAddRoles);
+
+            return new SuccessResult(Messages.Added);
+        }
     }
 }

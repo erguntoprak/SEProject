@@ -9,5 +9,6 @@ namespace SE.Business.Constants
     public static class GeneralConstants
     {
         public static string Admin => "Admin";
+        public static string Editor => "Editor";
     }
 }

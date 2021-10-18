@@ -173,13 +173,13 @@ namespace SE.Web.Controllers
         }
 
         [HttpGet("GetAllEducationListByRandomCategoryId")]
-        public async Task<IActionResult> GetAllEducationListByRandomCategoryId()
+        public async Task<IActionResult> GetAllEducationListByRandomCategoryId(int count)
         {
             var categoryList = await _categoryService.GetAllCategoryListAsync();
             var categoryIds = categoryList.Data.Select(d => d.Id).ToArray();
             Random random = new Random();
             int randomCategoryId = categoryIds[random.Next(categoryIds.Length)];
-            var result = await _educationService.GetAllEducationListByCategoryIdAndDistrictIdAsync(randomCategoryId, 0);
+            var result = await _educationService.GetAllEducationListByCategoryIdAndDistrictIdAsync(1, 0, count);
             if (result.Success)
                 return Ok(_mapper.Map<List<EducationListModel>>(result.Data));
 
@@ -198,10 +198,10 @@ namespace SE.Web.Controllers
 
 
         [HttpGet("GetAllEducationListByCategoryIdAndDistrictId")]
-        public async Task<IActionResult> GetAllEducationListByCategoryIdAndDistrictId(int categoryId, int districtId)
+        public async Task<IActionResult> GetAllEducationListByCategoryIdAndDistrictId(int categoryId, int districtId, int count)
         {
 
-            var result = await _educationService.GetAllEducationListByCategoryIdAndDistrictIdAsync(categoryId, districtId);
+            var result = await _educationService.GetAllEducationListByCategoryIdAndDistrictIdAsync(categoryId, districtId, count);
             if (result.Success)
                 return Ok(_mapper.Map<List<EducationListModel>>(result.Data));
 

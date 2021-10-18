@@ -86,21 +86,37 @@ namespace SE.Business.BlogServices
 
             return new SuccessDataResult<IEnumerable<BlogListDto>>(blogList);
         }
-        public async Task<IDataResult<IEnumerable<BlogListDto>>> GetAllBlogViewListAsync()
+        public async Task<IDataResult<IEnumerable<BlogListDto>>> GetAllBlogViewListAsync(int count)
         {
+           
+            if(count != 0)
+            {
+                var blogListWithCount = await _unitOfWork.BlogRepository.Include(d => d.User).Where(d => d.IsActive)
+               .AsNoTracking().OrderByDescending(d => d.UpdateTime).Take(count).Select(d => new BlogListDto
+               {
+                   Id = d.Id,
+                   UserName = d.User.UserName,
+                   IsActive = d.IsActive,
+                   UserSeoUrl = UrlHelper.FriendlyUrl(d.User.UserName),
+                   CreateTime = d.CreateTime,
+                   FirstVisibleImageName = d.FirstVisibleImageName,
+                   Title = d.Title,
+                   SeoUrl = d.SeoUrl
+               }).ToListAsync();
+                return new SuccessDataResult<IEnumerable<BlogListDto>>(blogListWithCount);
+            }
             var blogList = await _unitOfWork.BlogRepository.Include(d => d.User).Where(d => d.IsActive)
-                .AsNoTracking().OrderByDescending(d=>d.UpdateTime).Select(d => new BlogListDto
-                {
-                    Id = d.Id,
-                    UserName = d.User.UserName,
-                    IsActive = d.IsActive,
-                    UserSeoUrl = UrlHelper.FriendlyUrl(d.User.UserName),
-                    CreateTime = d.CreateTime,
-                    FirstVisibleImageName = d.FirstVisibleImageName,
-                    Title = d.Title,
-                    SeoUrl = d.SeoUrl
-                }).ToListAsync();
-
+               .AsNoTracking().OrderByDescending(d => d.UpdateTime).Select(d => new BlogListDto
+               {
+                   Id = d.Id,
+                   UserName = d.User.UserName,
+                   IsActive = d.IsActive,
+                   UserSeoUrl = UrlHelper.FriendlyUrl(d.User.UserName),
+                   CreateTime = d.CreateTime,
+                   FirstVisibleImageName = d.FirstVisibleImageName,
+                   Title = d.Title,
+                   SeoUrl = d.SeoUrl
+               }).ToListAsync();
             return new SuccessDataResult<IEnumerable<BlogListDto>>(blogList);
         }
 
@@ -153,7 +169,7 @@ namespace SE.Business.BlogServices
 
         public async Task<IDataResult<BlogUpdateDto>> GetBlogUpdateBySeoUrlAsync(string seoUrl)
         {
-            var blogUpdateDto = await _unitOfWork.BlogRepository.Include(d => d.BlogItems).Where(d => d.SeoUrl == seoUrl && (_requestContext.Roles.Contains(GeneralConstants.Admin) ? true : d.UserId == _requestContext.UserId)).Select(d => new BlogUpdateDto
+            var blogUpdateDto = await _unitOfWork.BlogRepository.Include(d => d.BlogItems).Where(d => d.SeoUrl == seoUrl && ((_requestContext.Roles.Contains(GeneralConstants.Admin) || _requestContext.Roles.Contains(GeneralConstants.Editor)) ? true : d.UserId == _requestContext.UserId)).Select(d => new BlogUpdateDto
             {
                 Id = d.Id,
                 Title = d.Title,
@@ -217,7 +233,7 @@ namespace SE.Business.BlogServices
         public async Task<IDataResult<int>> UpdateBlogAsync(BlogUpdateDto blogUpdateDto)
         {
 
-            var blog = await _unitOfWork.BlogRepository.Include(d => d.BlogItems).Where(d => d.Id == blogUpdateDto.Id && (_requestContext.Roles.Contains(GeneralConstants.Admin) ? true : d.UserId == _requestContext.UserId)).FirstOrDefaultAsync();
+            var blog = await _unitOfWork.BlogRepository.Include(d => d.BlogItems).Where(d => d.Id == blogUpdateDto.Id && ((_requestContext.Roles.Contains(GeneralConstants.Admin) || _requestContext.Roles.Contains(GeneralConstants.Editor)) ? true : d.UserId == _requestContext.UserId)).FirstOrDefaultAsync();
 
             if (blog == null)
                 return new ErrorDataResult<int>(Messages.ObjectIsNull);

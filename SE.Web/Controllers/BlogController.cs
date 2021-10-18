@@ -234,9 +234,9 @@ namespace SE.Web.Controllers
             return BadRequest(result);
         }
         [HttpGet("GetAllBlogViewList")]
-        public async Task<IActionResult> GetAllBlogViewList()
+        public async Task<IActionResult> GetAllBlogViewList(int count)
         {
-            var result = await _blogService.GetAllBlogViewListAsync();
+            var result = await _blogService.GetAllBlogViewListAsync(count);
             if (result.Success)
                 return Ok(_mapper.Map<List<BlogListModel>>(result.Data));
 

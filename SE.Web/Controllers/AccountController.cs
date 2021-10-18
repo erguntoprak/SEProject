@@ -243,6 +243,15 @@ namespace SE.Web.Controllers
             return BadRequest(result);
         }
 
+        [HttpPost("AddRole")]
+        public async Task<IActionResult> AddRole([FromBody]string role)
+        {
+            var result = await _accountService.AddRoleAsync(role);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
+        }
+
 
     }
 }

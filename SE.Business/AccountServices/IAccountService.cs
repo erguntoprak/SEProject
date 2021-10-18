@@ -25,6 +25,7 @@ namespace SE.Business.AccountServices
         Task<IResult> DeleteUserAsync(string userId);
         Task<IResult> ForgotPasswordAsync(string email);
         Task<IResult> ResetPasswordAsync(ResetPasswordDto resetPasswordDto);
+        Task<IResult> AddRoleAsync(string role);
 
     }
 }
